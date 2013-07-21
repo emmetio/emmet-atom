@@ -1,4 +1,6 @@
 $ = require 'jquery'
+CSON = require 'season'
+path = require 'path'
 emmet = require '../vendor/emmet-core'
 actions = emmet.require("actions")
 editorProxy = require './editor-proxy'
@@ -7,14 +9,15 @@ module.exports =
   editorSubscription: null
 
   activate: (@state) ->
+    keymapObj = CSON.readFileSync(path.join(__dirname, "../keymaps/emmet.cson"))[".editor"]
     @editorSubscription = rootView.eachEditor (editor) =>
       if editor.attached and not editor.mini
         editorProxy.setupContext(editor)
-        rootView.command 'emmet:expand_abbreviation', =>
-          @expandAbbreviation()
-
-  expandAbbreviation: ->
-    emmet.require("actions").run("expand_abbreviation", editorProxy)
+        for own key of keymapObj
+          action = keymapObj[key]
+          emmet_action = action.split(":")[1]
+          rootView.command action, =>
+            emmet.require("actions").run(emmet_action.replace(/\-/g, "_"), editorProxy)
 
   deactivate: ->
     @editorSubscription?.off()
