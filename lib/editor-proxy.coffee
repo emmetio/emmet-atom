@@ -121,21 +121,17 @@ module.exports =
     @editor.getText()
 
   # Returns the editor's syntax mode.
-  # TODO: this seems naive
   getSyntax: ->
-    @syntax if @syntax
-
-    "html"
+    @editSession.getGrammar()
 
   # Returns the current output profile name
   #
   # See emmet.setupProfile for more information.
-  # TODO: this seems naive
   getProfileName: ->
-    switch @getSyntax()
-      when "css"
+    switch @getSyntax().name
+      when "CSS"
         return "css"
-      when "xml", "xsl"
+      when "XML", "XSL"
         return "xml"
       else
         return "xhtml"
