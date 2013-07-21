@@ -2,45 +2,46 @@ emmet = require '../vendor/emmet-core'
 utils = emmet.require("utils")
 
 module.exports =
+  @editor: null
+  @syntax: null
 
   setupContext: (editor) ->
-    @atom = editor
-    @indentation = @atom.activeEditSession.getTabText()
+    @editor = editor
+    @indentation = @editor.activeEditSession.getTabText()
     emmet.require("resources").setVariable("indentation", @indentation)
 
-    @$syntax = null
-    @$syntax = @getSyntax()
+    @syntax = @getSyntax()
 
   # Fetches the character indexes of the selected text.
   #
   # Returns an {Object} with `start` and `end` properties.
   getSelectionRange: ->
-    range = @atom.getSelection().getBufferRange()
+    range = @editor.getSelection().getBufferRange()
     return {
-      start: @atom.activeEditSession.indexForBufferPosition(range.start),
-      end: @atom.activeEditSession.indexForBufferPosition(range.end)
+      start: @editor.activeEditSession.indexForBufferPosition(range.start),
+      end: @editor.activeEditSession.indexForBufferPosition(range.end)
     }
 
   # Fetches the current line's start and end indexes.
   #
   # Returns an {Object} with `start` and `end` properties
   getCurrentLineRange: ->
-    row = @atom.getCursor().getBufferRow()
-    lineLength = @atom.lineLengthForBufferRow(row)
-    index = @atom.activeEditSession.indexForBufferPosition({row: row, column: 0})
+    row = @editor.getCursor().getBufferRow()
+    lineLength = @editor.lineLengthForBufferRow(row)
+    index = @editor.activeEditSession.indexForBufferPosition({row: row, column: 0})
     return {
       start: index,
       end: index + lineLength
     }
 
   getCaretPos: ->
-    row = @atom.getCursor().getBufferRow()
-    column = @atom.getCursor().getBufferColumn()
+    row = @editor.getCursor().getBufferRow()
+    column = @editor.getCursor().getBufferColumn()
 
-    return @atom.activeEditSession.indexForBufferPosition( {row: row, column: column} )
+    return @editor.activeEditSession.indexForBufferPosition( {row: row, column: column} )
 
   getContent: ->
-    @atom.getText()
+    @editor.getText()
 
   # Replace the editor's content (or part of it, if using `start` to
   # `end` index).
@@ -84,18 +85,18 @@ module.exports =
         start: value.length + start
         end: value.length + start
 
-    range = @atom.getSelection()
-    range.start = @atom.activeEditSession.indexForBufferPosition(start)
-    range.end = @atom.activeEditSession.indexForBufferPosition(end)
+    range = @editor.getSelection()
+    range.start = @editor.activeEditSession.indexForBufferPosition(start)
+    range.end = @editor.activeEditSession.indexForBufferPosition(end)
 
     range.insertText(value)
 
-    range.start = @atom.activeEditSession.indexForBufferPosition(firstTabStop.start)
-    range.end = @atom.activeEditSession.indexForBufferPosition(firstTabStop.end)
-    @atom.setSelectedBufferRange(range)
+    range.start = @editor.activeEditSession.indexForBufferPosition(firstTabStop.start)
+    range.end = @editor.activeEditSession.indexForBufferPosition(firstTabStop.end)
+    @editor.setSelectedBufferRange(range)
 
   getSyntax: ->
-    return @$syntax if @$syntax
+    @syntax if @syntax
 
     "html"
 
