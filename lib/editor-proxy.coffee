@@ -2,9 +2,6 @@ emmet = require '../vendor/emmet-core'
 utils = emmet.require("utils")
 
 module.exports =
-  @editor: null
-  @syntax: null
-
   setupContext: (editor) ->
     @editor = editor
     @indentation = @editor.activeEditSession.getTabText()
@@ -22,6 +19,17 @@ module.exports =
       end: @editor.activeEditSession.indexForBufferPosition(range.end)
     }
 
+  # Creates a selection from the `start` to `end` character indexes.
+  #
+  # If `end` is ommited, this method should place a caret at the `start` index.
+  #
+  # start - A {Number} representing the starting character index
+  # end - A {Number} representing the ending character index
+  createSelection: (start, end) ->
+    @editor.getSelection().setBufferRange
+      start: @editor.indexForBufferPosition(start)
+      end: @editor.indexForBufferPosition(end)
+
   # Fetches the current line's start and end indexes.
   #
   # Returns an {Object} with `start` and `end` properties
@@ -34,14 +42,23 @@ module.exports =
       end: index + lineLength
     }
 
+  # Returns the current caret position.
   getCaretPos: ->
     row = @editor.getCursor().getBufferRow()
     column = @editor.getCursor().getBufferColumn()
 
     return @editor.activeEditSession.indexForBufferPosition( {row: row, column: column} )
 
-  getContent: ->
-    @editor.getText()
+  # Sets the current caret position.
+  setCaretPos: (index) ->
+    pos = @editor.indexForBufferPosition(index)
+    @editor.clearSelection()
+    @editor.setCursorBufferPosition pos
+
+  # Returns the current line.
+  getCurrentLine: ->
+    row = @editor.getCursor().getBufferRow()
+    return @editor.activeEditSession.lineForScreenRow(row)
 
   # Replace the editor's content (or part of it, if using `start` to
   # `end` index).
@@ -85,21 +102,33 @@ module.exports =
         start: value.length + start
         end: value.length + start
 
-    range = @editor.getSelection()
+    range = @getSelectionRange()
     range.start = @editor.activeEditSession.indexForBufferPosition(start)
     range.end = @editor.activeEditSession.indexForBufferPosition(end)
 
-    range.insertText(value)
+    # TODO: overwrite needs to happen here
+
+    @editor.insertText(value)
 
     range.start = @editor.activeEditSession.indexForBufferPosition(firstTabStop.start)
     range.end = @editor.activeEditSession.indexForBufferPosition(firstTabStop.end)
-    @editor.setSelectedBufferRange(range)
+    @editor.getSelection().setBufferRange(range)
 
+  # Returns the editor content.
+  getContent: ->
+    @editor.getText()
+
+  # Returns the editor's syntax mode.
+  # TODO: this seems naive
   getSyntax: ->
     @syntax if @syntax
 
     "html"
 
+  # Returns the current output profile name
+  #
+  # See emmet.setupProfile for more information.
+  # TODO: this seems naive
   getProfileName: ->
     switch @getSyntax()
       when "css"
@@ -108,3 +137,11 @@ module.exports =
         return "xml"
       else
         return "xhtml"
+
+  # Returns the currently selected text.
+  getSelection: ->
+    return @editor.activeEditSession.getSelectedText()
+
+  # Returns the current editor's file path
+  getFilePath: ->
+    return ""

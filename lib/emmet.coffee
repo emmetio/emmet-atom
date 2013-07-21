@@ -6,11 +6,6 @@ editorProxy = require './editor-proxy'
 module.exports =
   editorSubscription: null
 
-  initialize: (@editor) ->
-
-    debugger
-
-
   activate: (@state) ->
     @editorSubscription = rootView.eachEditor (editor) =>
       if editor.attached and not editor.mini
