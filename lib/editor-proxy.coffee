@@ -29,8 +29,8 @@ module.exports =
   # end - A {Number} representing the ending character index
   createSelection: (start, end) ->
     @editor.getSelection().setBufferRange
-      start: @editor.bufferPositionForIndex(start)
-      end: @editor.bufferPositionForIndex(end)
+      start: @editSession.bufferPositionForIndex(start)
+      end: @editSession.bufferPositionForIndex(end)
 
   # Fetches the current line's start and end indexes.
   #
@@ -53,7 +53,7 @@ module.exports =
 
   # Sets the current caret position.
   setCaretPos: (index) ->
-    pos = @editor.bufferPositionForIndex(index)
+    pos = @editSession.bufferPositionForIndex(index)
     @editor.clearSelection()
     @editor.setCursorBufferPosition pos
 
@@ -109,11 +109,11 @@ module.exports =
     range.end = Point.fromObject(@editSession.bufferPositionForIndex(end))
 
     @editor.setTextInRange(range, value)
-
-    range.start = Point.fromObject(@editSession.bufferPositionForIndex(firstTabStop.start))
-    range.end = Point.fromObject(@editSession.bufferPositionForIndex(firstTabStop.end))
-
-    @editor.getSelection().setBufferRange(range)
+    #
+    # range.start = Point.fromObject(@editSession.bufferPositionForIndex(firstTabStop.start))
+    # range.end = Point.fromObject(@editSession.bufferPositionForIndex(firstTabStop.end))
+    #
+    # @editor.getSelection().setBufferRange(range)
 
   # Returns the editor content.
   getContent: ->
