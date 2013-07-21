@@ -6,7 +6,7 @@ You can't yet.
 
 # What's working?
 
-Only this:
+Some of it is there:
 
 ![](https://f.cloud.github.com/assets/64050/831461/5e5e332c-f1e5-11e2-926e-850dbbb4ca37.gif)
 
