@@ -1,6 +1,5 @@
-#_ = require 'underscore'
 $ = require 'jquery'
-emmet = require './emmet-core'
+emmet = require '../vendor/emmet-core'
 actions = emmet.require("actions")
 editorProxy = require './editor-proxy'
 

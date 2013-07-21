@@ -1,4 +1,4 @@
-emmet = require './emmet-core'
+emmet = require '../vendor/emmet-core'
 utils = emmet.require("utils")
 
 module.exports =
