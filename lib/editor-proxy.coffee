@@ -142,4 +142,5 @@ module.exports =
 
   # Returns the current editor's file path
   getFilePath: ->
-    return ""
+    # is there a better way to get this?
+    return @editSession.buffer.file.path
