@@ -1,6 +1,7 @@
+Point = require 'point'
 emmet = require '../vendor/emmet-core'
 utils = emmet.require("utils")
-Point = require 'point'
+tabStops = emmet.require("tabStops")
 
 module.exports =
   setupContext: (editor) ->
@@ -89,7 +90,7 @@ module.exports =
       value = utils.padString(value, utils.getLinePaddingFromPosition(@getContent(), start))
 
     # find new caret position
-    tabstopData = emmet.require("tabStops").extract(value,
+    tabstopData = tabStops.extract(value,
       escape: (ch) ->
         return ch
     )

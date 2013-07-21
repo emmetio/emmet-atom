@@ -1,4 +1,3 @@
-$ = require 'jquery'
 CSON = require 'season'
 path = require 'path'
 emmet = require '../vendor/emmet-core'
@@ -16,8 +15,10 @@ module.exports =
         for own key of keymapObj
           action = keymapObj[key]
           emmet_action = action.split(":")[1]
+
+          # Atom likes -, but Emmet expects _
           rootView.command action, =>
-            emmet.require("actions").run(emmet_action.replace(/\-/g, "_"), editorProxy)
+            actions.run(emmet_action.replace(/\-/g, "_"), editorProxy)
 
   deactivate: ->
     @editorSubscription?.off()
