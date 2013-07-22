@@ -1,9 +1,11 @@
 RootView = require 'root-view'
 Buffer = require 'text-buffer'
 Editor = require 'editor'
+Path = require 'path'
+Fs = require 'fs'
 
 describe "Emmet", ->
-  [buffer, editor, editSession, htmlSolution, cssSolution] = []
+  [buffer, editor, editSession] = []
 
   beforeEach ->
     window.rootView = new RootView
@@ -19,38 +21,38 @@ describe "Emmet", ->
     editSession.destroy()
 
   fdescribe "emmet:expand-abbreviation", ->
+    expansion = null
+
     describe "for HTML", ->
       beforeEach ->
-        rootView.open('foo.html.erb')
+        rootView.open(Path.join(__dirname, './fixtures/abbreviation/before/html-abbrv.html'))
         editor = rootView.getActiveView()
         editSession = rootView.getActivePaneItem()
-        editor.setText "#header>ul#nav>li*4>a[href]"
+        editSession.moveCursorToEndOfLine()
 
-        htmlSolution = '<div id="header">\n  <ul id="nav">\n    <li><a href=""></a></li>\n    <li><a href=""></a></li>\n    <li><a href=""></a></li>\n    <li><a href=""></a></li>\n  </ul>\n</div>'
+        expansion = Fs.readFileSync(Path.join(__dirname, './fixtures/abbreviation/after/html-abbrv.html'), "utf8")
 
       it "expands HTML abbreviations via commands", ->
         editor.trigger "emmet:expand-abbreviation"
-        expect(editor.getText()).toBe htmlSolution
+        expect(editor.getText()).toBe expansion
 
       it "expands HTML abbreviations via keybindings", ->
         editor.trigger keydownEvent('e', shiftKey: true, metaKey: true, target: editor[0])
-        expect(editor.getText()).toBe htmlSolution
+        expect(editor.getText()).toBe expansion
 
     describe "for CSS", ->
       beforeEach ->
-        rootView.open('css.css')
+        rootView.open(Path.join(__dirname, './fixtures/abbreviation/before/css-abbrv.css'))
         editor = rootView.getActiveView()
         editSession = rootView.getActivePaneItem()
-        buffer = editor.getBuffer()
-        buffer.setText('')
-        editor.setText "m10"
+        editSession.moveCursorToEndOfLine()
 
-        cssSolution = "margin: 10px;"
+        expansion = Fs.readFileSync(Path.join(__dirname, './fixtures/abbreviation/after/css-abbrv.css'), "utf8")
 
       it "expands CSS abbreviations via commands", ->
         editor.trigger "emmet:expand-abbreviation"
-        expect(editor.getText()).toBe cssSolution
+        expect(editor.getText()).toBe expansion
 
       it "expands CSS abbreviations via keybindings", ->
         editor.trigger keydownEvent('e', shiftKey: true, metaKey: true, target: editor[0])
-        expect(editor.getText()).toBe cssSolution
+        expect(editor.getText()).toBe expansion
