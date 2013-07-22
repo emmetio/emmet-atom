@@ -6,8 +6,7 @@ tabStops = emmet.require("tabStops")
 module.exports =
   setupContext: (editor) ->
     @editor = editor
-    @editSession = @editor.activeEditSession
-    @indentation = @editSession.getTabText()
+    @indentation = @editor.activeEditSession.getTabText()
     emmet.require("resources").setVariable("indentation", @indentation)
 
     @syntax = @getSyntax()
@@ -18,8 +17,8 @@ module.exports =
   getSelectionRange: ->
     range = @editor.getSelection().getBufferRange()
     return {
-      start: @editSession.indexForBufferPosition(range.start),
-      end: @editSession.indexForBufferPosition(range.end)
+      start: @editor.activeEditSession.indexForBufferPosition(range.start),
+      end: @editor.activeEditSession.indexForBufferPosition(range.end)
     }
 
   # Creates a selection from the `start` to `end` character indexes.
@@ -30,8 +29,8 @@ module.exports =
   # end - A {Number} representing the ending character index
   createSelection: (start, end) ->
     @editor.getSelection().setBufferRange
-      start: @editSession.bufferPositionForIndex(start)
-      end: @editSession.bufferPositionForIndex(end)
+      start: @editor.activeEditSession.bufferPositionForIndex(start)
+      end: @editor.activeEditSession.bufferPositionForIndex(end)
 
   # Fetches the current line's start and end indexes.
   #
@@ -39,7 +38,7 @@ module.exports =
   getCurrentLineRange: ->
     row = @editor.getCursor().getBufferRow()
     lineLength = @editor.lineLengthForBufferRow(row)
-    index = @editSession.indexForBufferPosition({row: row, column: 0})
+    index = @editor.activeEditSession.indexForBufferPosition({row: row, column: 0})
     return {
       start: index,
       end: index + lineLength
@@ -50,18 +49,18 @@ module.exports =
     row = @editor.getCursor().getBufferRow()
     column = @editor.getCursor().getBufferColumn()
 
-    return @editSession.indexForBufferPosition( {row: row, column: column} )
+    return @editor.activeEditSession.indexForBufferPosition( {row: row, column: column} )
 
   # Sets the current caret position.
   setCaretPos: (index) ->
-    pos = @editSession.bufferPositionForIndex(index)
+    pos = @editor.activeEditSession.bufferPositionForIndex(index)
     @editor.clearSelection()
     @editor.setCursorBufferPosition pos
 
   # Returns the current line.
   getCurrentLine: ->
     row = @editor.getCursor().getBufferRow()
-    return @editSession.lineForBufferRow(row)
+    return @editor.activeEditSession.lineForBufferRow(row)
 
   # Replace the editor's content (or part of it, if using `start` to
   # `end` index).
@@ -106,29 +105,23 @@ module.exports =
         end: value.length + start
 
     range = @editor.getSelection().getBufferRange()
-    range.start = Point.fromObject(@editSession.bufferPositionForIndex(start))
-    range.end = Point.fromObject(@editSession.bufferPositionForIndex(end))
+    range.start = Point.fromObject(@editor.activeEditSession.bufferPositionForIndex(start))
+    range.end = Point.fromObject(@editor.activeEditSession.bufferPositionForIndex(end))
 
     @editor.setTextInRange(range, value)
     #
-    # range.start = Point.fromObject(@editSession.bufferPositionForIndex(firstTabStop.start))
-    # range.end = Point.fromObject(@editSession.bufferPositionForIndex(firstTabStop.end))
+    # range.start = Point.fromObject(@editor.activeEditSession.bufferPositionForIndex(firstTabStop.start))
+    # range.end = Point.fromObject(@editor.activeEditSession.bufferPositionForIndex(firstTabStop.end))
     #
     # @editor.getSelection().setBufferRange(range)
 
   # Returns the editor content.
   getContent: ->
-    @editor.getText()
+    return @editor.getText()
 
   # Returns the editor's syntax mode.
   getSyntax: ->
-    @editSession.getGrammar()
-
-  # Returns the current output profile name
-  #
-  # See emmet.setupProfile for more information.
-  getProfileName: ->
-    switch @getSyntax().name
+    switch @editor.activeEditSession.getGrammar().name
       when "CSS"
         return "css"
       when "XML", "XSL"
@@ -136,11 +129,17 @@ module.exports =
       else
         return "xhtml"
 
+  # Returns the current output profile name
+  #
+  # See emmet.setupProfile for more information.
+  getProfileName: ->
+    return @editor.activeEditSession.getGrammar().name
+
   # Returns the currently selected text.
   getSelection: ->
-    return @editSession.getSelectedText()
+    return @editor.activeEditSession.getSelectedText()
 
   # Returns the current editor's file path
   getFilePath: ->
     # is there a better way to get this?
-    return @editSession.buffer.file.path
+    return @editor.activeEditSession.buffer.file.path
