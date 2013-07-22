@@ -1,5 +1,4 @@
 RootView = require 'root-view'
-Buffer = require 'text-buffer'
 Editor = require 'editor'
 Path = require 'path'
 Fs = require 'fs'
@@ -20,7 +19,7 @@ describe "Emmet", ->
   afterEach ->
     editSession.destroy()
 
-  fdescribe "emmet:expand-abbreviation", ->
+  describe "emmet:expand-abbreviation", ->
     expansion = null
 
     describe "for HTML", ->
@@ -56,3 +55,42 @@ describe "Emmet", ->
       it "expands CSS abbreviations via keybindings", ->
         editor.trigger keydownEvent('e', shiftKey: true, metaKey: true, target: editor[0])
         expect(editor.getText()).toBe expansion
+
+  fdescribe "emmet:match-pair", ->
+    beforeEach ->
+      rootView.open(Path.join(__dirname, './fixtures/match-pair/sample.html'))
+      editor = rootView.getActiveView()
+      editSession = rootView.getActivePaneItem()
+
+    describe "for match-pair-outward", ->
+      beforeEach ->
+        editSession.setCursorBufferPosition([3, 23])
+
+      it "matches pairs outwards via commands", ->
+        expect(editor.getSelection().getBufferRange()).toEqual [[3, 23], [3, 23]]
+        editor.trigger "emmet:match-pair-outward"
+        expect(editor.getSelection().getBufferRange()).toEqual [[3, 11], [3, 38]]
+        editor.trigger "emmet:match-pair-outward"
+        expect(editor.getSelection().getBufferRange()).toEqual [[3, 8], [3, 42]]
+        editor.trigger "emmet:match-pair-outward"
+        expect(editor.getSelection().getBufferRange()).toEqual [[1, 29], [4, 4]]
+
+      it "matches pairs outwards via keybindings", ->
+        expect(editor.getSelection().getBufferRange()).toEqual [[3, 23], [3, 23]]
+        editor.trigger keydownEvent('d', ctrlKey: true, target: editor[0])
+        expect(editor.getSelection().getBufferRange()).toEqual [[3, 11], [3, 38]]
+        editor.trigger keydownEvent('d', ctrlKey: true, target: editor[0])
+        expect(editor.getSelection().getBufferRange()).toEqual [[3, 8], [3, 42]]
+        editor.trigger keydownEvent('d', ctrlKey: true, target: editor[0])
+        expect(editor.getSelection().getBufferRange()).toEqual [[1, 29], [4, 4]]
+
+    describe "for match-pair-inward", ->
+      beforeEach ->
+        editSession.setCursorBufferPosition([3, 23])
+
+      it "matches pairs inwards via commands", ->
+        editSession.getSelection().setBufferRange([[1, 29], [4, 4]])
+        editor.trigger "emmet:match-pair-inward"
+        expect(editor.getSelection().getBufferRange()).toEqual [[2, 8], [2, 33]]
+        editor.trigger keydownEvent('d', altKey: true, target: editor[0])
+        expect(editor.getSelection().getBufferRange()).toEqual [[2, 12], [2, 28]]
