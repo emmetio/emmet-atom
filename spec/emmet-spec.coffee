@@ -56,7 +56,7 @@ describe "Emmet", ->
         editor.trigger keydownEvent('e', shiftKey: true, metaKey: true, target: editor[0])
         expect(editor.getText()).toBe expansion
 
-  fdescribe "emmet:match-pair", ->
+  describe "emmet:match-pair", ->
     beforeEach ->
       rootView.open(Path.join(__dirname, './fixtures/match-pair/sample.html'))
       editor = rootView.getActiveView()
@@ -94,3 +94,22 @@ describe "Emmet", ->
         expect(editor.getSelection().getBufferRange()).toEqual [[2, 8], [2, 33]]
         editor.trigger keydownEvent('d', altKey: true, target: editor[0])
         expect(editor.getSelection().getBufferRange()).toEqual [[2, 12], [2, 28]]
+
+    fdescribe "for go-to match-pair", ->
+      it "goes to the match-pair via commands", ->
+        editSession.setCursorBufferPosition([4, 10])
+        editor.trigger "emmet:matching-pair"
+        expect(editor.getCursor().getBufferPosition()).toEqual [1, 4]
+
+        editSession.setCursorBufferPosition([5, 5])
+        editor.trigger "emmet:matching-pair"
+        expect(editor.getCursor().getBufferPosition()).toEqual [0, 0]
+
+      it "goes to the match-pair via keybindings", ->
+        editSession.setCursorBufferPosition([4, 10])
+        editor.trigger keydownEvent('j', ctrlKey: true, altKey: true, target: editor[0])
+        expect(editor.getCursor().getBufferPosition()).toEqual [1, 4]
+
+        editSession.setCursorBufferPosition([5, 5])
+        editor.trigger keydownEvent('j', ctrlKey: true, altKey: true, target: editor[0])
+        expect(editor.getCursor().getBufferPosition()).toEqual [0, 0]

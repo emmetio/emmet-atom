@@ -54,7 +54,7 @@ module.exports =
   # Sets the current caret position.
   setCaretPos: (index) ->
     pos = @editor.activeEditSession.bufferPositionForIndex(index)
-    @editor.clearSelection()
+    @editor.activeEditSession.getSelection().clear()
     @editor.setCursorBufferPosition pos
 
   # Returns the current line.

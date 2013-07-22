@@ -2,10 +2,10 @@
   'meta-E': 'emmet:expand-abbreviation'
   'ctrl-d': 'emmet:match-pair-outward'
   'alt-d': 'emmet:match-pair-inward'
-  # 'ctrl+alt+j': 'emmet:matching_pair'
+  'ctrl-alt-j': 'emmet:matching-pair'
   # 'alt+right': 'emmet:next_edit_point'
   # 'alt+left': 'emmet:prev_edit_point'
-  # 'command+/': 'emmet:toggle_comment'
+  # 'command+/': 'emmet:toggle_comment' already exists in Atom
   # 'shift+command+': 'emmet:split_join_tag'
   # 'command+': 'emmet:remove_tag'
   # 'shift+command+y': 'emmet:evaluate_math_expression'
