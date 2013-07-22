@@ -1,7 +1,7 @@
 '.editor':
-  'meta-E': 'emmet:expand-abbreviation'
-  # 'ctrl-d': 'emmet:match_pair_outward'
-  # 'ctrl-j': 'emmet:match_pair_inward'
+  'meta-E': 'emmet:expand-abbreviation',
+  'ctrl-d': 'emmet:match-pair-outward',
+  'ctrl-j': 'emmet:match-pair-inward'
   # 'ctrl+alt+j': 'emmet:matching_pair'
   # 'alt+right': 'emmet:next_edit_point'
   # 'alt+left': 'emmet:prev_edit_point'
