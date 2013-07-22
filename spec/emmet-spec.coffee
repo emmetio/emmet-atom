@@ -95,7 +95,7 @@ describe "Emmet", ->
         editor.trigger keydownEvent('d', altKey: true, target: editor[0])
         expect(editor.getSelection().getBufferRange()).toEqual [[2, 12], [2, 28]]
 
-    fdescribe "for go-to match-pair", ->
+    describe "for go-to match-pair", ->
       it "goes to the match-pair via commands", ->
         editSession.setCursorBufferPosition([4, 10])
         editor.trigger "emmet:matching-pair"
@@ -113,3 +113,49 @@ describe "Emmet", ->
         editSession.setCursorBufferPosition([5, 5])
         editor.trigger keydownEvent('j', ctrlKey: true, altKey: true, target: editor[0])
         expect(editor.getCursor().getBufferPosition()).toEqual [0, 0]
+
+  fdescribe "emmet:edit-point", ->
+    beforeEach ->
+      rootView.open(Path.join(__dirname, './fixtures/edit-points/edit-points.html'))
+      editor = rootView.getActiveView()
+      editSession = rootView.getActivePaneItem()
+
+    describe "for next-edit-point", ->
+      beforeEach ->
+        editSession.setCursorBufferPosition([0, 0])
+
+      it "finds the next-edit-point via commands", ->
+        editor.trigger "emmet:next-edit-point"
+        expect(editor.getCursor().getBufferPosition()).toEqual [1, 8]
+        editor.trigger "emmet:next-edit-point"
+        expect(editor.getCursor().getBufferPosition()).toEqual [1, 17]
+        editor.trigger "emmet:next-edit-point"
+        expect(editor.getCursor().getBufferPosition()).toEqual [1, 19]
+
+      it "finds the next-edit-point via keybindings", ->
+        editor.trigger keydownEvent('right', ctrlKey: true, altKey:true, target: editor[0])
+        expect(editor.getCursor().getBufferPosition()).toEqual [1, 8]
+        editor.trigger keydownEvent('right', ctrlKey: true, altKey:true, target: editor[0])
+        expect(editor.getCursor().getBufferPosition()).toEqual [1, 17]
+        editor.trigger keydownEvent('right', ctrlKey: true, altKey:true, target: editor[0])
+        expect(editor.getCursor().getBufferPosition()).toEqual [1, 19]
+
+    describe "for prev-edit-point", ->
+      beforeEach ->
+        editSession.setCursorBufferPosition([9, 15])
+
+      it "finds the prev-edit-point via commands", ->
+        editor.trigger "emmet:prev-edit-point"
+        expect(editor.getCursor().getBufferPosition()).toEqual [2, 23]
+        editor.trigger "emmet:prev-edit-point"
+        expect(editor.getCursor().getBufferPosition()).toEqual [2, 19]
+        editor.trigger "emmet:prev-edit-point"
+        expect(editor.getCursor().getBufferPosition()).toEqual [2, 17]
+
+      it "finds the prev-edit-point via keybindings", ->
+        editor.trigger keydownEvent('left', ctrlKey: true, altKey:true, target: editor[0])
+        expect(editor.getCursor().getBufferPosition()).toEqual [2, 23]
+        editor.trigger keydownEvent('left', ctrlKey: true, altKey:true, target: editor[0])
+        expect(editor.getCursor().getBufferPosition()).toEqual [2, 19]
+        editor.trigger keydownEvent('left', ctrlKey: true, altKey:true, target: editor[0])
+        expect(editor.getCursor().getBufferPosition()).toEqual [2, 17]

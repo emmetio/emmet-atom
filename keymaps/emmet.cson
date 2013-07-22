@@ -3,8 +3,8 @@
   'ctrl-d': 'emmet:match-pair-outward'
   'alt-d': 'emmet:match-pair-inward'
   'ctrl-alt-j': 'emmet:matching-pair'
-  # 'alt+right': 'emmet:next_edit_point'
-  # 'alt+left': 'emmet:prev_edit_point'
+  'ctrl-alt-right': 'emmet:next-edit-point'
+  'ctrl-alt-left': 'emmet:prev-edit-point'
   # 'command+/': 'emmet:toggle_comment' already exists in Atom
   # 'shift+command+': 'emmet:split_join_tag'
   # 'command+': 'emmet:remove_tag'
