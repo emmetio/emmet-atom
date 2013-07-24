@@ -3,7 +3,7 @@ Editor = require 'editor'
 Path = require 'path'
 Fs = require 'fs'
 
-describe "Emmet", ->
+fdescribe "Emmet", ->
   [buffer, editor, editSession] = []
 
   beforeEach ->
@@ -114,7 +114,7 @@ describe "Emmet", ->
         editor.trigger keydownEvent('j', ctrlKey: true, altKey: true, target: editor[0])
         expect(editor.getCursor().getBufferPosition()).toEqual [0, 0]
 
-  fdescribe "emmet:edit-point", ->
+  describe "emmet:edit-point", ->
     beforeEach ->
       rootView.open(Path.join(__dirname, './fixtures/edit-points/edit-points.html'))
       editor = rootView.getActiveView()

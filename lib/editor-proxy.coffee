@@ -1,4 +1,5 @@
-Point = require 'point'
+Editor = require 'editor'
+Point = require('telepath').Point
 emmet = require '../vendor/emmet-core'
 utils = emmet.require("utils")
 tabStops = emmet.require("tabStops")
@@ -17,8 +18,8 @@ module.exports =
   getSelectionRange: ->
     range = @editor.getSelection().getBufferRange()
     return {
-      start: @editor.activeEditSession.indexForBufferPosition(range.start),
-      end: @editor.activeEditSession.indexForBufferPosition(range.end)
+      start: @editor.activeEditSession.getBuffer().characterIndexForPosition(range.start),
+      end: @editor.activeEditSession.getBuffer().characterIndexForPosition(range.end)
     }
 
   # Creates a selection from the `start` to `end` character indexes.
@@ -29,8 +30,8 @@ module.exports =
   # end - A {Number} representing the ending character index
   createSelection: (start, end) ->
     @editor.getSelection().setBufferRange
-      start: @editor.activeEditSession.bufferPositionForIndex(start)
-      end: @editor.activeEditSession.bufferPositionForIndex(end)
+      start: @editor.activeEditSession.getBuffer().positionForCharacterIndex(start)
+      end: @editor.activeEditSession.getBuffer().positionForCharacterIndex(end)
 
   # Fetches the current line's start and end indexes.
   #
@@ -38,7 +39,7 @@ module.exports =
   getCurrentLineRange: ->
     row = @editor.getCursor().getBufferRow()
     lineLength = @editor.lineLengthForBufferRow(row)
-    index = @editor.activeEditSession.indexForBufferPosition({row: row, column: 0})
+    index = @editor.activeEditSession.getBuffer().characterIndexForPosition({row: row, column: 0})
     return {
       start: index,
       end: index + lineLength
@@ -48,12 +49,11 @@ module.exports =
   getCaretPos: ->
     row = @editor.getCursor().getBufferRow()
     column = @editor.getCursor().getBufferColumn()
-
-    return @editor.activeEditSession.indexForBufferPosition( {row: row, column: column} )
+    return @editor.activeEditSession.getBuffer().characterIndexForPosition( {row: row, column: column} )
 
   # Sets the current caret position.
   setCaretPos: (index) ->
-    pos = @editor.activeEditSession.bufferPositionForIndex(index)
+    pos = @editor.activeEditSession.getBuffer().positionForCharacterIndex(index)
     @editor.activeEditSession.getSelection().clear()
     @editor.setCursorBufferPosition pos
 
@@ -105,13 +105,13 @@ module.exports =
         end: value.length + start
 
     range = @editor.getSelection().getBufferRange()
-    range.start = Point.fromObject(@editor.activeEditSession.bufferPositionForIndex(start))
-    range.end = Point.fromObject(@editor.activeEditSession.bufferPositionForIndex(end))
+    range.start = Point.fromObject(@editor.activeEditSession.getBuffer().positionForCharacterIndex(start))
+    range.end = Point.fromObject(@editor.activeEditSession.getBuffer().positionForCharacterIndex(end))
 
-    @editor.setTextInRange(range, value)
+    @editor.activeEditSession.getBuffer().change(range, value)
     #
-    # range.start = Point.fromObject(@editor.activeEditSession.bufferPositionForIndex(firstTabStop.start))
-    # range.end = Point.fromObject(@editor.activeEditSession.bufferPositionForIndex(firstTabStop.end))
+    # range.start = Point.fromObject(@editor.activeEditSession.getBuffer().positionForCharacterIndex(firstTabStop.start))
+    # range.end = Point.fromObject(@editor.activeEditSession.getBuffer().positionForCharacterIndex(firstTabStop.end))
     #
     # @editor.getSelection().setBufferRange(range)
 
