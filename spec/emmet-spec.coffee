@@ -238,7 +238,7 @@ describe "Emmet", ->
        editor.trigger keydownEvent('y', shiftKey: true, metaKey: true, target: editor[0])
        expect(editor.getText()).toBe "12 3 90\n"
 
-  fdescribe "emmet increment/decrement numbers", ->
+  describe "emmet increment/decrement numbers", ->
      beforeEach ->
        rootView.open(Path.join(__dirname, './fixtures/increment-decrement-numbers/increment-decrement-numbers.css'))
        editor = rootView.getActiveView()
@@ -353,3 +353,152 @@ describe "Emmet", ->
          editor.trigger keydownEvent('down', altKey: true, ctrlKey: true, target: editor[0])
          editor.trigger keydownEvent('down', altKey: true, ctrlKey: true, target: editor[0])
          expect(editor.lineForBufferRow(3)).toMatch(/80/)
+
+  fdescribe "emmet select items", ->
+    describe "for HTML", ->
+      beforeEach ->
+        rootView.open(Path.join(__dirname, './fixtures/select-item/select-item.html'))
+        editor = rootView.getActiveView()
+        editSession = rootView.getActivePaneItem()
+
+      describe "selecting next item", ->
+        beforeEach ->
+          editSession.setCursorBufferPosition([0, 0])
+
+        it "selects next items via commands", ->
+          editor.trigger "emmet:select-next-item"
+          expect(editor.getSelection().getBufferRange()).toEqual [[0, 1], [0, 8]]
+          editor.trigger "emmet:select-next-item"
+          expect(editor.getSelection().getBufferRange()).toEqual [[1, 5], [1, 6]]
+          editor.trigger "emmet:select-next-item"
+          expect(editor.getSelection().getBufferRange()).toEqual [[2, 5], [2, 8]]
+          editor.trigger "emmet:select-next-item"
+          expect(editor.getSelection().getBufferRange()).toEqual [[2, 9], [2, 28]]
+          editor.trigger "emmet:select-next-item"
+          expect(editor.getSelection().getBufferRange()).toEqual [[2, 16], [2, 27]]
+          editor.trigger "emmet:select-next-item"
+          expect(editor.getSelection().getBufferRange()).toEqual [[2, 16], [2, 20]]
+          editor.trigger "emmet:select-next-item"
+          expect(editor.getSelection().getBufferRange()).toEqual [[2, 21], [2, 27]]
+
+        it "selects next items via keybindings", ->
+          editor.trigger keydownEvent('.', altKey: true, metaKey: true, target: editor[0])
+          expect(editor.getSelection().getBufferRange()).toEqual [[0, 1], [0, 8]]
+          editor.trigger keydownEvent('.', altKey: true, metaKey: true, target: editor[0])
+          expect(editor.getSelection().getBufferRange()).toEqual [[1, 5], [1, 6]]
+          editor.trigger keydownEvent('.', altKey: true, metaKey: true, target: editor[0])
+          expect(editor.getSelection().getBufferRange()).toEqual [[2, 5], [2, 8]]
+          editor.trigger keydownEvent('.', altKey: true, metaKey: true, target: editor[0])
+          expect(editor.getSelection().getBufferRange()).toEqual [[2, 9], [2, 28]]
+          editor.trigger keydownEvent('.', altKey: true, metaKey: true, target: editor[0])
+          expect(editor.getSelection().getBufferRange()).toEqual [[2, 16], [2, 27]]
+          editor.trigger keydownEvent('.', altKey: true, metaKey: true, target: editor[0])
+          expect(editor.getSelection().getBufferRange()).toEqual [[2, 16], [2, 20]]
+          editor.trigger keydownEvent('.', altKey: true, metaKey: true, target: editor[0])
+          expect(editor.getSelection().getBufferRange()).toEqual [[2, 21], [2, 27]]
+
+      describe "selecting previous item", ->
+        beforeEach ->
+          editSession.setCursorBufferPosition([2, 21])
+
+        it "selects previous items via commands", ->
+          editor.trigger "emmet:select-previous-item"
+          expect(editor.getSelection().getBufferRange()).toEqual [[2, 16], [2, 20]]
+          editor.trigger "emmet:select-previous-item"
+          expect(editor.getSelection().getBufferRange()).toEqual [[2, 16], [2, 27]]
+          editor.trigger "emmet:select-previous-item"
+          expect(editor.getSelection().getBufferRange()).toEqual [[2, 9], [2, 28]]
+          editor.trigger "emmet:select-previous-item"
+          expect(editor.getSelection().getBufferRange()).toEqual [[2, 5], [2, 8]]
+          editor.trigger "emmet:select-previous-item"
+          expect(editor.getSelection().getBufferRange()).toEqual [[1, 5], [1, 6]]
+          editor.trigger "emmet:select-previous-item"
+          expect(editor.getSelection().getBufferRange()).toEqual [[0, 1], [0, 8]]
+
+        it "selects previous items via keybindings", ->
+          editor.trigger keydownEvent(',', altKey: true, metaKey: true, target: editor[0])
+          expect(editor.getSelection().getBufferRange()).toEqual [[2, 16], [2, 20]]
+          editor.trigger keydownEvent(',', altKey: true, metaKey: true, target: editor[0])
+          expect(editor.getSelection().getBufferRange()).toEqual [[2, 16], [2, 27]]
+          editor.trigger keydownEvent(',', altKey: true, metaKey: true, target: editor[0])
+          expect(editor.getSelection().getBufferRange()).toEqual [[2, 9], [2, 28]]
+          editor.trigger keydownEvent(',', altKey: true, metaKey: true, target: editor[0])
+          expect(editor.getSelection().getBufferRange()).toEqual [[2, 5], [2, 8]]
+          editor.trigger keydownEvent(',', altKey: true, metaKey: true, target: editor[0])
+          expect(editor.getSelection().getBufferRange()).toEqual [[1, 5], [1, 6]]
+          editor.trigger keydownEvent(',', altKey: true, metaKey: true, target: editor[0])
+          expect(editor.getSelection().getBufferRange()).toEqual [[0, 1], [0, 8]]
+
+    describe "for CSS", ->
+      beforeEach ->
+        rootView.open(Path.join(__dirname, './fixtures/select-item/select-item.css'))
+        editor = rootView.getActiveView()
+        editSession = rootView.getActivePaneItem()
+
+      describe "selecting next item", ->
+        beforeEach ->
+          editSession.setCursorBufferPosition([0, 0])
+
+        it "selects next items via commands", ->
+          editor.trigger "emmet:select-next-item"
+          expect(editor.getSelection().getBufferRange()).toEqual [[0, 0], [0, 4]]
+          editor.trigger "emmet:select-next-item"
+          expect(editor.getSelection().getBufferRange()).toEqual [[1, 4], [1, 28]]
+          editor.trigger "emmet:select-next-item"
+          expect(editor.getSelection().getBufferRange()).toEqual [[1, 12], [1, 27]]
+          editor.trigger "emmet:select-next-item"
+          expect(editor.getSelection().getBufferRange()).toEqual [[1, 12], [1, 15]]
+          editor.trigger "emmet:select-next-item"
+          expect(editor.getSelection().getBufferRange()).toEqual [[1, 16], [1, 21]]
+          editor.trigger "emmet:select-next-item"
+          expect(editor.getSelection().getBufferRange()).toEqual [[1, 22], [1, 27]]
+          editor.trigger "emmet:select-next-item"
+          expect(editor.getSelection().getBufferRange()).toEqual [[2, 4], [2, 46]]
+
+        it "selects next items via keybindings", ->
+          editor.trigger keydownEvent('.', altKey: true, metaKey: true, target: editor[0])
+          expect(editor.getSelection().getBufferRange()).toEqual [[0, 0], [0, 4]]
+          editor.trigger keydownEvent('.', altKey: true, metaKey: true, target: editor[0])
+          expect(editor.getSelection().getBufferRange()).toEqual [[1, 4], [1, 28]]
+          editor.trigger keydownEvent('.', altKey: true, metaKey: true, target: editor[0])
+          expect(editor.getSelection().getBufferRange()).toEqual [[1, 12], [1, 27]]
+          editor.trigger keydownEvent('.', altKey: true, metaKey: true, target: editor[0])
+          expect(editor.getSelection().getBufferRange()).toEqual [[1, 12], [1, 15]]
+          editor.trigger keydownEvent('.', altKey: true, metaKey: true, target: editor[0])
+          expect(editor.getSelection().getBufferRange()).toEqual [[1, 16], [1, 21]]
+          editor.trigger keydownEvent('.', altKey: true, metaKey: true, target: editor[0])
+          expect(editor.getSelection().getBufferRange()).toEqual [[1, 22], [1, 27]]
+          editor.trigger keydownEvent('.', altKey: true, metaKey: true, target: editor[0])
+          expect(editor.getSelection().getBufferRange()).toEqual [[2, 4], [2, 46]]
+
+      describe "selecting previous item", ->
+        beforeEach ->
+          editSession.setCursorBufferPosition([2, 4])
+
+        it "selects previous items via commands", ->
+          editor.trigger "emmet:select-previous-item"
+          expect(editor.getSelection().getBufferRange()).toEqual [[1, 22], [1, 27]]
+          editor.trigger "emmet:select-previous-item"
+          expect(editor.getSelection().getBufferRange()).toEqual [[1, 16], [1, 21]]
+          editor.trigger "emmet:select-previous-item"
+          expect(editor.getSelection().getBufferRange()).toEqual [[1, 12], [1, 15]]
+          editor.trigger "emmet:select-previous-item"
+          expect(editor.getSelection().getBufferRange()).toEqual [[1, 12], [1, 27]]
+          editor.trigger "emmet:select-previous-item"
+          expect(editor.getSelection().getBufferRange()).toEqual [[1, 4], [1, 28]]
+          editor.trigger "emmet:select-previous-item"
+          expect(editor.getSelection().getBufferRange()).toEqual [[0, 0], [0, 4]]
+
+        it "selects previous items via keybindings", ->
+          editor.trigger keydownEvent(',', altKey: true, metaKey: true, target: editor[0])
+          expect(editor.getSelection().getBufferRange()).toEqual [[1, 22], [1, 27]]
+          editor.trigger keydownEvent(',', altKey: true, metaKey: true, target: editor[0])
+          expect(editor.getSelection().getBufferRange()).toEqual [[1, 16], [1, 21]]
+          editor.trigger keydownEvent(',', altKey: true, metaKey: true, target: editor[0])
+          expect(editor.getSelection().getBufferRange()).toEqual [[1, 12], [1, 15]]
+          editor.trigger keydownEvent(',', altKey: true, metaKey: true, target: editor[0])
+          expect(editor.getSelection().getBufferRange()).toEqual [[1, 12], [1, 27]]
+          editor.trigger keydownEvent(',', altKey: true, metaKey: true, target: editor[0])
+          expect(editor.getSelection().getBufferRange()).toEqual [[1, 4], [1, 28]]
+          editor.trigger keydownEvent(',', altKey: true, metaKey: true, target: editor[0])
+          expect(editor.getSelection().getBufferRange()).toEqual [[0, 0], [0, 4]]
