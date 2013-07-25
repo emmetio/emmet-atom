@@ -186,7 +186,7 @@ describe "Emmet", ->
        editor.trigger keydownEvent('j', shiftKey: true, metaKey: true, target: editor[0])
        expect(editor.lineForBufferRow(0)).toBe "<example />"
 
-  fdescribe "emmet:remove-tag", ->
+  describe "emmet:remove-tag", ->
     onceRemoved = twiceRemoved = null
 
     beforeEach ->
@@ -212,3 +212,28 @@ describe "Emmet", ->
        expect(editor.getText()).toBe onceRemoved
        editor.trigger keydownEvent('k', shiftKey: true, metaKey: true, target: editor[0])
        expect(editor.getText()).toBe twiceRemoved
+
+  fdescribe "emmet:evaluate-math-expression", ->
+    beforeEach ->
+      rootView.open(Path.join(__dirname, './fixtures/evaluate-math-expression/evaluate-math-expression.html'))
+      editor = rootView.getActiveView()
+      editSession = rootView.getActivePaneItem()
+
+    describe "for evaluate-math-expression", ->
+      it "calls evaluate-math-expression via commands", ->
+        editSession.setCursorBufferPosition([0, 3])
+        editor.trigger "emmet:evaluate-math-expression"
+        editSession.setCursorBufferPosition([0, 7])
+        editor.trigger "emmet:evaluate-math-expression"
+        editSession.setCursorBufferPosition([0, 12])
+        editor.trigger "emmet:evaluate-math-expression"
+        expect(editor.getText()).toBe "12 3 90\n"
+
+      it "calls evaluate-math-expression via keybindings", ->
+       editSession.setCursorBufferPosition([0, 3])
+       editor.trigger keydownEvent('y', shiftKey: true, metaKey: true, target: editor[0])
+       editSession.setCursorBufferPosition([0, 7])
+       editor.trigger keydownEvent('y', shiftKey: true, metaKey: true, target: editor[0])
+       editSession.setCursorBufferPosition([0, 12])
+       editor.trigger keydownEvent('y', shiftKey: true, metaKey: true, target: editor[0])
+       expect(editor.getText()).toBe "12 3 90\n"

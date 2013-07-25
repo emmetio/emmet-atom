@@ -8,7 +8,7 @@
   # 'command+/': 'emmet:toggle_comment' already exists in Atom
   'meta-J': 'emmet:split-join-tag'
   'meta-K': 'emmet:remove-tag'
-  # 'shift+command+y': 'emmet:evaluate_math_expression'
+  'meta-Y': 'emmet:evaluate-math-expression'
   # 'ctrl-shift-up': 'emmet:increment_number_by_1'
   # 'ctrl-shift-down': 'emmet:decrement_number_by_1'
   # 'alt-shift-up': 'emmet:increment_number_by_01'
