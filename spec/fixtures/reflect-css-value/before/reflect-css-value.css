@@ -1,0 +1,12 @@
+div {
+    padding: 10px;
+
+    -webkit-transform: rotate(50deg);
+    -moz-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    -o-transform: rotate(45deg);
+    transform: rotate(45deg);
+
+    opacity: 0.7;
+    filter: alpha(opacity=60);
+}

@@ -354,7 +354,7 @@ describe "Emmet", ->
          editor.trigger keydownEvent('down', altKey: true, ctrlKey: true, target: editor[0])
          expect(editor.lineForBufferRow(3)).toMatch(/80/)
 
-  fdescribe "emmet select items", ->
+  describe "emmet select items", ->
     describe "for HTML", ->
       beforeEach ->
         rootView.open(Path.join(__dirname, './fixtures/select-item/select-item.html'))
@@ -502,3 +502,28 @@ describe "Emmet", ->
           expect(editor.getSelection().getBufferRange()).toEqual [[1, 4], [1, 28]]
           editor.trigger keydownEvent(',', altKey: true, metaKey: true, target: editor[0])
           expect(editor.getSelection().getBufferRange()).toEqual [[0, 0], [0, 4]]
+
+  fdescribe "emmet:reflect-css-value", ->
+    reflection = null
+
+    describe "for HTML", ->
+      beforeEach ->
+        rootView.open(Path.join(__dirname, './fixtures/reflect-css-value/before/reflect-css-value.css'))
+        editor = rootView.getActiveView()
+        editSession = rootView.getActivePaneItem()
+
+        reflection = Fs.readFileSync(Path.join(__dirname, './fixtures/reflect-css-value/after/reflect-css-value.css'), "utf8")
+
+      it "reflects CSS via commands", ->
+        editor.setCursorBufferPosition([3, 32])
+        editor.trigger "emmet:reflect-css-value"
+        editor.setCursorBufferPosition([9, 16])
+        editor.trigger "emmet:reflect-css-value"
+        expect(editor.getText()).toBe reflection
+
+      it "reflects CSS via commands", ->
+        editor.setCursorBufferPosition([3, 32])
+        editor.trigger keydownEvent('r', shiftKey: true, metaKey: true, target: editor[0])
+        editor.setCursorBufferPosition([9, 16])
+        editor.trigger keydownEvent('r', shiftKey: true, metaKey: true, target: editor[0])
+        expect(editor.getText()).toBe reflection

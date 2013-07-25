@@ -17,7 +17,7 @@
   'ctrl-alt-down': 'emmet:decrement-number-by-10'
   'alt-meta-.': 'emmet:select-next-item'
   'alt-meta-,': 'emmet:select-previous-item'
-  # 'shift+command+r': 'emmet:reflect_css_value'
+  'meta-R': 'emmet:reflect-css-value'
   # 'shift+ctrl+d': 'emmet:encode_decode_data_url'
   # 'shift+ctrl+i': 'emmet:update_image_size'
   # 'ctrl+alt+enter': 'emmet:expand_as_you_type'
