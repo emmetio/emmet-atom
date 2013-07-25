@@ -160,7 +160,7 @@ describe "Emmet", ->
         editor.trigger keydownEvent('left', ctrlKey: true, altKey:true, target: editor[0])
         expect(editor.getCursor().getBufferPosition()).toEqual [2, 17]
 
-  fdescribe "emmet:split-join-tag", ->
+  describe "emmet:split-join-tag", ->
     beforeEach ->
       rootView.open(Path.join(__dirname, './fixtures/split-join-tag/split-join-tag.html'))
       editor = rootView.getActiveView()
@@ -170,7 +170,7 @@ describe "Emmet", ->
       beforeEach ->
         editSession.setCursorBufferPosition([1, 10])
 
-      it "collapses split-join-tag via commands", ->
+      it "calls split-join-tag via commands", ->
         editor.trigger "emmet:split-join-tag"
         expect(editor.lineForBufferRow(0)).toBe "<example />"
         editor.trigger "emmet:split-join-tag"
@@ -178,10 +178,37 @@ describe "Emmet", ->
         editor.trigger "emmet:split-join-tag"
         expect(editor.lineForBufferRow(0)).toBe "<example />"
 
-      it "finds the next-edit-point via keybindings", ->
+      it "calls split-join-tag via keybindings", ->
        editor.trigger keydownEvent('j', shiftKey: true, metaKey: true, target: editor[0])
        expect(editor.lineForBufferRow(0)).toBe "<example />"
        editor.trigger keydownEvent('j', shiftKey: true, metaKey: true, target: editor[0])
        expect(editor.lineForBufferRow(0)).toBe "<example></example>"
        editor.trigger keydownEvent('j', shiftKey: true, metaKey: true, target: editor[0])
        expect(editor.lineForBufferRow(0)).toBe "<example />"
+
+  fdescribe "emmet:remove-tag", ->
+    onceRemoved = twiceRemoved = null
+
+    beforeEach ->
+      rootView.open(Path.join(__dirname, './fixtures/remove-tag/before/remove-tag.html'))
+      editor = rootView.getActiveView()
+      editSession = rootView.getActivePaneItem()
+
+      onceRemoved = Fs.readFileSync(Path.join(__dirname, './fixtures/remove-tag/after/remove-tag-once.html'), "utf8")
+      twiceRemoved = Fs.readFileSync(Path.join(__dirname, './fixtures/remove-tag/after/remove-tag-twice.html'), "utf8")
+
+    describe "for remove-tag", ->
+      beforeEach ->
+        editSession.setCursorBufferPosition([1, 10])
+
+      it "calls remove-tag via commands", ->
+        editor.trigger "emmet:remove-tag"
+        expect(editor.getText()).toBe onceRemoved
+        editor.trigger "emmet:remove-tag"
+        expect(editor.getText()).toBe twiceRemoved
+
+      it "calls remove-tag via keybindings", ->
+       editor.trigger keydownEvent('k', shiftKey: true, metaKey: true, target: editor[0])
+       expect(editor.getText()).toBe onceRemoved
+       editor.trigger keydownEvent('k', shiftKey: true, metaKey: true, target: editor[0])
+       expect(editor.getText()).toBe twiceRemoved

@@ -7,7 +7,7 @@
   'ctrl-alt-left': 'emmet:prev-edit-point'
   # 'command+/': 'emmet:toggle_comment' already exists in Atom
   'meta-J': 'emmet:split-join-tag'
-  # 'command+': 'emmet:remove_tag'
+  'meta-K': 'emmet:remove-tag'
   # 'shift+command+y': 'emmet:evaluate_math_expression'
   # 'ctrl-shift-up': 'emmet:increment_number_by_1'
   # 'ctrl-shift-down': 'emmet:decrement_number_by_1'
