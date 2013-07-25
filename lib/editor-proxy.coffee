@@ -1,5 +1,5 @@
 Editor = require 'editor'
-Point = require('telepath').Point
+{Point} = require 'telepath'
 emmet = require '../vendor/emmet-core'
 utils = emmet.require("utils")
 tabStops = emmet.require("tabStops")

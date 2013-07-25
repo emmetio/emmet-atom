@@ -3,7 +3,7 @@ Editor = require 'editor'
 Path = require 'path'
 Fs = require 'fs'
 
-fdescribe "Emmet", ->
+describe "Emmet", ->
   [buffer, editor, editSession] = []
 
   beforeEach ->
@@ -159,3 +159,29 @@ fdescribe "Emmet", ->
         expect(editor.getCursor().getBufferPosition()).toEqual [2, 19]
         editor.trigger keydownEvent('left', ctrlKey: true, altKey:true, target: editor[0])
         expect(editor.getCursor().getBufferPosition()).toEqual [2, 17]
+
+  fdescribe "emmet:split-join-tag", ->
+    beforeEach ->
+      rootView.open(Path.join(__dirname, './fixtures/split-join-tag/split-join-tag.html'))
+      editor = rootView.getActiveView()
+      editSession = rootView.getActivePaneItem()
+
+    describe "for split-join-tag", ->
+      beforeEach ->
+        editSession.setCursorBufferPosition([1, 10])
+
+      it "collapses split-join-tag via commands", ->
+        editor.trigger "emmet:split-join-tag"
+        expect(editor.lineForBufferRow(0)).toBe "<example />"
+        editor.trigger "emmet:split-join-tag"
+        expect(editor.lineForBufferRow(0)).toBe "<example></example>"
+        editor.trigger "emmet:split-join-tag"
+        expect(editor.lineForBufferRow(0)).toBe "<example />"
+
+      it "finds the next-edit-point via keybindings", ->
+       editor.trigger keydownEvent('j', shiftKey: true, metaKey: true, target: editor[0])
+       expect(editor.lineForBufferRow(0)).toBe "<example />"
+       editor.trigger keydownEvent('j', shiftKey: true, metaKey: true, target: editor[0])
+       expect(editor.lineForBufferRow(0)).toBe "<example></example>"
+       editor.trigger keydownEvent('j', shiftKey: true, metaKey: true, target: editor[0])
+       expect(editor.lineForBufferRow(0)).toBe "<example />"
