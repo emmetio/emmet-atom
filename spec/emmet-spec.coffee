@@ -213,7 +213,7 @@ describe "Emmet", ->
        editor.trigger keydownEvent('k', shiftKey: true, metaKey: true, target: editor[0])
        expect(editor.getText()).toBe twiceRemoved
 
-  fdescribe "emmet:evaluate-math-expression", ->
+  describe "emmet:evaluate-math-expression", ->
     beforeEach ->
       rootView.open(Path.join(__dirname, './fixtures/evaluate-math-expression/evaluate-math-expression.html'))
       editor = rootView.getActiveView()
@@ -237,3 +237,119 @@ describe "Emmet", ->
        editSession.setCursorBufferPosition([0, 12])
        editor.trigger keydownEvent('y', shiftKey: true, metaKey: true, target: editor[0])
        expect(editor.getText()).toBe "12 3 90\n"
+
+  fdescribe "emmet increment/decrement numbers", ->
+     beforeEach ->
+       rootView.open(Path.join(__dirname, './fixtures/increment-decrement-numbers/increment-decrement-numbers.css'))
+       editor = rootView.getActiveView()
+       editSession = rootView.getActivePaneItem()
+
+     describe "for incrementing", ->
+       describe "increment by 01", ->
+         beforeEach ->
+          editSession.setCursorBufferPosition([1, 18])
+
+         it "increments via commands", ->
+          editor.trigger "emmet:increment-number-by-01"
+          editor.trigger "emmet:increment-number-by-01"
+          expect(editor.lineForBufferRow(1)).toMatch(/1\.9/)
+          editor.trigger "emmet:increment-number-by-01"
+          editor.trigger "emmet:increment-number-by-01"
+          expect(editor.lineForBufferRow(1)).toMatch(/2\.1/)
+
+         it "increments via keybindings", ->
+          editor.trigger "emmet:increment-number-by-01"
+          editor.trigger "emmet:increment-number-by-01"
+          editor.trigger keydownEvent('up', shiftKey: true, altKey: true, target: editor[0])
+          editor.trigger "emmet:increment-number-by-01"
+          editor.trigger "emmet:increment-number-by-01"
+          editor.trigger keydownEvent('up', shiftKey: true, altKey: true, target: editor[0])
+
+      describe "increment by 1", ->
+        beforeEach ->
+          editSession.setCursorBufferPosition([2, 13])
+
+        it "increments via commands", ->
+         editor.trigger "emmet:increment-number-by-1"
+         editor.trigger "emmet:increment-number-by-1"
+         expect(editor.lineForBufferRow(2)).toMatch(/12/)
+         for i in [0..12] by 1
+           editor.trigger "emmet:increment-number-by-1"
+         expect(editor.lineForBufferRow(2)).toMatch(/25/)
+
+        it "increments via keybindings", ->
+         editor.trigger keydownEvent('up', shiftKey: true, ctrlKey: true, target: editor[0])
+         editor.trigger keydownEvent('up', shiftKey: true, ctrlKey: true, target: editor[0])
+         expect(editor.lineForBufferRow(2)).toMatch(/12/)
+         for i in [0..12] by 1
+           editor.trigger keydownEvent('up', shiftKey: true, ctrlKey: true, target: editor[0])
+         expect(editor.lineForBufferRow(2)).toMatch(/25/)
+
+      describe "increment by 10", ->
+        beforeEach ->
+          editSession.setCursorBufferPosition([3, 12])
+
+        it "increments via commands", ->
+         editor.trigger "emmet:increment-number-by-10"
+         editor.trigger "emmet:increment-number-by-10"
+         expect(editor.lineForBufferRow(3)).toMatch(/120/)
+
+        it "increments via keybindings", ->
+         editor.trigger keydownEvent('up', altKey: true, ctrlKey: true, target: editor[0])
+         editor.trigger keydownEvent('up', altKey: true, ctrlKey: true, target: editor[0])
+         expect(editor.lineForBufferRow(3)).toMatch(/120/)
+
+     describe "for decrementing", ->
+       describe "decrement by 01", ->
+         beforeEach ->
+          editSession.setCursorBufferPosition([1, 18])
+
+         it "decrements via commands", ->
+          editor.trigger "emmet:decrement-number-by-01"
+          editor.trigger "emmet:decrement-number-by-01"
+          expect(editor.lineForBufferRow(1)).toMatch(/1\.5/)
+          for i in [0..20] by 1
+            editor.trigger "emmet:decrement-number-by-01"
+          expect(editor.lineForBufferRow(1)).toMatch(/\-0\.6/)
+
+         it "decrements via keybindings", ->
+          editor.trigger keydownEvent('down', shiftKey: true, altKey: true, target: editor[0])
+          editor.trigger keydownEvent('down', shiftKey: true, altKey: true, target: editor[0])
+          expect(editor.lineForBufferRow(1)).toMatch(/1\.5/)
+          for i in [0..20] by 1
+            editor.trigger keydownEvent('down', shiftKey: true, altKey: true, target: editor[0])
+          expect(editor.lineForBufferRow(1)).toMatch(/\-0\.6/)
+
+      describe "decrement by 1", ->
+        beforeEach ->
+          editSession.setCursorBufferPosition([2, 13])
+
+        it "decrements via commands", ->
+         editor.trigger "emmet:decrement-number-by-1"
+         editor.trigger "emmet:decrement-number-by-1"
+         expect(editor.lineForBufferRow(2)).toMatch(/8/)
+         for i in [0..12] by 1
+           editor.trigger "emmet:decrement-number-by-1"
+         expect(editor.lineForBufferRow(2)).toMatch(/\-5/)
+
+        it "decrements via keybindings", ->
+         editor.trigger keydownEvent('down', shiftKey: true, ctrlKey: true, target: editor[0])
+         editor.trigger keydownEvent('down', shiftKey: true, ctrlKey: true, target: editor[0])
+         expect(editor.lineForBufferRow(2)).toMatch(/8/)
+         for i in [0..12] by 1
+          editor.trigger keydownEvent('down', shiftKey: true, ctrlKey: true, target: editor[0])
+         expect(editor.lineForBufferRow(2)).toMatch(/\-5/)
+
+      describe "decrement by 10", ->
+        beforeEach ->
+          editSession.setCursorBufferPosition([3, 12])
+
+        it "decrements via commands", ->
+         editor.trigger "emmet:decrement-number-by-10"
+         editor.trigger "emmet:decrement-number-by-10"
+         expect(editor.lineForBufferRow(3)).toMatch(/80/)
+
+        it "decrements via keybindings", ->
+         editor.trigger keydownEvent('down', altKey: true, ctrlKey: true, target: editor[0])
+         editor.trigger keydownEvent('down', altKey: true, ctrlKey: true, target: editor[0])
+         expect(editor.lineForBufferRow(3)).toMatch(/80/)
