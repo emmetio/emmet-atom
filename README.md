@@ -3,6 +3,12 @@
 # How to get it
 
 ```bash
+apm install emmet
+```
+
+If that doesn't work, try old school:
+
+```bash
 cd ~/.atom/packages
 git clone https://github.com/atom/emmet
 ```
