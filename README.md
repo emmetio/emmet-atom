@@ -1,4 +1,4 @@
-[Emmet](emmet.io) support for Atom
+[Emmet](emmet.io) support for Atom.
 
 # How to get it
 
@@ -8,7 +8,35 @@ You can't yet.
 
 Some of it is there:
 
-![](https://f.cloud.github.com/assets/64050/831461/5e5e332c-f1e5-11e2-926e-850dbbb4ca37.gif)
+Almost everything! Anything requiring a dialog isn't working. There's no support
+(yet) for _snippets.json_ and _preferences.json_.
 
+# Default Keybindings
 
-[Here's the list](https://github.com/atom/emmet/issues/1) of what's left to match.
+```cson
+'meta-E': 'emmet:expand-abbreviation'
+'ctrl-d': 'emmet:match-pair-outward'
+'alt-d': 'emmet:match-pair-inward'
+'ctrl-alt-j': 'emmet:matching-pair'
+'ctrl-alt-right': 'emmet:next-edit-point'
+'ctrl-alt-left': 'emmet:prev-edit-point'
+# 'command+/': 'emmet:toggle_comment' already exists in Atom
+'meta-J': 'emmet:split-join-tag'
+'meta-K': 'emmet:remove-tag'
+'meta-Y': 'emmet:evaluate-math-expression'
+'ctrl-shift-up': 'emmet:increment-number-by-1'
+'ctrl-shift-down': 'emmet:decrement-number-by-1'
+'alt-shift-up': 'emmet:increment-number-by-01'
+'alt-shift-down': 'emmet:decrement-number-by-01'
+'ctrl-alt-up': 'emmet:increment-number-by-10'
+'ctrl-alt-down': 'emmet:decrement-number-by-10'
+'alt-meta-.': 'emmet:select-next-item'
+'alt-meta-,': 'emmet:select-previous-item'
+'meta-R': 'emmet:reflect-css-value'
+'ctrl-D': 'emmet:encode-decode-data-url' # decoding doesn't work--we need dialogs
+'ctrl-I': 'emmet:update-image-size'
+#'ctrl+alt+enter': 'emmet:expand_as_you_type' doesn't work--we need dialogs
+# 'shift+ctrl+g': 'emmet:wrap_as_you_type' doesn't work--we need dialogs
+# 'Tab': 'emmet:expand_abbreviation_with_tab'
+# 'shift+ctrl+a': 'emmet:wrap_with_abbreviation' doesn't work--we need dialogs
+```
