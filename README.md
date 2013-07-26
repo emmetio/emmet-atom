@@ -1,4 +1,4 @@
-[Emmet](emmet.io) support for Atom.
+[Emmet](http://emmet.io) support for Atom.
 
 # How to get it
 
