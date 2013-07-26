@@ -18,7 +18,7 @@
   'alt-meta-.': 'emmet:select-next-item'
   'alt-meta-,': 'emmet:select-previous-item'
   'meta-R': 'emmet:reflect-css-value'
-  # 'shift+ctrl+d': 'emmet:encode_decode_data_url'
+  'ctrl-D': 'emmet:encode-decode-data-url'
   # 'shift+ctrl+i': 'emmet:update_image_size'
   # 'ctrl+alt+enter': 'emmet:expand_as_you_type'
   # 'shift+ctrl+g': 'emmet:wrap_as_you_type'

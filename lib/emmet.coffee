@@ -3,6 +3,7 @@ path = require 'path'
 emmet = require '../vendor/emmet-core'
 editorProxy = require './editor-proxy'
 actions = emmet.require("actions")
+emmet.define('file', require('./file'));
 
 module.exports =
   editorSubscription: null

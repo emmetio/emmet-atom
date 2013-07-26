@@ -143,3 +143,6 @@ module.exports =
   getFilePath: ->
     # is there a better way to get this?
     return @editor.activeEditSession.buffer.file.path
+
+  prompt: (message) ->
+    # does nothing. currently breaks decoding base64 URLs

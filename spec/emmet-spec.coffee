@@ -503,7 +503,7 @@ describe "Emmet", ->
           editor.trigger keydownEvent(',', altKey: true, metaKey: true, target: editor[0])
           expect(editor.getSelection().getBufferRange()).toEqual [[0, 0], [0, 4]]
 
-  fdescribe "emmet:reflect-css-value", ->
+  describe "emmet:reflect-css-value", ->
     reflection = null
 
     describe "for HTML", ->
@@ -527,3 +527,22 @@ describe "Emmet", ->
         editor.setCursorBufferPosition([9, 16])
         editor.trigger keydownEvent('r', shiftKey: true, metaKey: true, target: editor[0])
         expect(editor.getText()).toBe reflection
+
+  fdescribe "emmet:encode-decode-data-url", ->
+    encoded = null
+    beforeEach ->
+      rootView.open(Path.join(__dirname, './fixtures/encode-decode-data-url/before/encode-decode-data-url.css'))
+      editor = rootView.getActiveView()
+      editSession = rootView.getActivePaneItem()
+
+      editSession.setCursorBufferPosition([1, 25])
+
+      encoded = Fs.readFileSync(Path.join(__dirname, './fixtures/encode-decode-data-url/after/encode-decode-data-url.css'), "utf8")
+
+    it "encodes and decodes URL via commands", ->
+      editor.trigger "emmet:encode-decode-data-url"
+      expect(editor.getText()).toBe encoded
+
+    it "encodes and decodes CSS via commands", ->
+      editor.trigger keydownEvent('d', shiftKey: true, ctrlKey: true, target: editor[0])
+      expect(editor.getText()).toBe encoded
