@@ -19,7 +19,7 @@
   'alt-meta-,': 'emmet:select-previous-item'
   'meta-R': 'emmet:reflect-css-value'
   'ctrl-D': 'emmet:encode-decode-data-url'
-  # 'shift+ctrl+i': 'emmet:update_image_size'
+  'ctrl-I': 'emmet:update-image-size'
   # 'ctrl+alt+enter': 'emmet:expand_as_you_type'
   # 'shift+ctrl+g': 'emmet:wrap_as_you_type'
   # 'Tab': 'emmet:expand_abbreviation_with_tab'

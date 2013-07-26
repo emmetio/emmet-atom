@@ -9,7 +9,7 @@ module.exports =
     Path.join(Path.dirname(editorFile), imgPath)
 
   read: (realImgPath, callback) ->
-    Fs.readFile(realImgPath, callback)
+    Fs.readFile(realImgPath, 'binary', callback)
 
   getExt: (realImgPath) ->
     Path.extname(realImgPath)
