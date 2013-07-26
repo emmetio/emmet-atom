@@ -9,9 +9,9 @@ git clone https://github.com/atom/emmet
 
 # What's working?
 
-Some of it is there:
+Almost everything! 
 
-Almost everything! Anything requiring a dialog isn't working. There's no support
+Anything requiring a dialog isn't working. There's no support
 (yet) for _snippets.json_ and _preferences.json_.
 
 # Default Keybindings
