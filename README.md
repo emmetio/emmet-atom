@@ -2,7 +2,10 @@
 
 # How to get it
 
-You can't yet.
+```bash
+cd ~/.atom/packages
+git clone https://github.com/atom/emmet
+```
 
 # What's working?
 
