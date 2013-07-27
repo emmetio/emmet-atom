@@ -10,7 +10,7 @@
     "url": "https://github.com/atom/emmet.git"
   },
   "bugs": {
-    "url": "https://github.com/atom/terminal/issues"
+    "url": "https://github.com/atom/emmet/issues"
   },
   "engines": {
     "atom": "*"

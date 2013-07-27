@@ -124,6 +124,10 @@ module.exports =
     switch @editor.activeEditSession.getGrammar().name
       when "CSS"
         return "css"
+      when "SCSS"
+        return "scss"
+      when "LESS"
+        return "less"
       when "XML", "XSL"
         return "xml"
       else
