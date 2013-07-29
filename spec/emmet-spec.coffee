@@ -86,14 +86,27 @@ describe "Emmet", ->
 
     describe "for match-pair-inward", ->
       beforeEach ->
-        editSession.setCursorBufferPosition([3, 23])
+        editSession.setCursorBufferPosition([1, 4])
 
       it "matches pairs inwards via commands", ->
-        editSession.getSelection().setBufferRange([[1, 29], [4, 4]])
+        editor.trigger "emmet:match-pair-inward"
+        expect(editor.getSelection().getBufferRange()).toEqual [[0, 15], [5, 0]]
+        editor.trigger "emmet:match-pair-inward"
+        expect(editor.getSelection().getBufferRange()).toEqual [[1, 4], [4, 14]]
+        editor.trigger "emmet:match-pair-inward"
+        expect(editor.getSelection().getBufferRange()).toEqual [[1, 29], [4, 4]]
         editor.trigger "emmet:match-pair-inward"
         expect(editor.getSelection().getBufferRange()).toEqual [[2, 8], [2, 33]]
+
+      it "matches pairs inwards via keybindings", ->
         editor.trigger keydownEvent('d', altKey: true, target: editor[0])
-        expect(editor.getSelection().getBufferRange()).toEqual [[2, 12], [2, 28]]
+        expect(editor.getSelection().getBufferRange()).toEqual [[0, 15], [5, 0]]
+        editor.trigger keydownEvent('d', altKey: true, target: editor[0])
+        expect(editor.getSelection().getBufferRange()).toEqual [[1, 4], [4, 14]]
+        editor.trigger keydownEvent('d', altKey: true, target: editor[0])
+        expect(editor.getSelection().getBufferRange()).toEqual [[1, 29], [4, 4]]
+        editor.trigger keydownEvent('d', altKey: true, target: editor[0])
+        expect(editor.getSelection().getBufferRange()).toEqual [[2, 8], [2, 33]]
 
     describe "for go-to match-pair", ->
       it "goes to the match-pair via commands", ->
