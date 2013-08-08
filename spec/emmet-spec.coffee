@@ -146,11 +146,11 @@ describe "Emmet", ->
         expect(editor.getCursor().getBufferPosition()).toEqual [1, 19]
 
       it "finds the next-edit-point via keybindings", ->
-        editor.trigger keydownEvent('right', ctrlKey: true, altKey:true, target: editor[0])
+        editor.trigger keydownEvent('.', ctrlKey: true, altKey:true, target: editor[0])
         expect(editor.getCursor().getBufferPosition()).toEqual [1, 8]
-        editor.trigger keydownEvent('right', ctrlKey: true, altKey:true, target: editor[0])
+        editor.trigger keydownEvent('.', ctrlKey: true, altKey:true, target: editor[0])
         expect(editor.getCursor().getBufferPosition()).toEqual [1, 17]
-        editor.trigger keydownEvent('right', ctrlKey: true, altKey:true, target: editor[0])
+        editor.trigger keydownEvent('.', ctrlKey: true, altKey:true, target: editor[0])
         expect(editor.getCursor().getBufferPosition()).toEqual [1, 19]
 
     describe "for prev-edit-point", ->
@@ -166,11 +166,11 @@ describe "Emmet", ->
         expect(editor.getCursor().getBufferPosition()).toEqual [2, 17]
 
       it "finds the prev-edit-point via keybindings", ->
-        editor.trigger keydownEvent('left', ctrlKey: true, altKey:true, target: editor[0])
+        editor.trigger keydownEvent(',', ctrlKey: true, altKey:true, target: editor[0])
         expect(editor.getCursor().getBufferPosition()).toEqual [2, 23]
-        editor.trigger keydownEvent('left', ctrlKey: true, altKey:true, target: editor[0])
+        editor.trigger keydownEvent(',', ctrlKey: true, altKey:true, target: editor[0])
         expect(editor.getCursor().getBufferPosition()).toEqual [2, 19]
-        editor.trigger keydownEvent('left', ctrlKey: true, altKey:true, target: editor[0])
+        editor.trigger keydownEvent(',', ctrlKey: true, altKey:true, target: editor[0])
         expect(editor.getCursor().getBufferPosition()).toEqual [2, 17]
 
   describe "emmet:split-join-tag", ->
