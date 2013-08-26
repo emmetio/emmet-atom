@@ -39,6 +39,10 @@ describe "Emmet", ->
         editor.trigger keydownEvent('e', shiftKey: true, metaKey: true, target: editor[0])
         expect(editor.getText()).toBe expansion
 
+      it "expands HTML abbreviations via Tab", ->
+        editor.trigger keydownEvent('tab', target: editor[0])
+        expect(editor.getText()).toBe expansion
+
     describe "for CSS", ->
       beforeEach ->
         rootView.open(Path.join(__dirname, './fixtures/abbreviation/before/css-abbrv.css'))
@@ -54,6 +58,10 @@ describe "Emmet", ->
 
       it "expands CSS abbreviations via keybindings", ->
         editor.trigger keydownEvent('e', shiftKey: true, metaKey: true, target: editor[0])
+        expect(editor.getText()).toBe expansion
+
+      it "expands CSS abbreviations via tab", ->
+        editor.trigger keydownEvent('tab', target: editor[0])
         expect(editor.getText()).toBe expansion
 
   describe "emmet:match-pair", ->

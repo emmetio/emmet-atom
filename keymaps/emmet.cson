@@ -22,5 +22,5 @@
   'ctrl-I': 'emmet:update-image-size'
   #'ctrl+alt+enter': 'emmet:expand_as_you_type' doesn't work--we need dialogs
   # 'shift+ctrl+g': 'emmet:wrap_as_you_type' doesn't work--we need dialogs
-  # 'Tab': 'emmet:expand_abbreviation_with_tab'
+  'tab': 'emmet:expand-abbreviation-with-tab'
   # 'shift+ctrl+a': 'emmet:wrap_with_abbreviation' doesn't work--we need dialogs
