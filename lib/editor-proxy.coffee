@@ -1,5 +1,4 @@
-Editor = require 'editor'
-{Point} = require 'telepath'
+{Editor, Point} = require 'atom'
 emmet = require '../vendor/emmet-core'
 utils = emmet.require("utils")
 tabStops = emmet.require("tabStops")

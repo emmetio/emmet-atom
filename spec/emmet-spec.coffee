@@ -1,5 +1,4 @@
-RootView = require 'root-view'
-Editor = require 'editor'
+{Editor, RootView} = require 'atom'
 Path = require 'path'
 Fs = require 'fs'
 
