@@ -129,8 +129,10 @@ module.exports =
         return "less"
       when "XML", "XSL"
         return "xml"
+      when "HTML", "HTML (Rails)"
+        return "html"
       else
-        return "xhtml"
+        return null
 
   # Returns the current output profile name
   #
