@@ -2,7 +2,7 @@
 Path = require 'path'
 Fs = require 'fs'
 
-fdescribe "Emmet", ->
+describe "Emmet", ->
   [buffer, editor, editSession] = []
 
   beforeEach ->

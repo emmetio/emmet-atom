@@ -108,11 +108,12 @@ module.exports =
     range.end = Point.fromObject(@editor.activeEditSession.getBuffer().positionForCharacterIndex(end))
 
     @editor.activeEditSession.getBuffer().change(range, value)
-    #
-    # range.start = Point.fromObject(@editor.activeEditSession.getBuffer().positionForCharacterIndex(firstTabStop.start))
-    # range.end = Point.fromObject(@editor.activeEditSession.getBuffer().positionForCharacterIndex(firstTabStop.end))
-    #
-    # @editor.getSelection().setBufferRange(range)
+
+    range.start = Point.fromObject(@editor.activeEditSession.getBuffer().positionForCharacterIndex(firstTabStop.start))
+    range.end = Point.fromObject(@editor.activeEditSession.getBuffer().positionForCharacterIndex(firstTabStop.end))
+
+    debugger
+    @editor.getSelection().setBufferRange(range)
 
   # Returns the editor content.
   getContent: ->
