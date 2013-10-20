@@ -120,19 +120,19 @@ module.exports =
 
   # Returns the editor's syntax mode.
   getSyntax: ->
-    switch @editor.activeEditSession.getGrammar().name
-      when "CSS"
-        return "css"
-      when "SCSS"
-        return "scss"
-      when "LESS"
-        return "less"
-      when "XML", "XSL"
-        return "xml"
-      when "HTML", "HTML (Rails)"
-        return "html"
-      else
-        return null
+    grammar = @editor.activeEditSession.getGrammar().name
+    if /^CSS/.test(grammar)
+      return "css"
+    else if /^SCSS/.test(grammar)
+      return "scss"
+    else if /^LESS/.test(grammar)
+      return "less"
+    else if /^XML|XSL/.test(grammar)
+      return "xml"
+    else if /^HTML/.test(grammar)
+      return "html"
+    else
+      return null
 
   # Returns the current output profile name
   #
