@@ -8,7 +8,6 @@ module.exports =
     @editor = editor
     @indentation = @editor.activeEditSession.getTabText()
     emmet.require("resources").setVariable("indentation", @indentation)
-
     @syntax = @getSyntax()
 
   # Fetches the character indexes of the selected text.
