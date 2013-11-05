@@ -1,7 +1,7 @@
 {
   "name": "emmet",
   "main": "./lib/emmet",
-  "version": "0.1.0",
+  "version": "0.0.0",
   "dependencies" : {
     "season": "0.11.0"
   },
