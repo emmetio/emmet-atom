@@ -12,7 +12,6 @@ module.exports =
   activate: (@state) ->
     unless @actionTranslation
       @actionTranslation = {}
-      console.log CSON.readFileSync(path.join(__dirname, "../keymaps/emmet.cson"))
       for selector, bindings of CSON.readFileSync(path.join(__dirname, "../keymaps/emmet.cson"))
         for key, action of bindings
           # Atom likes -, but Emmet expects _
