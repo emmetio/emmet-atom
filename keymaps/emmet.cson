@@ -15,8 +15,8 @@
   'alt-shift-down': 'emmet:decrement-number-by-01'
   'ctrl-alt-up': 'emmet:increment-number-by-10'
   'ctrl-alt-down': 'emmet:decrement-number-by-10'
-  'alt-meta-.': 'emmet:select-next-item'
-  'alt-meta-,': 'emmet:select-previous-item'
+  'alt-cmd-.': 'emmet:select-next-item'
+  'alt-cmd-,': 'emmet:select-previous-item'
   'cmd-R': 'emmet:reflect-css-value'
   'ctrl-D': 'emmet:encode-decode-data-url' # decoding doesn't work--we need dialogs
   'ctrl-I': 'emmet:update-image-size'
