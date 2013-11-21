@@ -12,14 +12,13 @@ module.exports =
   activate: (@state) ->
     unless @actionTranslation
       @actionTranslation = {}
-      keymapObj = CSON.readFileSync(path.join(__dirname, "../keymaps/emmet.cson"))[".editor"]
-      for key of keymapObj
-        # Atom likes -, but Emmet expects _
-        action = keymapObj[key]
-        emmet_action = action.split(":")[1].replace(/\-/g, "_")
-        @actionTranslation[action] = emmet_action
+      for selector, bindings of CSON.readFileSync(path.join(__dirname, "../keymaps/emmet.cson"))
+        for key, action of bindings
+          # Atom likes -, but Emmet expects _
+          emmet_action = action.split(":")[1].replace(/\-/g, "_")
+          @actionTranslation[action] = emmet_action
 
-    @editorSubscription = rootView.eachEditor (editor) =>
+    @editorSubscription = atom.rootView.eachEditor (editor) =>
       if editor.attached and not editor.mini
         for action, emmetAction of @actionTranslation
           do (action) =>
