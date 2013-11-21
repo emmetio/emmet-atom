@@ -1,16 +1,17 @@
-{Editor, RootView} = require 'atom'
+{RootView} = require 'atom'
 Path = require 'path'
 Fs = require 'fs'
 
 describe "Emmet", ->
-  [buffer, editor, editSession] = []
+  [buffer, editor, editSession, rootView] = []
 
   beforeEach ->
-    window.rootView = new RootView
+    atom.rootView = new RootView
+    rootView = atom.rootView
 
-    atom.activatePackage("emmet")
-    atom.activatePackage('css-tmbundle', sync: true)
-    atom.activatePackage('html-tmbundle', sync: true)
+    atom.packages.activatePackage("emmet")
+    atom.packages.activatePackage('language-css', sync: true)
+    atom.packages.activatePackage('language-html', sync: true)
 
     rootView.simulateDomAttachment()
     rootView.enableKeymap()
@@ -23,7 +24,7 @@ describe "Emmet", ->
 
     describe "for HTML", ->
       beforeEach ->
-        rootView.open(Path.join(__dirname, './fixtures/abbreviation/before/html-abbrv.html'))
+        rootView.openSync(Path.join(__dirname, './fixtures/abbreviation/before/html-abbrv.html'))
         editor = rootView.getActiveView()
         editSession = rootView.getActivePaneItem()
         editSession.moveCursorToEndOfLine()
@@ -44,7 +45,7 @@ describe "Emmet", ->
 
     describe "for CSS", ->
       beforeEach ->
-        rootView.open(Path.join(__dirname, './fixtures/abbreviation/before/css-abbrv.css'))
+        rootView.openSync(Path.join(__dirname, './fixtures/abbreviation/before/css-abbrv.css'))
         editor = rootView.getActiveView()
         editSession = rootView.getActivePaneItem()
         editSession.moveCursorToEndOfLine()
@@ -65,7 +66,7 @@ describe "Emmet", ->
 
   describe "emmet:match-pair", ->
     beforeEach ->
-      rootView.open(Path.join(__dirname, './fixtures/match-pair/sample.html'))
+      rootView.openSync(Path.join(__dirname, './fixtures/match-pair/sample.html'))
       editor = rootView.getActiveView()
       editSession = rootView.getActivePaneItem()
 
@@ -136,7 +137,7 @@ describe "Emmet", ->
 
   describe "emmet:edit-point", ->
     beforeEach ->
-      rootView.open(Path.join(__dirname, './fixtures/edit-points/edit-points.html'))
+      rootView.openSync(Path.join(__dirname, './fixtures/edit-points/edit-points.html'))
       editor = rootView.getActiveView()
       editSession = rootView.getActivePaneItem()
 
@@ -182,7 +183,7 @@ describe "Emmet", ->
 
   describe "emmet:split-join-tag", ->
     beforeEach ->
-      rootView.open(Path.join(__dirname, './fixtures/split-join-tag/split-join-tag.html'))
+      rootView.openSync(Path.join(__dirname, './fixtures/split-join-tag/split-join-tag.html'))
       editor = rootView.getActiveView()
       editSession = rootView.getActivePaneItem()
 
@@ -210,7 +211,7 @@ describe "Emmet", ->
     onceRemoved = twiceRemoved = null
 
     beforeEach ->
-      rootView.open(Path.join(__dirname, './fixtures/remove-tag/before/remove-tag.html'))
+      rootView.openSync(Path.join(__dirname, './fixtures/remove-tag/before/remove-tag.html'))
       editor = rootView.getActiveView()
       editSession = rootView.getActivePaneItem()
 
@@ -235,7 +236,7 @@ describe "Emmet", ->
 
   describe "emmet:evaluate-math-expression", ->
     beforeEach ->
-      rootView.open(Path.join(__dirname, './fixtures/evaluate-math-expression/evaluate-math-expression.html'))
+      rootView.openSync(Path.join(__dirname, './fixtures/evaluate-math-expression/evaluate-math-expression.html'))
       editor = rootView.getActiveView()
       editSession = rootView.getActivePaneItem()
 
@@ -260,7 +261,7 @@ describe "Emmet", ->
 
   describe "emmet increment/decrement numbers", ->
      beforeEach ->
-       rootView.open(Path.join(__dirname, './fixtures/increment-decrement-numbers/increment-decrement-numbers.css'))
+       rootView.openSync(Path.join(__dirname, './fixtures/increment-decrement-numbers/increment-decrement-numbers.css'))
        editor = rootView.getActiveView()
        editSession = rootView.getActivePaneItem()
 
@@ -377,7 +378,7 @@ describe "Emmet", ->
   describe "emmet select items", ->
     describe "for HTML", ->
       beforeEach ->
-        rootView.open(Path.join(__dirname, './fixtures/select-item/select-item.html'))
+        rootView.openSync(Path.join(__dirname, './fixtures/select-item/select-item.html'))
         editor = rootView.getActiveView()
         editSession = rootView.getActivePaneItem()
 
@@ -451,7 +452,7 @@ describe "Emmet", ->
 
     describe "for CSS", ->
       beforeEach ->
-        rootView.open(Path.join(__dirname, './fixtures/select-item/select-item.css'))
+        rootView.openSync(Path.join(__dirname, './fixtures/select-item/select-item.css'))
         editor = rootView.getActiveView()
         editSession = rootView.getActivePaneItem()
 
@@ -528,7 +529,7 @@ describe "Emmet", ->
 
     describe "for HTML", ->
       beforeEach ->
-        rootView.open(Path.join(__dirname, './fixtures/reflect-css-value/before/reflect-css-value.css'))
+        rootView.openSync(Path.join(__dirname, './fixtures/reflect-css-value/before/reflect-css-value.css'))
         editor = rootView.getActiveView()
         editSession = rootView.getActivePaneItem()
 
