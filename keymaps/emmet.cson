@@ -1,14 +1,14 @@
 '.editor':
-  'meta-E': 'emmet:expand-abbreviation'
+  'cmd-E': 'emmet:expand-abbreviation'
   'ctrl-d': 'emmet:match-pair-outward'
   'alt-d': 'emmet:match-pair-inward'
   'ctrl-alt-j': 'emmet:matching-pair'
   'ctrl-alt-.': 'emmet:next-edit-point'
   'ctrl-alt-,': 'emmet:prev-edit-point'
   # 'command+/': 'emmet:toggle_comment' already exists in Atom
-  'meta-J': 'emmet:split-join-tag'
-  'meta-K': 'emmet:remove-tag'
-  'meta-Y': 'emmet:evaluate-math-expression'
+  'cmd-J': 'emmet:split-join-tag'
+  'cmd-K': 'emmet:remove-tag'
+  'cmd-Y': 'emmet:evaluate-math-expression'
   'ctrl-shift-up': 'emmet:increment-number-by-1'
   'ctrl-shift-down': 'emmet:decrement-number-by-1'
   'alt-shift-up': 'emmet:increment-number-by-01'
@@ -17,7 +17,7 @@
   'ctrl-alt-down': 'emmet:decrement-number-by-10'
   'alt-meta-.': 'emmet:select-next-item'
   'alt-meta-,': 'emmet:select-previous-item'
-  'meta-R': 'emmet:reflect-css-value'
+  'cmd-R': 'emmet:reflect-css-value'
   'ctrl-D': 'emmet:encode-decode-data-url' # decoding doesn't work--we need dialogs
   'ctrl-I': 'emmet:update-image-size'
   #'ctrl+alt+enter': 'emmet:expand_as_you_type' doesn't work--we need dialogs
