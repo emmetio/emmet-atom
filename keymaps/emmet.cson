@@ -1,4 +1,4 @@
-'.editor':
+'.editor:not(.mini)':
   'cmd-E': 'emmet:expand-abbreviation'
   'ctrl-d': 'emmet:match-pair-outward'
   'alt-d': 'emmet:match-pair-inward'
