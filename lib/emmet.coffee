@@ -18,7 +18,7 @@ module.exports =
           emmet_action = action.split(":")[1].replace(/\-/g, "_")
           @actionTranslation[action] = emmet_action
 
-    @editorSubscription = atom.rootView.eachEditor (editor) =>
+    @editorSubscription = atom.workspaceView.eachEditor (editor) =>
       if editor.attached and not editor.mini
         for action, emmetAction of @actionTranslation
           do (action) =>
