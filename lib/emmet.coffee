@@ -18,18 +18,18 @@ module.exports =
           emmet_action = action.split(":")[1].replace(/\-/g, "_")
           @actionTranslation[action] = emmet_action
 
-    @editorSubscription = atom.workspaceView.eachEditor (editor) =>
-      if editor.attached and not editor.mini
+    @editorViewSubscription = atom.workspaceView.eachEditorView (editorView) =>
+      if editorView.attached and not editorView.mini
         for action, emmetAction of @actionTranslation
           do (action) =>
-              editor.command action, (e) =>
+              editorView.command action, (e) =>
                 # a better way to do this might be to manage the editorProxies
                 # right now we are setting up the proxy each time
-                editorProxy.setupContext(editor)
+                editorProxy.setupContext(editorView)
                 syntax = editorProxy.getSyntax()
                 if emmet.require("resources").hasSyntax(syntax)
                   emmetAction = @actionTranslation[action]
-                  if emmetAction == "expand_abbreviation_with_tab" && !editor.getSelection().isEmpty()
+                  if emmetAction == "expand_abbreviation_with_tab" && !editorView.getSelection().isEmpty()
                     e.abortKeyBinding()
                     return
                   else
@@ -38,5 +38,5 @@ module.exports =
                   e.abortKeyBinding()
                   return
   deactivate: ->
-    @editorSubscription?.off()
-    @editorSubscription = null
+    @editorViewSubscription?.off()
+    @editorViewSubscription = null
