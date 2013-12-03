@@ -10,6 +10,7 @@ describe "Emmet", ->
     rootView = atom.rootView
 
     atom.packages.activatePackage("emmet")
+    atom.packages.activatePackage("snippets") # intentionally disrupt tab expansion
     atom.packages.activatePackage('language-css', sync: true)
     atom.packages.activatePackage('language-html', sync: true)
 
@@ -19,10 +20,10 @@ describe "Emmet", ->
   afterEach ->
     editSession.destroy()
 
-  describe "emmet:expand-abbreviation", ->
+  fdescribe "emmet:expand-abbreviation", ->
     expansion = null
 
-    describe "for HTML", ->
+    describe "for normal HTML", ->
       beforeEach ->
         rootView.openSync(Path.join(__dirname, './fixtures/abbreviation/before/html-abbrv.html'))
         editor = rootView.getActiveView()
@@ -30,6 +31,28 @@ describe "Emmet", ->
         editSession.moveCursorToEndOfLine()
 
         expansion = Fs.readFileSync(Path.join(__dirname, './fixtures/abbreviation/after/html-abbrv.html'), "utf8")
+
+      it "expands HTML abbreviations via commands", ->
+        editor.trigger "emmet:expand-abbreviation"
+        expect(editor.getText()).toBe expansion
+
+      it "expands HTML abbreviations via keybindings", ->
+        editor.trigger keydownEvent('e', shiftKey: true, metaKey: true, target: editor[0])
+        expect(editor.getText()).toBe expansion
+
+      it "expands HTML abbreviations via Tab", ->
+        editor.trigger keydownEvent('tab', target: editor[0])
+        expect(editor.getText()).toBe expansion
+
+    # headers seem to be a special case: http://git.io/7XeBKQ
+    fdescribe "for headers in HTML", ->
+      beforeEach ->
+        rootView.openSync(Path.join(__dirname, './fixtures/abbreviation/before/header-expand.html'))
+        editor = rootView.getActiveView()
+        editSession = rootView.getActivePaneItem()
+        editSession.moveCursorToEndOfLine()
+
+        expansion = Fs.readFileSync(Path.join(__dirname, './fixtures/abbreviation/after/header-expand.html'), "utf8")
 
       it "expands HTML abbreviations via commands", ->
         editor.trigger "emmet:expand-abbreviation"
