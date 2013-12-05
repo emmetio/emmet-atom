@@ -47,9 +47,9 @@ describe "Emmet", ->
     # headers seem to be a special case: http://git.io/7XeBKQ
     fdescribe "for headers in HTML", ->
       beforeEach ->
-        rootView.openSync(Path.join(__dirname, './fixtures/abbreviation/before/header-expand.html'))
-        editor = rootView.getActiveView()
-        editSession = rootView.getActivePaneItem()
+        workspaceView.openSync(Path.join(__dirname, './fixtures/abbreviation/before/header-expand.html'))
+        editor = workspaceView.getActiveView()
+        editSession = workspaceView.getActivePaneItem()
         editSession.moveCursorToEndOfLine()
 
         expansion = Fs.readFileSync(Path.join(__dirname, './fixtures/abbreviation/after/header-expand.html'), "utf8")
@@ -572,59 +572,58 @@ describe "Emmet", ->
         editor.trigger keydownEvent('r', shiftKey: true, metaKey: true, target: editor[0])
         expect(editor.getText()).toBe reflection
 
-  # TODO: THESE TESTS _SHOULD_ BE WORKING.... but they're not for some reason.
-  # describe "emmet:encode-decode-data-url", ->
-  #   encoded = null
-  #   beforeEach ->
-  #     workspaceView.open(Path.join(__dirname, './fixtures/encode-decode-data-url/before/encode-decode-data-url.css'))
-  #     editor = workspaceView.getActiveView()
-  #     editSession = workspaceView.getActivePaneItem()
-  #
-  #     editSession.setCursorBufferPosition([1, 22])
-  #
-  #     encoded = Fs.readFileSync(Path.join(__dirname, './fixtures/encode-decode-data-url/after/encode-decode-data-url.css'), "utf8")
-  #
-  #   it "encodes and decodes URL via commands", ->
-  #     editor.trigger "emmet:encode-decode-data-url"
-  #     expect(editor.getText()).toBe encoded
-  #
-  #   it "encodes and decodes CSS via keybindings", ->
-  #     editor.trigger keydownEvent('d', shiftKey: true, ctrlKey: true, target: editor[0])
-  #     expect(editor.getText()).toBe encoded
-  #
-  # describe "emmet:update-image-size", ->
-  #   updated = null
-  #
-  #   describe "for HTML", ->
-  #     beforeEach ->
-  #       workspaceView.open(Path.join(__dirname, './fixtures/update-image-size/before/update-image-size.html'))
-  #       editor = workspaceView.getActiveView()
-  #       editSession = workspaceView.getActivePaneItem()
-  #       editSession.setCursorBufferPosition([0, 15])
-  #
-  #       updated = Fs.readFileSync(Path.join(__dirname, './fixtures/update-image-size/after/update-image-size.html'), "utf8")
-  #
-  #     it "updates the image via commands", ->
-  #       editor.trigger "emmet:update-image-size"
-  #       expect(editor.getText()).toBe updated
-  #
-  #     it "updates the image via keybindings", ->
-  #       editor.trigger keydownEvent('i', shiftKey: true, ctrlKey: true, target: editor[0])
-  #       expect(editor.getText()).toBe updated
-  #
-  #   describe "for CSS", ->
-  #     beforeEach ->
-  #       workspaceView.open(Path.join(__dirname, './fixtures/update-image-size/before/update-image-size.css'))
-  #       editor = workspaceView.getActiveView()
-  #       editSession = workspaceView.getActivePaneItem()
-  #       editSession.setCursorBufferPosition([0, 15])
-  #
-  #       updated = Fs.readFileSync(Path.join(__dirname, './fixtures/update-image-size/after/update-image-size.css'), "utf8")
-  #
-  #     it "updates the image via commands", ->
-  #       editor.trigger "emmet:update-image-size"
-  #       expect(editor.getText()).toBe updated
-  #
-  #     it "updates the image via keybindings", ->
-  #       editor.trigger keydownEvent('i', shiftKey: true, ctrlKey: true, target: editor[0])
-  #       expect(editor.getText()).toBe updated
+  describe "emmet:encode-decode-data-url", ->
+    encoded = null
+    beforeEach ->
+      workspaceView.open(Path.join(__dirname, './fixtures/encode-decode-data-url/before/encode-decode-data-url.css'))
+      editor = workspaceView.getActiveView()
+      editSession = workspaceView.getActivePaneItem()
+
+      editSession.setCursorBufferPosition([1, 22])
+
+      encoded = Fs.readFileSync(Path.join(__dirname, './fixtures/encode-decode-data-url/after/encode-decode-data-url.css'), "utf8")
+
+    it "encodes and decodes URL via commands", ->
+      editor.trigger "emmet:encode-decode-data-url"
+      expect(editor.getText()).toBe encoded
+
+    it "encodes and decodes CSS via keybindings", ->
+      editor.trigger keydownEvent('d', shiftKey: true, ctrlKey: true, target: editor[0])
+      expect(editor.getText()).toBe encoded
+
+  describe "emmet:update-image-size", ->
+    updated = null
+
+    describe "for HTML", ->
+      beforeEach ->
+        workspaceView.open(Path.join(__dirname, './fixtures/update-image-size/before/update-image-size.html'))
+        editor = workspaceView.getActiveView()
+        editSession = workspaceView.getActivePaneItem()
+        editSession.setCursorBufferPosition([0, 15])
+
+        updated = Fs.readFileSync(Path.join(__dirname, './fixtures/update-image-size/after/update-image-size.html'), "utf8")
+
+      it "updates the image via commands", ->
+        editor.trigger "emmet:update-image-size"
+        expect(editor.getText()).toBe updated
+
+      it "updates the image via keybindings", ->
+        editor.trigger keydownEvent('i', shiftKey: true, ctrlKey: true, target: editor[0])
+        expect(editor.getText()).toBe updated
+
+    describe "for CSS", ->
+      beforeEach ->
+        workspaceView.open(Path.join(__dirname, './fixtures/update-image-size/before/update-image-size.css'))
+        editor = workspaceView.getActiveView()
+        editSession = workspaceView.getActivePaneItem()
+        editSession.setCursorBufferPosition([0, 15])
+
+        updated = Fs.readFileSync(Path.join(__dirname, './fixtures/update-image-size/after/update-image-size.css'), "utf8")
+
+      it "updates the image via commands", ->
+        editor.trigger "emmet:update-image-size"
+        expect(editor.getText()).toBe updated
+
+      it "updates the image via keybindings", ->
+        editor.trigger keydownEvent('i', shiftKey: true, ctrlKey: true, target: editor[0])
+        expect(editor.getText()).toBe updated
