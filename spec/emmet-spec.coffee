@@ -1,21 +1,21 @@
-{RootView} = require 'atom'
+{WorkspaceView} = require 'atom'
 Path = require 'path'
 Fs = require 'fs'
 
 describe "Emmet", ->
-  [buffer, editor, editSession, rootView] = []
+  [buffer, editor, editSession, workspaceView] = []
 
   beforeEach ->
-    atom.rootView = new RootView
-    rootView = atom.rootView
+    atom.workspaceView = new WorkspaceView
+    workspaceView = atom.workspaceView
 
     atom.packages.activatePackage("emmet")
     atom.packages.activatePackage("snippets") # intentionally disrupt tab expansion
     atom.packages.activatePackage('language-css', sync: true)
     atom.packages.activatePackage('language-html', sync: true)
 
-    rootView.simulateDomAttachment()
-    rootView.enableKeymap()
+    workspaceView.simulateDomAttachment()
+    workspaceView.enableKeymap()
 
   afterEach ->
     editSession.destroy()
@@ -25,9 +25,9 @@ describe "Emmet", ->
 
     describe "for normal HTML", ->
       beforeEach ->
-        rootView.openSync(Path.join(__dirname, './fixtures/abbreviation/before/html-abbrv.html'))
-        editor = rootView.getActiveView()
-        editSession = rootView.getActivePaneItem()
+        workspaceView.openSync(Path.join(__dirname, './fixtures/abbreviation/before/html-abbrv.html'))
+        editor = workspaceView.getActiveView()
+        editSession = workspaceView.getActivePaneItem()
         editSession.moveCursorToEndOfLine()
 
         expansion = Fs.readFileSync(Path.join(__dirname, './fixtures/abbreviation/after/html-abbrv.html'), "utf8")
@@ -47,9 +47,9 @@ describe "Emmet", ->
     # headers seem to be a special case: http://git.io/7XeBKQ
     fdescribe "for headers in HTML", ->
       beforeEach ->
-        rootView.openSync(Path.join(__dirname, './fixtures/abbreviation/before/header-expand.html'))
-        editor = rootView.getActiveView()
-        editSession = rootView.getActivePaneItem()
+        workspaceView.openSync(Path.join(__dirname, './fixtures/abbreviation/before/header-expand.html'))
+        editor = workspaceView.getActiveView()
+        editSession = workspaceView.getActivePaneItem()
         editSession.moveCursorToEndOfLine()
 
         expansion = Fs.readFileSync(Path.join(__dirname, './fixtures/abbreviation/after/header-expand.html'), "utf8")
@@ -68,9 +68,9 @@ describe "Emmet", ->
 
     describe "for CSS", ->
       beforeEach ->
-        rootView.openSync(Path.join(__dirname, './fixtures/abbreviation/before/css-abbrv.css'))
-        editor = rootView.getActiveView()
-        editSession = rootView.getActivePaneItem()
+        workspaceView.openSync(Path.join(__dirname, './fixtures/abbreviation/before/css-abbrv.css'))
+        editor = workspaceView.getActiveView()
+        editSession = workspaceView.getActivePaneItem()
         editSession.moveCursorToEndOfLine()
 
         expansion = Fs.readFileSync(Path.join(__dirname, './fixtures/abbreviation/after/css-abbrv.css'), "utf8")
@@ -89,9 +89,9 @@ describe "Emmet", ->
 
   describe "emmet:match-pair", ->
     beforeEach ->
-      rootView.openSync(Path.join(__dirname, './fixtures/match-pair/sample.html'))
-      editor = rootView.getActiveView()
-      editSession = rootView.getActivePaneItem()
+      workspaceView.openSync(Path.join(__dirname, './fixtures/match-pair/sample.html'))
+      editor = workspaceView.getActiveView()
+      editSession = workspaceView.getActivePaneItem()
 
     describe "for match-pair-outward", ->
       beforeEach ->
@@ -160,9 +160,9 @@ describe "Emmet", ->
 
   describe "emmet:edit-point", ->
     beforeEach ->
-      rootView.openSync(Path.join(__dirname, './fixtures/edit-points/edit-points.html'))
-      editor = rootView.getActiveView()
-      editSession = rootView.getActivePaneItem()
+      workspaceView.openSync(Path.join(__dirname, './fixtures/edit-points/edit-points.html'))
+      editor = workspaceView.getActiveView()
+      editSession = workspaceView.getActivePaneItem()
 
     describe "for next-edit-point", ->
       beforeEach ->
@@ -206,9 +206,9 @@ describe "Emmet", ->
 
   describe "emmet:split-join-tag", ->
     beforeEach ->
-      rootView.openSync(Path.join(__dirname, './fixtures/split-join-tag/split-join-tag.html'))
-      editor = rootView.getActiveView()
-      editSession = rootView.getActivePaneItem()
+      workspaceView.openSync(Path.join(__dirname, './fixtures/split-join-tag/split-join-tag.html'))
+      editor = workspaceView.getActiveView()
+      editSession = workspaceView.getActivePaneItem()
 
     describe "for split-join-tag", ->
       beforeEach ->
@@ -234,9 +234,9 @@ describe "Emmet", ->
     onceRemoved = twiceRemoved = null
 
     beforeEach ->
-      rootView.openSync(Path.join(__dirname, './fixtures/remove-tag/before/remove-tag.html'))
-      editor = rootView.getActiveView()
-      editSession = rootView.getActivePaneItem()
+      workspaceView.openSync(Path.join(__dirname, './fixtures/remove-tag/before/remove-tag.html'))
+      editor = workspaceView.getActiveView()
+      editSession = workspaceView.getActivePaneItem()
 
       onceRemoved = Fs.readFileSync(Path.join(__dirname, './fixtures/remove-tag/after/remove-tag-once.html'), "utf8")
       twiceRemoved = Fs.readFileSync(Path.join(__dirname, './fixtures/remove-tag/after/remove-tag-twice.html'), "utf8")
@@ -259,9 +259,9 @@ describe "Emmet", ->
 
   describe "emmet:evaluate-math-expression", ->
     beforeEach ->
-      rootView.openSync(Path.join(__dirname, './fixtures/evaluate-math-expression/evaluate-math-expression.html'))
-      editor = rootView.getActiveView()
-      editSession = rootView.getActivePaneItem()
+      workspaceView.openSync(Path.join(__dirname, './fixtures/evaluate-math-expression/evaluate-math-expression.html'))
+      editor = workspaceView.getActiveView()
+      editSession = workspaceView.getActivePaneItem()
 
     describe "for evaluate-math-expression", ->
       it "calls evaluate-math-expression via commands", ->
@@ -284,9 +284,9 @@ describe "Emmet", ->
 
   describe "emmet increment/decrement numbers", ->
      beforeEach ->
-       rootView.openSync(Path.join(__dirname, './fixtures/increment-decrement-numbers/increment-decrement-numbers.css'))
-       editor = rootView.getActiveView()
-       editSession = rootView.getActivePaneItem()
+       workspaceView.openSync(Path.join(__dirname, './fixtures/increment-decrement-numbers/increment-decrement-numbers.css'))
+       editor = workspaceView.getActiveView()
+       editSession = workspaceView.getActivePaneItem()
 
      describe "for incrementing", ->
        describe "increment by 01", ->
@@ -401,9 +401,9 @@ describe "Emmet", ->
   describe "emmet select items", ->
     describe "for HTML", ->
       beforeEach ->
-        rootView.openSync(Path.join(__dirname, './fixtures/select-item/select-item.html'))
-        editor = rootView.getActiveView()
-        editSession = rootView.getActivePaneItem()
+        workspaceView.openSync(Path.join(__dirname, './fixtures/select-item/select-item.html'))
+        editor = workspaceView.getActiveView()
+        editSession = workspaceView.getActivePaneItem()
 
       describe "selecting next item", ->
         beforeEach ->
@@ -475,9 +475,9 @@ describe "Emmet", ->
 
     describe "for CSS", ->
       beforeEach ->
-        rootView.openSync(Path.join(__dirname, './fixtures/select-item/select-item.css'))
-        editor = rootView.getActiveView()
-        editSession = rootView.getActivePaneItem()
+        workspaceView.openSync(Path.join(__dirname, './fixtures/select-item/select-item.css'))
+        editor = workspaceView.getActiveView()
+        editSession = workspaceView.getActivePaneItem()
 
       describe "selecting next item", ->
         beforeEach ->
@@ -552,9 +552,9 @@ describe "Emmet", ->
 
     describe "for HTML", ->
       beforeEach ->
-        rootView.openSync(Path.join(__dirname, './fixtures/reflect-css-value/before/reflect-css-value.css'))
-        editor = rootView.getActiveView()
-        editSession = rootView.getActivePaneItem()
+        workspaceView.openSync(Path.join(__dirname, './fixtures/reflect-css-value/before/reflect-css-value.css'))
+        editor = workspaceView.getActiveView()
+        editSession = workspaceView.getActivePaneItem()
 
         reflection = Fs.readFileSync(Path.join(__dirname, './fixtures/reflect-css-value/after/reflect-css-value.css'), "utf8")
 
@@ -572,59 +572,58 @@ describe "Emmet", ->
         editor.trigger keydownEvent('r', shiftKey: true, metaKey: true, target: editor[0])
         expect(editor.getText()).toBe reflection
 
-  # TODO: THESE TESTS _SHOULD_ BE WORKING.... but they're not for some reason.
-  # describe "emmet:encode-decode-data-url", ->
-  #   encoded = null
-  #   beforeEach ->
-  #     rootView.open(Path.join(__dirname, './fixtures/encode-decode-data-url/before/encode-decode-data-url.css'))
-  #     editor = rootView.getActiveView()
-  #     editSession = rootView.getActivePaneItem()
-  #
-  #     editSession.setCursorBufferPosition([1, 22])
-  #
-  #     encoded = Fs.readFileSync(Path.join(__dirname, './fixtures/encode-decode-data-url/after/encode-decode-data-url.css'), "utf8")
-  #
-  #   it "encodes and decodes URL via commands", ->
-  #     editor.trigger "emmet:encode-decode-data-url"
-  #     expect(editor.getText()).toBe encoded
-  #
-  #   it "encodes and decodes CSS via keybindings", ->
-  #     editor.trigger keydownEvent('d', shiftKey: true, ctrlKey: true, target: editor[0])
-  #     expect(editor.getText()).toBe encoded
-  #
-  # describe "emmet:update-image-size", ->
-  #   updated = null
-  #
-  #   describe "for HTML", ->
-  #     beforeEach ->
-  #       rootView.open(Path.join(__dirname, './fixtures/update-image-size/before/update-image-size.html'))
-  #       editor = rootView.getActiveView()
-  #       editSession = rootView.getActivePaneItem()
-  #       editSession.setCursorBufferPosition([0, 15])
-  #
-  #       updated = Fs.readFileSync(Path.join(__dirname, './fixtures/update-image-size/after/update-image-size.html'), "utf8")
-  #
-  #     it "updates the image via commands", ->
-  #       editor.trigger "emmet:update-image-size"
-  #       expect(editor.getText()).toBe updated
-  #
-  #     it "updates the image via keybindings", ->
-  #       editor.trigger keydownEvent('i', shiftKey: true, ctrlKey: true, target: editor[0])
-  #       expect(editor.getText()).toBe updated
-  #
-  #   describe "for CSS", ->
-  #     beforeEach ->
-  #       rootView.open(Path.join(__dirname, './fixtures/update-image-size/before/update-image-size.css'))
-  #       editor = rootView.getActiveView()
-  #       editSession = rootView.getActivePaneItem()
-  #       editSession.setCursorBufferPosition([0, 15])
-  #
-  #       updated = Fs.readFileSync(Path.join(__dirname, './fixtures/update-image-size/after/update-image-size.css'), "utf8")
-  #
-  #     it "updates the image via commands", ->
-  #       editor.trigger "emmet:update-image-size"
-  #       expect(editor.getText()).toBe updated
-  #
-  #     it "updates the image via keybindings", ->
-  #       editor.trigger keydownEvent('i', shiftKey: true, ctrlKey: true, target: editor[0])
-  #       expect(editor.getText()).toBe updated
+  describe "emmet:encode-decode-data-url", ->
+    encoded = null
+    beforeEach ->
+      workspaceView.open(Path.join(__dirname, './fixtures/encode-decode-data-url/before/encode-decode-data-url.css'))
+      editor = workspaceView.getActiveView()
+      editSession = workspaceView.getActivePaneItem()
+
+      editSession.setCursorBufferPosition([1, 22])
+
+      encoded = Fs.readFileSync(Path.join(__dirname, './fixtures/encode-decode-data-url/after/encode-decode-data-url.css'), "utf8")
+
+    it "encodes and decodes URL via commands", ->
+      editor.trigger "emmet:encode-decode-data-url"
+      expect(editor.getText()).toBe encoded
+
+    it "encodes and decodes CSS via keybindings", ->
+      editor.trigger keydownEvent('d', shiftKey: true, ctrlKey: true, target: editor[0])
+      expect(editor.getText()).toBe encoded
+
+  describe "emmet:update-image-size", ->
+    updated = null
+
+    describe "for HTML", ->
+      beforeEach ->
+        workspaceView.open(Path.join(__dirname, './fixtures/update-image-size/before/update-image-size.html'))
+        editor = workspaceView.getActiveView()
+        editSession = workspaceView.getActivePaneItem()
+        editSession.setCursorBufferPosition([0, 15])
+
+        updated = Fs.readFileSync(Path.join(__dirname, './fixtures/update-image-size/after/update-image-size.html'), "utf8")
+
+      it "updates the image via commands", ->
+        editor.trigger "emmet:update-image-size"
+        expect(editor.getText()).toBe updated
+
+      it "updates the image via keybindings", ->
+        editor.trigger keydownEvent('i', shiftKey: true, ctrlKey: true, target: editor[0])
+        expect(editor.getText()).toBe updated
+
+    describe "for CSS", ->
+      beforeEach ->
+        workspaceView.open(Path.join(__dirname, './fixtures/update-image-size/before/update-image-size.css'))
+        editor = workspaceView.getActiveView()
+        editSession = workspaceView.getActivePaneItem()
+        editSession.setCursorBufferPosition([0, 15])
+
+        updated = Fs.readFileSync(Path.join(__dirname, './fixtures/update-image-size/after/update-image-size.css'), "utf8")
+
+      it "updates the image via commands", ->
+        editor.trigger "emmet:update-image-size"
+        expect(editor.getText()).toBe updated
+
+      it "updates the image via keybindings", ->
+        editor.trigger keydownEvent('i', shiftKey: true, ctrlKey: true, target: editor[0])
+        expect(editor.getText()).toBe updated
