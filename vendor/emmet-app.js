@@ -7118,7 +7118,7 @@ if (typeof module === 'object' && typeof define !== 'function') {
 
 define('assets/range',['require','exports','module','lodash'],function(require, exports, module) {
   var _ = require('lodash');
-  
+
   function cmp(a, b, op) {
     switch (op) {
       case 'eq':
@@ -7138,8 +7138,8 @@ define('assets/range',['require','exports','module','lodash'],function(require, 
         return a >= b;
     }
   }
-  
-  
+
+
   /**
    * @type Range
    * @constructor
@@ -7160,12 +7160,12 @@ define('assets/range',['require','exports','module','lodash'],function(require, 
       this.end = start + len;
     }
   }
-  
+
   Range.prototype = {
     length: function() {
       return Math.abs(this.end - this.start);
     },
-    
+
     /**
      * Returns <code>true</code> if passed range is equals to current one
      * @param {Range} range
@@ -7175,7 +7175,7 @@ define('assets/range',['require','exports','module','lodash'],function(require, 
       return this.cmp(range, 'eq', 'eq');
 //      return this.start === range.start && this.end === range.end;
     },
-    
+
     /**
      * Shifts indexes position with passed <code>delat</code>
      * @param {Number} delta
@@ -7186,7 +7186,7 @@ define('assets/range',['require','exports','module','lodash'],function(require, 
       this.end += delta;
       return this;
     },
-    
+
     /**
      * Check if two ranges are overlapped
      * @param {Range} range
@@ -7195,7 +7195,7 @@ define('assets/range',['require','exports','module','lodash'],function(require, 
     overlap: function(range) {
       return range.start <= this.end && range.end >= this.start;
     },
-    
+
     /**
      * Finds intersection of two ranges
      * @param {Range} range
@@ -7207,10 +7207,10 @@ define('assets/range',['require','exports','module','lodash'],function(require, 
         var end = Math.min(range.end, this.end);
         return new Range(start, end - start);
       }
-      
+
       return null;
     },
-    
+
     /**
      * Returns the union of the thow ranges.
      * @param {Range} range
@@ -7222,12 +7222,12 @@ define('assets/range',['require','exports','module','lodash'],function(require, 
         var end = Math.max(range.end, this.end);
         return new Range(start, end - start);
       }
-      
+
       return null;
     },
-    
+
     /**
-     * Returns a Boolean value that indicates whether a specified position 
+     * Returns a Boolean value that indicates whether a specified position
      * is in a given range.
      * @param {Number} loc
      */
@@ -7235,26 +7235,26 @@ define('assets/range',['require','exports','module','lodash'],function(require, 
       return this.cmp(loc, 'lte', 'gt');
 //      return this.start <= loc && this.end > loc;
     },
-    
+
     /**
-     * Returns a Boolean value that indicates whether a specified position 
+     * Returns a Boolean value that indicates whether a specified position
      * is in a given range, but not equals bounds.
      * @param {Number} loc
      */
     contains: function(loc) {
       return this.cmp(loc, 'lt', 'gt');
     },
-    
+
     /**
      * Check if current range completely includes specified one
      * @param {Range} r
-     * @returns {Boolean} 
+     * @returns {Boolean}
      */
     include: function(r) {
       return this.cmp(r, 'lte', 'gte');
 //      return this.start <= r.start && this.end >= r.end;
     },
-    
+
     /**
      * Low-level comparision method
      * @param {Number} loc
@@ -7269,21 +7269,21 @@ define('assets/range',['require','exports','module','lodash'],function(require, 
       } else {
         a = b = loc;
       }
-      
+
       return cmp(this.start, a, left || '<=') && cmp(this.end, b, right || '>');
     },
-    
+
     /**
      * Returns substring of specified <code>str</code> for current range
      * @param {String} str
      * @returns {String}
      */
     substring: function(str) {
-      return this.length() > 0 
-        ? str.substring(this.start, this.end) 
+      return this.length() > 0
+        ? str.substring(this.start, this.end)
         : '';
     },
-    
+
     /**
      * Creates copy of current range
      * @returns {Range}
@@ -7291,14 +7291,14 @@ define('assets/range',['require','exports','module','lodash'],function(require, 
     clone: function() {
       return new Range(this.start, this.length());
     },
-    
+
     /**
      * @returns {Array}
      */
     toArray: function() {
       return [this.start, this.end];
     },
-    
+
     toString: function() {
       return this.valueOf();
     },
@@ -7318,15 +7318,15 @@ define('assets/range',['require','exports','module','lodash'],function(require, 
   module.exports = function(start, len) {
     if (typeof start == 'undefined' || start === null)
       return null;
-      
+
     if (start instanceof Range)
       return start;
-    
+
     if (typeof start == 'object' && 'start' in start && 'end' in start) {
       len = start.end - start.start;
       start = start.start;
     }
-      
+
     return new Range(start, len);
   };
 
@@ -7342,7 +7342,7 @@ define('assets/range',['require','exports','module','lodash'],function(require, 
     if (_.isNumber(start) && _.isNumber(end)) {
       end -= start;
     }
-    
+
     return this.create(start, end);
   };
 
@@ -7380,12 +7380,12 @@ define('utils/common',['require','exports','module','lodash','../assets/range'],
   var _ = require('lodash');
   var range = require('../assets/range');
 
-  /** 
-   * Special token used as a placeholder for caret positions inside 
-   * generated output 
+  /**
+   * Special token used as a placeholder for caret positions inside
+   * generated output
    */
   var caretPlaceholder = '${0}';
-  
+
   return {
     reTag: /<\/?[\w:\-]+(?:\s+[\w\-:]+(?:\s*=\s*(?:(?:"[^"]*")|(?:'[^']*')|[^>\s]+))?)*\s*(\/?)>$/,
 
@@ -7396,17 +7396,17 @@ define('utils/common',['require','exports','module','lodash','../assets/range'],
     defaultProfile: function() {
       return 'plain';
     },
-    
+
     /**
      * Test if passed string ends with XHTML tag. This method is used for testing
-     * '>' character: it belongs to tag or it's a part of abbreviation? 
+     * '>' character: it belongs to tag or it's a part of abbreviation?
      * @param {String} str
      * @return {Boolean}
      */
     endsWithTag: function(str) {
       return this.reTag.test(str);
     },
-    
+
     /**
      * Check if passed symbol is a number
      * @param {String} ch
@@ -7415,10 +7415,10 @@ define('utils/common',['require','exports','module','lodash','../assets/range'],
     isNumeric: function(ch) {
       if (typeof(ch) == 'string')
         ch = ch.charCodeAt(0);
-        
+
       return (ch && ch > 47 && ch < 58);
     },
-    
+
     /**
      * Trim whitespace from string
      * @param {String} text
@@ -7427,7 +7427,7 @@ define('utils/common',['require','exports','module','lodash','../assets/range'],
     trim: function(text) {
       return (text || "").replace(/^\s+|\s+$/g, "");
     },
-    
+
     /**
      * Split text into lines. Set <code>remove_empty</code> to true to filter
      * empty lines
@@ -7436,7 +7436,7 @@ define('utils/common',['require','exports','module','lodash','../assets/range'],
      * @return {Array}
      */
     splitByLines: function(text, removeEmpty) {
-      // IE fails to split string by regexp, 
+      // IE fails to split string by regexp,
       // need to normalize newlines first
       // Also, Mozilla's Rhiho JS engine has a weird newline bug
       var nl = '\n';
@@ -7446,16 +7446,16 @@ define('utils/common',['require','exports','module','lodash','../assets/range'],
         .replace(/\r/g, '\n')
         .replace(/\n/g, nl)
         .split(nl);
-      
+
       if (removeEmpty) {
         lines = _.filter(lines, function(line) {
           return line.length && !!this.trim(line);
         }, this);
       }
-      
+
       return lines;
     },
-    
+
     /**
      * Repeats string <code>howMany</code> times
      * @param {String} str
@@ -7470,7 +7470,7 @@ define('utils/common',['require','exports','module','lodash','../assets/range'],
 
       return out;
     },
-    
+
     /**
      * Returns list of paddings that should be used to align passed string
      * @param {Array} strings
@@ -7480,14 +7480,14 @@ define('utils/common',['require','exports','module','lodash','../assets/range'],
       var lengths = _.map(strings, function(s) {
         return _.isString(s) ? s.length : +s;
       });
-      
+
       var max = _.max(lengths);
       return _.map(lengths, function(l) {
         var pad = max - l;
         return pad ? this.repeatString(' ', pad) : '';
       }, this);
     },
-    
+
     /**
      * Indents text with padding
      * @param {String} text Text to indent
@@ -7498,14 +7498,14 @@ define('utils/common',['require','exports','module','lodash','../assets/range'],
       var result = [];
       var lines = this.splitByLines(text);
       var nl = '\n';
-        
+
       result.push(lines[0]);
-      for (var j = 1; j < lines.length; j++) 
+      for (var j = 1; j < lines.length; j++)
         result.push(nl + pad + lines[j]);
-        
+
       return result.join('');
     },
-    
+
     /**
      * Pad string with zeroes
      * @param {String} str String to pad
@@ -7515,11 +7515,11 @@ define('utils/common',['require','exports','module','lodash','../assets/range'],
     zeroPadString: function(str, pad) {
       var padding = '';
       var il = str.length;
-        
+
       while (pad > il++) padding += '0';
-      return padding + str; 
+      return padding + str;
     },
-    
+
     /**
      * Removes padding at the beginning of each text's line
      * @param {String} text
@@ -7534,16 +7534,16 @@ define('utils/common',['require','exports','module','lodash','../assets/range'],
           lines[i] = line.substr(pl);
         }
       }
-      
+
       return lines.join('\n');
     },
-    
+
     /**
      * Replaces unescaped symbols in <code>str</code>. For example, the '$' symbol
      * will be replaced in 'item$count', but not in 'item\$count'.
      * @param {String} str Original string
      * @param {String} symbol Symbol to replace
-     * @param {String} replace Symbol replacement. Might be a function that 
+     * @param {String} replace Symbol replacement. Might be a function that
      * returns new value
      * @return {String}
      */
@@ -7552,7 +7552,7 @@ define('utils/common',['require','exports','module','lodash','../assets/range'],
       var il = str.length;
       var sl = symbol.length;
       var matchCount = 0;
-        
+
       while (i < il) {
         if (str.charAt(i) == '\\') {
           // escaped symbol, skip next character
@@ -7571,12 +7571,12 @@ define('utils/common',['require','exports','module','lodash','../assets/range'],
               newValue = false;
             }
           }
-          
+
           if (newValue === false) { // skip replacement
             i++;
             continue;
           }
-          
+
           str = str.substring(0, i) + newValue + str.substring(i + curSl);
           // adjust indexes
           il = str.length;
@@ -7585,10 +7585,10 @@ define('utils/common',['require','exports','module','lodash','../assets/range'],
           i++;
         }
       }
-      
+
       return str;
     },
-    
+
     /**
      * Replaces '$' character in string assuming it might be escaped with '\'
      * @param {String} str String where character should be replaced
@@ -7600,48 +7600,48 @@ define('utils/common',['require','exports','module','lodash','../assets/range'],
       // in case we received strings from Java, convert the to native strings
       str = String(str);
       value = String(value);
-      
+
       if (/^\-?\d+$/.test(value)) {
         value = +value;
       }
-      
+
       var that = this;
-      
+
       return this.replaceUnescapedSymbol(str, symbol, function(str, symbol, pos, matchNum){
         if (str.charAt(pos + 1) == '{' || that.isNumeric(str.charAt(pos + 1)) ) {
           // it's a variable, skip it
           return false;
         }
-        
-        // replace sequense of $ symbols with padded number  
+
+        // replace sequense of $ symbols with padded number
         var j = pos + 1;
         while(str.charAt(j) == '$' && str.charAt(j + 1) != '{') j++;
         var pad = j - pos;
-        
+
         // get counter base
         var base = 0, decrement = false, m;
         if ((m = str.substr(j).match(/^@(\-?)(\d*)/))) {
           j += m[0].length;
-          
+
           if (m[1]) {
             decrement = true;
           }
-          
+
           base = parseInt(m[2] || 1, 10) - 1;
         }
-        
+
         if (decrement && total && _.isNumber(value)) {
           value = total - value + 1;
         }
-        
+
         value += base;
-        
+
         return [str.substring(pos, j), that.zeroPadString(value + '', pad)];
       });
     },
-    
+
     /**
-     * Check if string matches against <code>reTag</code> regexp. This 
+     * Check if string matches against <code>reTag</code> regexp. This
      * function may be used to test if provided string contains HTML tags
      * @param {String} str
      * @returns {Boolean}
@@ -7649,7 +7649,7 @@ define('utils/common',['require','exports','module','lodash','../assets/range'],
     matchesTag: function(str) {
       return this.reTag.test(str || '');
     },
-    
+
     /**
      * Escapes special characters used in Emmet, like '$', '|', etc.
      * Use this method before passing to actions like "Wrap with Abbreviation"
@@ -7660,7 +7660,7 @@ define('utils/common',['require','exports','module','lodash','../assets/range'],
     escapeText: function(text) {
       return text.replace(/([\$\\])/g, '\\$1');
     },
-    
+
     /**
      * Unescapes special characters used in Emmet, like '$', '|', etc.
      * @param {String} text
@@ -7669,26 +7669,26 @@ define('utils/common',['require','exports','module','lodash','../assets/range'],
     unescapeText: function(text) {
       return text.replace(/\\(.)/g, '$1');
     },
-    
+
     /**
      * Returns caret placeholder
      * @returns {String}
      */
     getCaretPlaceholder: function() {
-      return _.isFunction(caretPlaceholder) 
+      return _.isFunction(caretPlaceholder)
         ? caretPlaceholder.apply(this, arguments)
         : caretPlaceholder;
     },
-    
+
     /**
      * Sets new representation for carets in generated output
-     * @param {String} value New caret placeholder. Might be a 
+     * @param {String} value New caret placeholder. Might be a
      * <code>Function</code>
      */
     setCaretPlaceholder: function(value) {
       caretPlaceholder = value;
     },
-    
+
     /**
      * Returns line padding
      * @param {String} line
@@ -7697,7 +7697,7 @@ define('utils/common',['require','exports','module','lodash','../assets/range'],
     getLinePadding: function(line) {
       return (line.match(/^(\s+)/) || [''])[0];
     },
-    
+
     /**
      * Helper function that returns padding of line of <code>pos</code>
      * position in <code>content</code>
@@ -7709,7 +7709,7 @@ define('utils/common',['require','exports','module','lodash','../assets/range'],
       var lineRange = this.findNewlineBounds(content, pos);
       return this.getLinePadding(lineRange.substring(content));
     },
-    
+
     /**
      * Escape special regexp chars in string, making it usable for creating dynamic
      * regular expressions
@@ -7720,10 +7720,10 @@ define('utils/common',['require','exports','module','lodash','../assets/range'],
       var specials = new RegExp("[.*+?|()\\[\\]{}\\\\]", "g"); // .*+?|()[]{}\
       return str.replace(specials, "\\$&");
     },
-    
+
     /**
      * Make decimal number look good: convert it to fixed precision end remove
-     * traling zeroes 
+     * traling zeroes
      * @param {Number} num
      * @param {Number} fracion Fraction numbers (default is 2)
      * @return {String}
@@ -7731,7 +7731,7 @@ define('utils/common',['require','exports','module','lodash','../assets/range'],
     prettifyNumber: function(num, fraction) {
       return num.toFixed(typeof fraction == 'undefined' ? 2 : fraction).replace(/\.?0+$/, '');
     },
-    
+
     /**
      * Replace substring of <code>str</code> with <code>value</code>
      * @param {String} str String where to replace substring
@@ -7739,7 +7739,7 @@ define('utils/common',['require','exports','module','lodash','../assets/range'],
      * @param {Number} start Start index of substring to replace. May also
      * be a <code>Range</code> object: in this case, the <code>end</code>
      * argument is not required
-     * @param {Number} end End index of substring to replace. If ommited, 
+     * @param {Number} end End index of substring to replace. If ommited,
      * <code>start</code> argument is used
      */
     replaceSubstring: function(str, value, start, end) {
@@ -7747,39 +7747,39 @@ define('utils/common',['require','exports','module','lodash','../assets/range'],
         end = start.end;
         start = start.start;
       }
-      
+
       if (_.isString(end))
         end = start + end.length;
-      
+
       if (_.isUndefined(end))
         end = start;
-      
+
       if (start < 0 || start > str.length)
         return str;
-      
+
       return str.substring(0, start) + value + str.substring(end);
     },
-    
+
     /**
      * Narrows down text range, adjusting selection to non-space characters
      * @param {String} text
-     * @param {Number} start Starting range in <code>text</code> where 
+     * @param {Number} start Starting range in <code>text</code> where
      * slection should be adjusted. Can also be any object that is accepted
      * by <code>Range</code> class
      * @return {Range}
      */
     narrowToNonSpace: function(text, start, end) {
       var rng = range.create(start, end);
-      
+
       var reSpace = /[\s\n\r\u00a0]/;
       // narrow down selection until first non-space character
       while (rng.start < rng.end) {
         if (!reSpace.test(text.charAt(rng.start)))
           break;
-          
+
         rng.start++;
       }
-      
+
       while (rng.end > rng.start) {
         rng.end--;
         if (!reSpace.test(text.charAt(rng.end))) {
@@ -7787,22 +7787,22 @@ define('utils/common',['require','exports','module','lodash','../assets/range'],
           break;
         }
       }
-      
+
       return rng;
     },
-    
+
     /**
      * Find start and end index of text line for <code>from</code> index
-     * @param {String} text 
+     * @param {String} text
      * @param {Number} from
      */
     findNewlineBounds: function(text, from) {
       var len = text.length,
         start = 0,
-        end = len - 1, 
+        end = len - 1,
         ch;
 
-      
+
       // search left
       for (var i = from - 1; i > 0; i--) {
         ch = text.charAt(i);
@@ -7819,7 +7819,7 @@ define('utils/common',['require','exports','module','lodash','../assets/range'],
           break;
         }
       }
-      
+
       return range.create(start, end - start);
     },
 
@@ -7885,7 +7885,7 @@ define('utils/common',['require','exports','module','lodash','../assets/range'],
       if (typeof str == 'object') {
         return str;
       }
-      
+
       try {
         return (new Function('return ' + str))();
       } catch(e) {
@@ -7904,7 +7904,7 @@ define('path',{});
  * Since implementation of this module depends
  * greatly on current runtime, this module must be
  * initialized with actual implementation first
- * before use. E.g. 
+ * before use. E.g.
  * require('./plugin/file')({
  *  read: function() {...}
  * })
@@ -8016,19 +8016,19 @@ define('plugin/file',['require','exports','module','lodash','fs','fs','path','fs
         params.callback(err, err ? '' : buf.toString());
       });
     },
-    
+
     /**
      * Locate <code>file_name</code> file that relates to <code>editor_file</code>.
      * File name may be absolute or relative path
-     * 
+     *
      * <b>Dealing with absolute path.</b>
      * Many modern editors have a "project" support as information unit, but you
      * should not rely on project path to find file with absolute path. First,
-     * it requires user to create a project before using this method (and this 
+     * it requires user to create a project before using this method (and this
      * is not very convenient). Second, project path doesn't always points to
-     * to website's document root folder: it may point, for example, to an 
+     * to website's document root folder: it may point, for example, to an
      * upper folder which contains server-side scripts.
-     * 
+     *
      * For better result, you should use the following algorithm in locating
      * absolute resources:
      * 1) Get parent folder for <code>editorFile</code> as a start point
@@ -8036,7 +8036,7 @@ define('plugin/file',['require','exports','module','lodash','fs','fs','path','fs
      * file exists
      * 3) If it doesn't exists, move start point one level up (to parent folder)
      * and repeat step 2.
-     * 
+     *
      * @param {String} editorFile
      * @param {String} fileName
      * @return {String} Returns null if <code>fileName</code> cannot be located
@@ -8057,10 +8057,10 @@ define('plugin/file',['require','exports','module','lodash','fs','fs','path','fs
         if (fs.existsSync(f))
           return f;
       }
-      
+
       return '';
     },
-    
+
     /**
      * Creates absolute path by concatenating <code>parent</code> and <code>fileName</code>.
      * If <code>parent</code> points to file, its parent directory is used
@@ -8076,10 +8076,10 @@ define('plugin/file',['require','exports','module','lodash','fs','fs','path','fs
       if (stat && !stat.isDirectory()) {
         parent = path.dirname(parent);
       }
-      
+
       return callback(path.resolve(parent, fileName));
     },
-    
+
     /**
      * Saves <code>content</code> as <code>file</code>
      * @param {String} file File's absolute path
@@ -8089,7 +8089,7 @@ define('plugin/file',['require','exports','module','lodash','fs','fs','path','fs
       var fs = require('fs');
       fs.writeFileSync(file, content, 'ascii');
     },
-    
+
     /**
      * Returns file extension in lower case
      * @param {String} file
@@ -8099,7 +8099,7 @@ define('plugin/file',['require','exports','module','lodash','fs','fs','path','fs
       var m = (file || '').match(/\.([\w\-]+)$/);
       return m ? m[1].toLowerCase() : '';
     }
-  
+
   });
 });
 /**
@@ -8114,7 +8114,7 @@ if (typeof module === 'object' && typeof define !== 'function') {
 
 define('utils/base64',['require','exports','module'],function(require, exports, module) {
   var chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
-  
+
   return {
     /**
      * Encodes data using base64 algorithm
@@ -8156,7 +8156,7 @@ define('utils/base64',['require','exports','module'],function(require, exports, 
 
     /**
      * Decodes string using MIME base64 algorithm
-     * 
+     *
      * @author Tyler Akins (http://rumkin.com)
      * @param {String} data
      * @return {String}
@@ -8217,7 +8217,7 @@ define('assets/stringStream',['require','exports','module'],function(require, ex
     this.string = string;
     this._length = string.length;
   }
-  
+
   StringStream.prototype = {
     /**
      * Returns true only if the stream is at the end of the line.
@@ -8226,7 +8226,7 @@ define('assets/stringStream',['require','exports','module'],function(require, ex
     eol: function() {
       return this.pos >= this._length;
     },
-    
+
     /**
      * Returns true only if the stream is at the start of the line
      * @returns {Boolean}
@@ -8234,16 +8234,16 @@ define('assets/stringStream',['require','exports','module'],function(require, ex
     sol: function() {
       return this.pos === 0;
     },
-    
+
     /**
-     * Returns the next character in the stream without advancing it. 
+     * Returns the next character in the stream without advancing it.
      * Will return <code>undefined</code> at the end of the line.
      * @returns {String}
      */
     peek: function() {
       return this.string.charAt(this.pos);
     },
-    
+
     /**
      * Returns the next character in the stream and advances it.
      * Also returns <code>undefined</code> when no more characters are available.
@@ -8253,7 +8253,7 @@ define('assets/stringStream',['require','exports','module'],function(require, ex
       if (this.pos < this._length)
         return this.string.charAt(this.pos++);
     },
-    
+
     /**
      * match can be a character, a regular expression, or a function that
      * takes a character and returns a boolean. If the next character in the
@@ -8268,13 +8268,13 @@ define('assets/stringStream',['require','exports','module'],function(require, ex
         ok = ch == match;
       else
         ok = ch && (match.test ? match.test(ch) : match(ch));
-      
+
       if (ok) {
         ++this.pos;
         return ch;
       }
     },
-    
+
     /**
      * Repeatedly calls <code>eat</code> with the given argument, until it
      * fails. Returns <code>true</code> if any characters were eaten.
@@ -8286,7 +8286,7 @@ define('assets/stringStream',['require','exports','module'],function(require, ex
       while (this.eat(match)) {}
       return this.pos > start;
     },
-    
+
     /**
      * Shortcut for <code>eatWhile</code> when matching white-space.
      * @returns {Boolean}
@@ -8297,14 +8297,14 @@ define('assets/stringStream',['require','exports','module'],function(require, ex
         ++this.pos;
       return this.pos > start;
     },
-    
+
     /**
      * Moves the position to the end of the line.
      */
     skipToEnd: function() {
       this.pos = this._length;
     },
-    
+
     /**
      * Skips to the next occurrence of the given character, if found on the
      * current line (doesn't advance the stream if the character does not
@@ -8319,7 +8319,7 @@ define('assets/stringStream',['require','exports','module'],function(require, ex
         return true;
       }
     },
-    
+
     /**
      * Skips to <code>close</code> character which is pair to <code>open</code>
      * character, considering possible pair nesting. This function is used
@@ -8344,7 +8344,7 @@ define('assets/stringStream',['require','exports','module'],function(require, ex
           }
         }
       }
-      
+
       return false;
     },
 
@@ -8368,7 +8368,7 @@ define('assets/stringStream',['require','exports','module'],function(require, ex
 
       return false;
     },
-    
+
     /**
      * Backs up the stream n characters. Backing it up further than the
      * start of the current token will cause things to break, so be careful.
@@ -8377,7 +8377,7 @@ define('assets/stringStream',['require','exports','module'],function(require, ex
     backUp : function(n) {
       this.pos -= n;
     },
-    
+
     /**
      * Act like a multi-character <code>eat</code>—if <code>consume</code> is true or
      * not given—or a look-ahead that doesn't update the stream position—if
@@ -8387,7 +8387,7 @@ define('assets/stringStream',['require','exports','module'],function(require, ex
      * case-insensitive. When successfully matching a regular expression,
      * the returned value will be the array returned by <code>match</code>,
      * in case you need to extract matched groups.
-     * 
+     *
      * @param {RegExp} pattern
      * @param {Boolean} consume
      * @param {Boolean} caseInsensitive
@@ -8398,7 +8398,7 @@ define('assets/stringStream',['require','exports','module'],function(require, ex
         var cased = caseInsensitive
           ? function(str) {return str.toLowerCase();}
           : function(str) {return str;};
-        
+
         if (cased(this.string).indexOf(cased(pattern), this.pos) == this.pos) {
           if (consume !== false)
             this.pos += pattern.length;
@@ -8411,9 +8411,9 @@ define('assets/stringStream',['require','exports','module'],function(require, ex
         return match;
       }
     },
-    
+
     /**
-     * Get the string between the start of the current token and the 
+     * Get the string between the start of the current token and the
      * current stream position.
      * @returns {String}
      */
@@ -8431,9 +8431,9 @@ define('assets/stringStream',['require','exports','module'],function(require, ex
   return module.exports;
 });
 /**
- * Utility module that provides ordered storage of function handlers. 
+ * Utility module that provides ordered storage of function handlers.
  * Many Emmet modules' functionality can be extended/overridden by custom
- * function. This modules provides unified storage of handler functions, their 
+ * function. This modules provides unified storage of handler functions, their
  * management and execution
  */
 if (typeof module === 'object' && typeof define !== 'function') {
@@ -8444,7 +8444,7 @@ if (typeof module === 'object' && typeof define !== 'function') {
 
 define('assets/handlerList',['require','exports','module','lodash'],function(require, exports, module) {
   var _ = require('lodash');
-  
+
   /**
    * @type HandlerList
    * @constructor
@@ -8452,7 +8452,7 @@ define('assets/handlerList',['require','exports','module','lodash'],function(req
   function HandlerList() {
     this._list = [];
   }
-  
+
   HandlerList.prototype = {
     /**
      * Adds function handler
@@ -8464,7 +8464,7 @@ define('assets/handlerList',['require','exports','module','lodash'],function(req
     add: function(fn, options) {
       this._list.push(_.extend({order: 0}, options || {}, {fn: fn}));
     },
-    
+
     /**
      * Removes handler from list
      * @param {Function} fn
@@ -8474,18 +8474,18 @@ define('assets/handlerList',['require','exports','module','lodash'],function(req
         return item.fn === fn;
       }));
     },
-    
+
     /**
-     * Returns ordered list of handlers. By default, handlers 
-     * with the same <code>order</code> option returned in reverse order, 
-     * i.e. the latter function was added into the handlers list, the higher 
-     * it will be in the returned array 
+     * Returns ordered list of handlers. By default, handlers
+     * with the same <code>order</code> option returned in reverse order,
+     * i.e. the latter function was added into the handlers list, the higher
+     * it will be in the returned array
      * @returns {Array}
      */
     list: function() {
       return _.sortBy(this._list, 'order').reverse();
     },
-    
+
     /**
      * Returns ordered list of handler functions
      * @returns {Array}
@@ -8493,17 +8493,17 @@ define('assets/handlerList',['require','exports','module','lodash'],function(req
     listFn: function() {
       return _.pluck(this.list(), 'fn');
     },
-    
+
     /**
      * Executes handler functions in their designated order. If function
-     * returns <code>skipVal</code>, meaning that function was unable to 
+     * returns <code>skipVal</code>, meaning that function was unable to
      * handle passed <code>args</code>, the next function will be executed
      * and so on.
-     * @param {Object} skipValue If function returns this value, execute 
+     * @param {Object} skipValue If function returns this value, execute
      * next handler.
      * @param {Array} args Arguments to pass to handler function
      * @returns {Boolean} Whether any of registered handlers performed
-     * successfully  
+     * successfully
      */
     exec: function(skipValue, args) {
       args = args || [];
@@ -8513,11 +8513,11 @@ define('assets/handlerList',['require','exports','module','lodash'],function(req
         if (result !== skipValue)
           return true;
       });
-      
+
       return result;
     }
   };
-  
+
   return {
     /**
      * Factory method that produces <code>HandlerList</code> instance
@@ -8553,8 +8553,8 @@ define('assets/elements',['require','exports','module','lodash'],function(requir
     /**
      * Create new element factory
      * @param {String} name Element identifier
-     * @param {Function} factory Function that produces element of specified 
-     * type. The object generated by this factory is automatically 
+     * @param {Function} factory Function that produces element of specified
+     * type. The object generated by this factory is automatically
      * augmented with <code>type</code> property pointing to element
      * <code>name</code>
      * @memberOf elements
@@ -8565,11 +8565,11 @@ define('assets/elements',['require','exports','module','lodash'],function(requir
         var elem = factory.apply(that, arguments);
         if (elem)
           elem.type = name;
-        
+
         return elem;
       };
     },
-    
+
     /**
      * Returns factory for specified name
      * @param {String} name
@@ -8578,7 +8578,7 @@ define('assets/elements',['require','exports','module','lodash'],function(requir
     get: function(name) {
       return factories[name];
     },
-    
+
     /**
      * Creates new element with specified type
      * @param {String} name
@@ -8589,7 +8589,7 @@ define('assets/elements',['require','exports','module','lodash'],function(requir
       var factory = this.get(name);
       return factory ? factory.apply(this, args) : null;
     },
-    
+
     /**
      * Check if passed element is of specified type
      * @param {Object} elem
@@ -8609,12 +8609,12 @@ define('assets/elements',['require','exports','module','lodash'],function(requir
       return elem && elem.type;
     }
   };
-  
+
   /**
    * Element factory
    * @param {String} elementName Name of output element
    * @param {String} attrs Attributes definition. You may also pass
-   * <code>Array</code> where each contains object with <code>name</code> 
+   * <code>Array</code> where each contains object with <code>name</code>
    * and <code>value</code> properties, or <code>Object</code>
    * @param {Boolean} isEmpty Is expanded element should be empty
    */
@@ -8641,22 +8641,22 @@ define('assets/elements',['require','exports','module','lodash'],function(requir
       } else {
         _.each(attrs, function(value, name) {
           ret.attributes.push({
-            name: name, 
+            name: name,
             value: value
           });
         });
       }
     }
-    
+
     return ret;
   });
-  
+
   module.exports.add('snippet', commonFactory);
   module.exports.add('reference', commonFactory);
   module.exports.add('empty', function() {
     return {};
   });
-  
+
   return module.exports;
 });
 /**
@@ -8678,7 +8678,7 @@ define('assets/logger',['require','exports','module'],function(require, exports,
   }
 });
 /*!
- * string_score.js: String Scoring Algorithm 0.1.10 
+ * string_score.js: String Scoring Algorithm 0.1.10
  *
  * http://joshaven.com/string_score
  * https://github.com/joshaven/string_score
@@ -8716,7 +8716,7 @@ define('vendor/stringScore',['require','exports','module'],function(require, exp
             abbreviation_score,
             fuzzies=1,
             final_score;
-        
+
         // Walk through abbreviation and add up scores.
         for (var i = 0,
                character_score/* = 0*/,
@@ -8727,16 +8727,16 @@ define('vendor/stringScore',['require','exports','module'],function(require, exp
                min_index/* = 0*/;
            i < abbreviation_length;
            ++i) {
-          
+
           // Find the first case-insensitive match of a character.
           c = abbreviation.charAt(i);
-          
+
           index_c_lowercase = string.indexOf(c.toLowerCase());
           index_c_uppercase = string.indexOf(c.toUpperCase());
           min_index = Math.min(index_c_lowercase, index_c_uppercase);
           index_in_string = (min_index > -1) ? min_index : Math.max(index_c_lowercase, index_c_uppercase);
-          
-          if (index_in_string === -1) { 
+
+          if (index_in_string === -1) {
             if (fuzziness) {
               fuzzies += 1-fuzziness;
               continue;
@@ -8746,14 +8746,14 @@ define('vendor/stringScore',['require','exports','module'],function(require, exp
           } else {
             character_score = 0.1;
           }
-          
+
           // Set base score for matching 'c'.
-          
+
           // Same case bonus.
-          if (string[index_in_string] === c) { 
-            character_score += 0.1; 
+          if (string[index_in_string] === c) {
+            character_score += 0.1;
           }
-          
+
           // Consecutive letter & start-of-string Bonus
           if (index_in_string === 0) {
             // Increase the score when matching first character of the remainder of the string
@@ -8773,38 +8773,38 @@ define('vendor/stringScore',['require','exports','module'],function(require, exp
           character_score += 0.8; // * Math.min(index_in_string, 5); // Cap bonus at 0.4 * 5
         }
           }
-          
+
           // Left trim the already matched part of the string
           // (forces sequential matching).
           string = string.substring(index_in_string + 1, string_length);
-          
+
           total_character_score += character_score;
         } // end of for loop
-        
+
         // Uncomment to weigh smaller words higher.
         // return total_character_score / string_length;
-        
+
         abbreviation_score = total_character_score / abbreviation_length;
         //percentage_of_matched_string = abbreviation_length / string_length;
         //word_score = abbreviation_score * percentage_of_matched_string;
-        
+
         // Reduce penalty for longer strings.
         //final_score = (word_score + abbreviation_score) / 2;
         final_score = ((abbreviation_score * (abbreviation_length / string_length)) + abbreviation_score) / 2;
-        
+
         final_score = final_score / fuzzies;
-        
+
         if (start_of_string_bonus && (final_score + 0.15 < 1)) {
           final_score += 0.15;
         }
-        
+
         return final_score;
     }
   };
 });
 /**
  * Parsed resources (snippets, abbreviations, variables, etc.) for Emmet.
- * Contains convenient method to get access for snippets with respect of 
+ * Contains convenient method to get access for snippets with respect of
  * inheritance. Also provides ability to store data in different vocabularies
  * ('system' and 'user') for fast and safe resource update
  * @author Sergey Chikuyonok (serge.che@gmail.com)
@@ -8826,18 +8826,18 @@ define('assets/resources',['require','exports','module','lodash','./handlerList'
 
   var VOC_SYSTEM = 'system';
   var VOC_USER = 'user';
-  
+
   var cache = {};
-    
+
   /** Regular expression for XML tag matching */
   var reTag = /^<(\w+\:?[\w\-]*)((?:\s+[@\!]?[\w\:\-]+\s*=\s*(['"]).*?\3)*)\s*(\/?)>/;
-    
+
   var systemSettings = {};
   var userSettings = {};
-  
+
   /** @type HandlerList List of registered abbreviation resolvers */
   var resolvers = handlerList.create();
-  
+
   /**
    * Normalizes caret plceholder in passed text: replaces | character with
    * default caret placeholder
@@ -8847,19 +8847,19 @@ define('assets/resources',['require','exports','module','lodash','./handlerList'
   function normalizeCaretPlaceholder(text) {
     return utils.replaceUnescapedSymbol(text, '|', utils.getCaretPlaceholder());
   }
-  
+
   function parseItem(name, value, type) {
     value = normalizeCaretPlaceholder(value);
-    
+
     if (type == 'snippets') {
       return elements.create('snippet', value);
     }
-    
+
     if (type == 'abbreviations') {
       return parseAbbreviation(name, value);
     }
   }
-  
+
   /**
    * Parses single abbreviation
    * @param {String} key Abbreviation name
@@ -8876,7 +8876,7 @@ define('assets/resources',['require','exports','module','lodash','./handlerList'
       return elements.create('reference', value);
     }
   }
-  
+
   /**
    * Normalizes snippet key name for better fuzzy search
    * @param {String} str
@@ -8925,7 +8925,7 @@ define('assets/resources',['require','exports','module','lodash','./handlerList'
 
         voc[syntax] = _section;
       });
-       
+
 
       if (type == VOC_SYSTEM) {
         systemSettings = voc;
@@ -8933,7 +8933,7 @@ define('assets/resources',['require','exports','module','lodash','./handlerList'
         userSettings = voc;
       }
     },
-    
+
     /**
      * Returns resource vocabulary by its name
      * @param {String} name Vocabulary name ('system' or 'user')
@@ -8942,19 +8942,19 @@ define('assets/resources',['require','exports','module','lodash','./handlerList'
     getVocabulary: function(name) {
       return name == VOC_SYSTEM ? systemSettings : userSettings;
     },
-    
+
     /**
-     * Returns resource (abbreviation, snippet, etc.) matched for passed 
+     * Returns resource (abbreviation, snippet, etc.) matched for passed
      * abbreviation
      * @param {AbbreviationNode} node
      * @param {String} syntax
      * @returns {Object}
      */
     getMatchedResource: function(node, syntax) {
-      return resolvers.exec(null, _.toArray(arguments)) 
+      return resolvers.exec(null, _.toArray(arguments))
         || this.findSnippet(syntax, node.name());
     },
-    
+
     /**
      * Returns variable value
      * @return {String}
@@ -8962,7 +8962,7 @@ define('assets/resources',['require','exports','module','lodash','./handlerList'
     getVariable: function(name) {
       return (this.getSection('variables') || {})[name];
     },
-    
+
     /**
      * Store runtime variable in user storage
      * @param {String} name Variable name
@@ -8972,38 +8972,38 @@ define('assets/resources',['require','exports','module','lodash','./handlerList'
       var voc = this.getVocabulary('user') || {};
       if (!('variables' in voc))
         voc.variables = {};
-        
+
       voc.variables[name] = value;
       this.setVocabulary(voc, 'user');
     },
-    
+
     /**
      * Check if there are resources for specified syntax
      * @param {String} syntax
      * @return {Boolean}
      */
     hasSyntax: function(syntax) {
-      return syntax in this.getVocabulary(VOC_USER) 
+      return syntax in this.getVocabulary(VOC_USER)
         || syntax in this.getVocabulary(VOC_SYSTEM);
     },
-    
+
     /**
      * Registers new abbreviation resolver.
-     * @param {Function} fn Abbreviation resolver which will receive 
+     * @param {Function} fn Abbreviation resolver which will receive
      * abbreviation as first argument and should return parsed abbreviation
      * object if abbreviation has handled successfully, <code>null</code>
      * otherwise
-     * @param {Object} options Options list as described in 
+     * @param {Object} options Options list as described in
      * {@link HandlerList#add()} method
      */
     addResolver: function(fn, options) {
       resolvers.add(fn, options);
     },
-    
+
     removeResolver: function(fn) {
       resolvers.remove(fn);
     },
-    
+
     /**
      * Returns actual section data, merged from both
      * system and user data
@@ -9014,11 +9014,11 @@ define('assets/resources',['require','exports','module','lodash','./handlerList'
     getSection: function(name) {
       if (!name)
         return null;
-      
+
       if (!(name in cache)) {
         cache[name] = utils.deepMerge({}, systemSettings[name], userSettings[name]);
       }
-      
+
       var data = cache[name], subsections = _.rest(arguments), key;
       while (data && (key = subsections.shift())) {
         if (key in data) {
@@ -9027,10 +9027,10 @@ define('assets/resources',['require','exports','module','lodash','./handlerList'
           return null;
         }
       }
-      
+
       return data;
     },
-    
+
     /**
      * Recursively searches for a item inside top level sections (syntaxes)
      * with respect of `extends` attribute
@@ -9043,15 +9043,15 @@ define('assets/resources',['require','exports','module','lodash','./handlerList'
       while (data) {
         if (subsection in data)
           return data[subsection];
-        
+
         data = this.getSection(data['extends']);
       }
     },
-    
+
     /**
      * Recursively searches for a snippet definition inside syntax section.
-     * Definition is searched inside `snippets` and `abbreviations` 
-     * subsections  
+     * Definition is searched inside `snippets` and `abbreviations`
+     * subsections
      * @param {String} syntax Top-level section name (syntax)
      * @param {String} name Snippet name
      * @returns {Object}
@@ -9059,16 +9059,16 @@ define('assets/resources',['require','exports','module','lodash','./handlerList'
     findSnippet: function(syntax, name, memo) {
       if (!syntax || !name)
         return null;
-      
+
       memo = memo || [];
-      
+
       var names = [name];
       // create automatic aliases to properties with colons,
       // e.g. pos-a == pos:a
       if (~name.indexOf('-')) {
         names.push(name.replace(/\-/g, ':'));
       }
-      
+
       var data = this.getSection(syntax), matchedItem = null;
       _.find(['snippets', 'abbreviations'], function(sectionName) {
         var data = this.getSection(syntax, sectionName);
@@ -9080,16 +9080,16 @@ define('assets/resources',['require','exports','module','lodash','./handlerList'
           });
         }
       }, this);
-      
+
       memo.push(syntax);
       if (!matchedItem && data['extends'] && !_.include(memo, data['extends'])) {
         // try to find item in parent syntax section
         return this.findSnippet(data['extends'], name, memo);
       }
-      
+
       return matchedItem;
     },
-    
+
     /**
      * Performs fuzzy search of snippet definition
      * @param {String} syntax Top-level section name (syntax)
@@ -9098,9 +9098,9 @@ define('assets/resources',['require','exports','module','lodash','./handlerList'
      */
     fuzzyFindSnippet: function(syntax, name, minScore) {
       minScore = minScore || 0.3;
-      
+
       var payload = this.getAllSnippets(syntax);
-      
+
       name = normalizeName(name);
       var scores = _.map(payload, function(value, key) {
         return {
@@ -9108,7 +9108,7 @@ define('assets/resources',['require','exports','module','lodash','./handlerList'
           score: stringScore.score(value.nk, name, 0.1)
         };
       });
-      
+
       var result = _.last(_.sortBy(scores, 'score'));
       if (result && result.score >= minScore) {
         var k = result.key;
@@ -9116,7 +9116,7 @@ define('assets/resources',['require','exports','module','lodash','./handlerList'
 //        return parseItem(k, payload[k].value, payload[k].type);
       }
     },
-    
+
     /**
      * Returns plain dictionary of all available abbreviations and snippets
      * for specified syntax with respect of inheritance
@@ -9128,12 +9128,12 @@ define('assets/resources',['require','exports','module','lodash','./handlerList'
       if (!cache[cacheKey]) {
         var stack = [], sectionKey = syntax;
         var memo = [];
-        
+
         do {
           var section = this.getSection(sectionKey);
           if (!section)
             break;
-          
+
           _.each(['snippets', 'abbreviations'], function(sectionName) {
             var stackItem = {};
             _.each(section[sectionName] || null, function(v, k) {
@@ -9144,18 +9144,18 @@ define('assets/resources',['require','exports','module','lodash','./handlerList'
                 type: sectionName
               };
             });
-            
+
             stack.push(stackItem);
           });
-          
+
           memo.push(sectionKey);
           sectionKey = section['extends'];
         } while (sectionKey && !_.include(memo, sectionKey));
-        
-        
+
+
         cache[cacheKey] = _.extend.apply(_, stack.reverse());
       }
-      
+
       return cache[cacheKey];
     },
 
@@ -9167,7 +9167,7 @@ define('assets/resources',['require','exports','module','lodash','./handlerList'
       var nl = this.getVariable('newline');
       return _.isString(nl) ? nl : '\n';
     },
-    
+
     /**
      * Sets new newline character that will be used in output
      * @param {String} str
@@ -9198,14 +9198,14 @@ define('assets/resources',['require','exports','module','lodash','./handlerList'
   return exports;
 });
 /**
- * Utility module for handling tabstops tokens generated by Emmet's 
+ * Utility module for handling tabstops tokens generated by Emmet's
  * "Expand Abbreviation" action. The main <code>extract</code> method will take
- * raw text (for example: <i>${0} some ${1:text}</i>), find all tabstops 
- * occurrences, replace them with tokens suitable for your editor of choice and 
+ * raw text (for example: <i>${0} some ${1:text}</i>), find all tabstops
+ * occurrences, replace them with tokens suitable for your editor of choice and
  * return object with processed text and list of found tabstops and their ranges.
- * For sake of portability (Objective-C/Java) the tabstops list is a plain 
+ * For sake of portability (Objective-C/Java) the tabstops list is a plain
  * sorted array with plain objects.
- * 
+ *
  * Placeholders with the same are meant to be <i>linked</i> in your editor.
  */
 if (typeof module === 'object' && typeof define !== 'function') {
@@ -9221,12 +9221,12 @@ define('assets/tabStops',['require','exports','module','lodash','../utils/common
   var resources = require('./resources');
 
   /**
-   * Global placeholder value, automatically incremented by 
+   * Global placeholder value, automatically incremented by
    * <code>variablesResolver()</code> function
    */
   var startPlaceholderNum = 100;
   var tabstopIndex = 0;
-  
+
   var defaultOptions = {
     replaceCarets: false,
     escape: function(ch) {
@@ -9239,35 +9239,35 @@ define('assets/tabStops',['require','exports','module','lodash','../utils/common
       return data.token;
     }
   };
-  
+
   return {
     /**
      * Main function that looks for a tabstops in provided <code>text</code>
-     * and returns a processed version of <code>text</code> with expanded 
+     * and returns a processed version of <code>text</code> with expanded
      * placeholders and list of tabstops found.
      * @param {String} text Text to process
      * @param {Object} options List of processor options:<br>
-     * 
+     *
      * <b>replaceCarets</b> : <code>Boolean</code> — replace all default
      * caret placeholders (like <i>{%::emmet-caret::%}</i>) with <i>${0:caret}</i><br>
-     * 
+     *
      * <b>escape</b> : <code>Function</code> — function that handle escaped
-     * characters (mostly '$'). By default, it returns the character itself 
-     * to be displayed as is in output, but sometimes you will use 
-     * <code>extract</code> method as intermediate solution for further 
+     * characters (mostly '$'). By default, it returns the character itself
+     * to be displayed as is in output, but sometimes you will use
+     * <code>extract</code> method as intermediate solution for further
      * processing and want to keep character escaped. Thus, you should override
      * <code>escape</code> method to return escaped symbol (e.g. '\\$')<br>
-     * 
-     * <b>tabstop</b> : <code>Function</code> – a tabstop handler. Receives 
-     * a single argument – an object describing token: its position, number 
-     * group, placeholder and token itself. Should return a replacement 
+     *
+     * <b>tabstop</b> : <code>Function</code> – a tabstop handler. Receives
+     * a single argument – an object describing token: its position, number
+     * group, placeholder and token itself. Should return a replacement
      * string that will appear in final output
-     * 
-     * <b>variable</b> : <code>Function</code> – variable handler. Receives 
-     * a single argument – an object describing token: its position, name 
-     * and original token itself. Should return a replacement 
+     *
+     * <b>variable</b> : <code>Function</code> – variable handler. Receives
+     * a single argument – an object describing token: its position, name
+     * and original token itself. Should return a replacement
      * string that will appear in final output
-     * 
+     *
      * @returns {Object} Object with processed <code>text</code> property
      * and array of <code>tabstops</code> found
      * @memberOf tabStops
@@ -9276,7 +9276,7 @@ define('assets/tabStops',['require','exports','module','lodash','../utils/common
       // prepare defaults
       var placeholders = {carets: ''};
       var marks = [];
-      
+
       options = _.extend({}, defaultOptions, options, {
         tabstop: function(data) {
           var token = data.token;
@@ -9292,10 +9292,10 @@ define('assets/tabStops',['require','exports','module','lodash','../utils/common
             // unify placeholder value for single group
             if ('placeholder' in data)
               placeholders[data.group] = data.placeholder;
-            
+
             if (data.group in placeholders)
               ret = placeholders[data.group];
-            
+
             marks.push({
               start: data.start,
               end: data.start + token.length,
@@ -9303,85 +9303,85 @@ define('assets/tabStops',['require','exports','module','lodash','../utils/common
               value: ret
             });
           }
-          
+
           return token;
         }
       });
-      
+
       if (options.replaceCarets) {
         text = text.replace(new RegExp( utils.escapeForRegexp( utils.getCaretPlaceholder() ), 'g'), '${0:cursor}');
       }
-      
+
       // locate tabstops and unify group's placeholders
       text = this.processText(text, options);
-      
+
       // now, replace all tabstops with placeholders
       var buf = '', lastIx = 0;
       var tabStops = _.map(marks, function(mark) {
         buf += text.substring(lastIx, mark.start);
-        
+
         var pos = buf.length;
         var ph = placeholders[mark.group] || '';
-        
+
         buf += ph;
         lastIx = mark.end;
-        
+
         return {
           group: mark.group,
           start: pos,
           end:  pos + ph.length
         };
       });
-      
+
       buf += text.substring(lastIx);
-      
+
       return {
         text: buf,
         tabstops: _.sortBy(tabStops, 'start')
       };
     },
-    
+
     /**
      * Text processing routine. Locates escaped characters and tabstops and
-     * replaces them with values returned by handlers defined in 
+     * replaces them with values returned by handlers defined in
      * <code>options</code>
      * @param {String} text
-     * @param {Object} options See <code>extract</code> method options 
+     * @param {Object} options See <code>extract</code> method options
      * description
      * @returns {String}
      */
     processText: function(text, options) {
       options = _.extend({}, defaultOptions, options);
-      
+
       var buf = '';
       /** @type StringStream */
       var stream = stringStream.create(text);
       var ch, m, a;
-      
+
       while ((ch = stream.next())) {
         if (ch == '\\' && !stream.eol()) {
           // handle escaped character
           buf += options.escape(stream.next());
           continue;
         }
-        
+
         a = ch;
-        
+
         if (ch == '$') {
           // looks like a tabstop
           stream.start = stream.pos - 1;
-          
+
           if ((m = stream.match(/^[0-9]+/))) {
             // it's $N
             a = options.tabstop({
-              start: buf.length, 
+              start: buf.length,
               group: stream.current().substr(1),
               token: stream.current()
             });
           } else if ((m = stream.match(/^\{([a-z_\-][\w\-]*)\}/))) {
             // ${variable}
             a = options.variable({
-              start: buf.length, 
+              start: buf.length,
               name: m[1],
               token: stream.current()
             });
@@ -9389,29 +9389,29 @@ define('assets/tabStops',['require','exports','module','lodash','../utils/common
             // ${N:value} or ${N} placeholder
             // parse placeholder, including nested ones
             stream.skipToPair('{', '}');
-            
+
             var obj = {
-              start: buf.length, 
+              start: buf.length,
               group: m[1],
               token: stream.current()
             };
-            
+
             var placeholder = obj.token.substring(obj.group.length + 2, obj.token.length - 1);
-            
+
             if (placeholder) {
               obj.placeholder = placeholder.substr(1);
             }
-            
+
             a = options.tabstop(obj);
           }
         }
-        
+
         buf += a;
       }
-      
+
       return buf;
     },
-    
+
     /**
      * Upgrades tabstops in output node in order to prevent naming conflicts
      * @param {AbbreviationNode} node
@@ -9424,25 +9424,25 @@ define('assets/tabStops',['require','exports','module','lodash','../utils/common
         tabstop: function(data) {
           var group = parseInt(data.group, 10);
           if (group > maxNum) maxNum = group;
-            
+
           if (data.placeholder)
             return '${' + (group + offset) + ':' + data.placeholder + '}';
           else
             return '${' + (group + offset) + '}';
         }
       };
-      
+
       _.each(['start', 'end', 'content'], function(p) {
         node[p] = this.processText(node[p], options);
       }, this);
-      
+
       return maxNum;
     },
-    
+
     /**
-     * Helper function that produces a callback function for 
+     * Helper function that produces a callback function for
      * <code>replaceVariables()</code> method from {@link utils}
-     * module. This callback will replace variable definitions (like 
+     * module. This callback will replace variable definitions (like
      * ${var_name}) with their value defined in <i>resource</i> module,
      * or outputs tabstop with variable name otherwise.
      * @param {AbbreviationNode} node Context node
@@ -9456,26 +9456,26 @@ define('assets/tabStops',['require','exports','module','lodash','../utils/common
         if (varName == 'child') {
           return str;
         }
-        
+
         if (varName == 'cursor') {
           return utils.getCaretPlaceholder();
         }
-        
+
         var attr = node.attribute(varName);
         if (!_.isUndefined(attr) && attr !== str) {
           return attr;
         }
-        
+
         var varValue = resources.getVariable(varName);
         if (varValue) {
           return varValue;
         }
-        
+
         // output as placeholder
         if (!placeholderMemo[varName]) {
           placeholderMemo[varName] = startPlaceholderNum++;
         }
-          
+
         return '${' + placeholderMemo[varName] + ':' + varName + '}';
       };
     },
@@ -9483,7 +9483,7 @@ define('assets/tabStops',['require','exports','module','lodash','../utils/common
     /**
      * Replace variables like ${var} in string
      * @param {String} str
-     * @param {Object} vars Variable set (defaults to variables defined in 
+     * @param {Object} vars Variable set (defaults to variables defined in
      * <code>snippets.json</code>) or variable resolver (<code>Function</code>)
      * @return {String}
      */
@@ -9492,7 +9492,7 @@ define('assets/tabStops',['require','exports','module','lodash','../utils/common
       var resolver = _.isFunction(vars) ? vars : function(str, p1) {
         return p1 in vars ? vars[p1] : null;
       };
-      
+
       return this.processText(str, {
         variable: function(data) {
           var newValue = resolver(data.token, data.name, data);
@@ -9500,7 +9500,7 @@ define('assets/tabStops',['require','exports','module','lodash','../utils/common
             // try to find variable in resources
             newValue = resources.getVariable(data.name);
           }
-          
+
           if (newValue === null || _.isUndefined(newValue))
             // nothing found, return token itself
             newValue = data.token;
@@ -9508,18 +9508,18 @@ define('assets/tabStops',['require','exports','module','lodash','../utils/common
         }
       });
     },
-    
+
     /**
      * Resets global tabstop index. When parsed tree is converted to output
-     * string (<code>AbbreviationNode.toString()</code>), all tabstops 
+     * string (<code>AbbreviationNode.toString()</code>), all tabstops
      * defined in snippets and elements are upgraded in order to prevent
      * naming conflicts of nested. For example, <code>${1}</code> of a node
      * should not be linked with the same placehilder of the child node.
      * By default, <code>AbbreviationNode.toString()</code> automatically
      * upgrades tabstops of the same index for each node and writes maximum
      * tabstop index into the <code>tabstopIndex</code> variable. To keep
-     * this variable at reasonable value, it is recommended to call 
-     * <code>resetTabstopIndex()</code> method each time you expand variable 
+     * this variable at reasonable value, it is recommended to call
+     * <code>resetTabstopIndex()</code> method each time you expand variable
      * @returns
      */
     resetTabstopIndex: function() {
@@ -9528,19 +9528,19 @@ define('assets/tabStops',['require','exports','module','lodash','../utils/common
     },
 
     /**
-     * Output processor for abbreviation parser that will upgrade tabstops 
+     * Output processor for abbreviation parser that will upgrade tabstops
      * of parsed node in order to prevent tabstop index conflicts
      */
     abbrOutputProcessor: function(text, node, type) {
       var maxNum = 0;
       var that = this;
-      
+
       var tsOptions = {
         tabstop: function(data) {
           var group = parseInt(data.group, 10);
           if (group === 0)
             return '${0}';
-          
+
           if (group > maxNum) maxNum = group;
           if (data.placeholder) {
             // respect nested placeholders
@@ -9552,24 +9552,24 @@ define('assets/tabStops',['require','exports','module','lodash','../utils/common
           }
         }
       };
-      
+
       // upgrade tabstops
       text = this.processText(text, tsOptions);
-      
+
       // resolve variables
       text = this.replaceVariables(text, this.variablesResolver(node));
-      
+
       tabstopIndex += maxNum + 1;
       return text;
     }
   };
 });
 /**
- * Common module's preferences storage. This module 
+ * Common module's preferences storage. This module
  * provides general storage for all module preferences, their description and
  * default values.<br><br>
- * 
- * This module can also be used to list all available properties to create 
+ *
+ * This module can also be used to list all available properties to create
  * UI for updating properties
  */
 if (typeof module === 'object' && typeof define !== 'function') {
@@ -9595,13 +9595,13 @@ define('assets/preferences',['require','exports','module','lodash','../utils/com
 
     return !!val;
   }
-  
+
   function isValueObj(obj) {
-    return _.isObject(obj) 
-      && 'value' in obj 
+    return _.isObject(obj)
+      && 'value' in obj
       && _.keys(obj).length < 3;
   }
-  
+
   return {
     /**
      * Creates new preference item with default value
@@ -9620,12 +9620,12 @@ define('assets/preferences',['require','exports','module','lodash','../utils/com
           description: description
         };
       }
-      
+
       _.each(prefs, function(v, k) {
         defaults[k] = isValueObj(v) ? v : {value: v};
       });
     },
-    
+
     /**
      * Updates preference item value. Preference value should be defined
      * first with <code>define</code> method.
@@ -9640,12 +9640,12 @@ define('assets/preferences',['require','exports','module','lodash','../utils/com
         prefs = {};
         prefs[name] = value;
       }
-      
+
       _.each(prefs, function(v, k) {
         if (!(k in defaults)) {
           throw 'Property "' + k + '" is not defined. You should define it first with `define` method of current module';
         }
-        
+
         // do not set value if it equals to default value
         if (v !== defaults[k].value) {
           // make sure we have value of correct type
@@ -9668,27 +9668,27 @@ define('assets/preferences',['require','exports','module','lodash','../utils/com
         }
       });
     },
-    
+
     /**
      * Returns preference value
      * @param {String} name
-     * @returns {String} Returns <code>undefined</code> if preference is 
+     * @returns {String} Returns <code>undefined</code> if preference is
      * not defined
      */
     get: function(name) {
       if (name in preferences)
         return preferences[name];
-      
+
       if (name in defaults)
         return defaults[name].value;
-      
+
       return void 0;
     },
-    
+
     /**
      * Returns comma-separated preference value as array of values
      * @param {String} name
-     * @returns {Array} Returns <code>undefined</code> if preference is 
+     * @returns {Array} Returns <code>undefined</code> if preference is
      * not defined, <code>null</code> if string cannot be converted to array
      */
     getArray: function(name) {
@@ -9701,10 +9701,10 @@ define('assets/preferences',['require','exports','module','lodash','../utils/com
       if (!val.length) {
         return null;
       }
-      
+
       return val;
     },
-    
+
     /**
      * Returns comma and colon-separated preference value as dictionary
      * @param {String} name
@@ -9716,10 +9716,10 @@ define('assets/preferences',['require','exports','module','lodash','../utils/com
         var parts = val.split(':');
         result[parts[0]] = parts[1];
       });
-      
+
       return result;
     },
-    
+
     /**
      * Returns description of preference item
      * @param {String} name Preference name
@@ -9728,7 +9728,7 @@ define('assets/preferences',['require','exports','module','lodash','../utils/com
     description: function(name) {
       return name in defaults ? defaults[name].description : void 0;
     },
-    
+
     /**
      * Completely removes specified preference(s)
      * @param {String} name Preference name (or array of names)
@@ -9736,16 +9736,16 @@ define('assets/preferences',['require','exports','module','lodash','../utils/com
     remove: function(name) {
       if (!_.isArray(name))
         name = [name];
-      
+
       _.each(name, function(key) {
         if (key in preferences)
           delete preferences[key];
-        
+
         if (key in defaults)
           delete defaults[key];
       });
     },
-    
+
     /**
      * Returns sorted list of all available properties
      * @returns {Array}
@@ -9760,7 +9760,7 @@ define('assets/preferences',['require','exports','module','lodash','../utils/com
         };
       }, this);
     },
-    
+
     /**
      * Loads user-defined preferences from JSON
      * @param {Object} json
@@ -9779,7 +9779,7 @@ define('assets/preferences',['require','exports','module','lodash','../utils/com
     exportModified: function() {
       return _.clone(preferences);
     },
-    
+
     /**
      * Reset to defaults
      * @returns
@@ -9787,7 +9787,7 @@ define('assets/preferences',['require','exports','module','lodash','../utils/com
     reset: function() {
       preferences = {};
     },
-    
+
     /**
      * For unit testing: use empty storage
      */
@@ -9797,7 +9797,7 @@ define('assets/preferences',['require','exports','module','lodash','../utils/com
       defaults = {};
       preferences = {};
     },
-    
+
     /**
      * For unit testing: restore original storage
      */
@@ -9823,37 +9823,37 @@ define('assets/profile',['require','exports','module','lodash','../utils/common'
   var resources = require('./resources');
   var prefs = require('./preferences');
 
-  prefs.define('profile.allowCompactBoolean', true, 
-    'This option can be used to globally disable compact form of boolean ' + 
+  prefs.define('profile.allowCompactBoolean', true,
+    'This option can be used to globally disable compact form of boolean ' +
     'attribues (attributes where name and value are equal). With compact' +
     'form enabled, HTML tags can be outputted as <code>&lt;div contenteditable&gt;</code> ' +
     'instead of <code>&lt;div contenteditable="contenteditable"&gt;</code>');
 
-  prefs.define('profile.booleanAttributes', '^contenteditable|seamless$', 
-    'A regular expression for attributes that should be boolean by default.' + 
+  prefs.define('profile.booleanAttributes', '^contenteditable|seamless$',
+    'A regular expression for attributes that should be boolean by default.' +
     'If attribute name matches this expression, you don’t have to write dot ' +
     'after attribute name in Emmet abbreviation to mark it as boolean.');
 
   var profiles = {};
-  
+
   var defaultProfile = {
     tag_case: 'asis',
     attr_case: 'asis',
     attr_quotes: 'double',
-    
+
     // Each tag on new line
     tag_nl: 'decide',
-    
+
     // With tag_nl === true, defines if leaf node (e.g. node with no children)
     // should have formatted line breaks
     tag_nl_leaf: false,
-    
+
     place_cursor: true,
-    
+
     // Indent tags
     indent: true,
-    
-    // How many inline elements should be to force line break 
+
+    // How many inline elements should be to force line break
     // (set to 0 to disable)
     inline_break: 3,
 
@@ -9862,19 +9862,19 @@ define('assets/profile',['require','exports','module','lodash','../utils/common'
     // With this option enabled, HTML filter will
     // produce <div contenteditable> instead of <div contenteditable="contenteditable">
     compact_bool: false,
-    
+
     // Use self-closing style for writing empty elements, e.g. <br /> or <br>
     self_closing_tag: 'xhtml',
-    
-    // Profile-level output filters, re-defines syntax filters 
+
+    // Profile-level output filters, re-defines syntax filters
     filters: '',
-    
+
     // Additional filters applied to abbreviation.
     // Unlike "filters", this preference doesn't override default filters
     // but add the instead every time given profile is chosen
     extraFilters: ''
   };
-  
+
   /**
    * @constructor
    * @type OutputProfile
@@ -9883,7 +9883,7 @@ define('assets/profile',['require','exports','module','lodash','../utils/common'
   function OutputProfile(options) {
     _.extend(this, defaultProfile, options);
   }
-  
+
   OutputProfile.prototype = {
     /**
      * Transforms tag name case depending on current profile settings
@@ -9893,16 +9893,16 @@ define('assets/profile',['require','exports','module','lodash','../utils/common'
     tagName: function(name) {
       return stringCase(name, this.tag_case);
     },
-    
+
     /**
-     * Transforms attribute name case depending on current profile settings 
+     * Transforms attribute name case depending on current profile settings
      * @param {String} name String to transform
      * @returns {String}
      */
     attributeName: function(name) {
       return stringCase(name, this.attr_case);
     },
-    
+
     /**
      * Returns quote character for current profile
      * @returns {String}
@@ -9918,13 +9918,13 @@ define('assets/profile',['require','exports','module','lodash','../utils/common'
     selfClosing: function() {
       if (this.self_closing_tag == 'xhtml')
         return ' /';
-      
+
       if (this.self_closing_tag === true)
         return '/';
-      
+
       return '';
     },
-    
+
     /**
      * Returns cursor token based on current profile settings
      * @returns {String}
@@ -9935,7 +9935,7 @@ define('assets/profile',['require','exports','module','lodash','../utils/common'
 
     /**
      * Check if attribute with given name is boolean,
-     * e.g. written as `contenteditable` instead of 
+     * e.g. written as `contenteditable` instead of
      * `contenteditable="contenteditable"`
      * @param  {String}  name Attribute name
      * @return {Boolean}
@@ -9955,7 +9955,7 @@ define('assets/profile',['require','exports','module','lodash','../utils/common'
     },
 
     /**
-     * Check if compact boolean attribute record is 
+     * Check if compact boolean attribute record is
      * allowed for current profile
      * @return {Boolean}
      */
@@ -9963,12 +9963,12 @@ define('assets/profile',['require','exports','module','lodash','../utils/common'
       return this.compact_bool && prefs.get('profile.allowCompactBoolean');
     }
   };
-  
+
   /**
-   * Helper function that converts string case depending on 
-   * <code>caseValue</code> 
+   * Helper function that converts string case depending on
+   * <code>caseValue</code>
    * @param {String} str String to transform
-   * @param {String} caseValue Case value: can be <i>lower</i>, 
+   * @param {String} caseValue Case value: can be <i>lower</i>,
    * <i>upper</i> and <i>leave</i>
    * @returns {String}
    */
@@ -9979,10 +9979,10 @@ define('assets/profile',['require','exports','module','lodash','../utils/common'
       case 'upper':
         return str.toUpperCase();
     }
-    
+
     return str;
   }
-  
+
   /**
    * Creates new output profile
    * @param {String} name Profile name
@@ -9991,7 +9991,7 @@ define('assets/profile',['require','exports','module','lodash','../utils/common'
   function createProfile(name, options) {
     return profiles[name.toLowerCase()] = new OutputProfile(options);
   }
-  
+
   function createDefaultProfiles() {
     createProfile('xhtml');
     createProfile('html', {self_closing_tag: false, compact_bool: true});
@@ -10001,9 +10001,9 @@ define('assets/profile',['require','exports','module','lodash','../utils/common'
     createProfile('css', {tag_nl: true});
     createProfile('css_line', {tag_nl: false});
   }
-  
+
   createDefaultProfiles();
-  
+
   return  {
     /**
      * Creates new output profile and adds it into internal dictionary
@@ -10019,7 +10019,7 @@ define('assets/profile',['require','exports','module','lodash','../utils/common'
         // create profile object only
         return new OutputProfile(_.defaults(name || {}, defaultProfile));
     },
-    
+
     /**
      * Returns profile by its name. If profile wasn't found, returns
      * 'plain' profile
@@ -10036,22 +10036,22 @@ define('assets/profile',['require','exports','module','lodash','../utils/common'
           name = profile;
         }
       }
-      
+
       if (!name) {
         return profiles.plain;
       }
-      
+
       if (name instanceof OutputProfile) {
         return name;
       }
-      
+
       if (_.isString(name) && name.toLowerCase() in profiles) {
         return profiles[name.toLowerCase()];
       }
-      
+
       return this.create(name);
     },
-    
+
     /**
      * Deletes profile with specified name
      * @param {String} name Profile name
@@ -10061,7 +10061,7 @@ define('assets/profile',['require','exports','module','lodash','../utils/common'
       if (name in profiles)
         delete profiles[name];
     },
-    
+
     /**
      * Resets all user-defined profiles
      */
@@ -10069,12 +10069,12 @@ define('assets/profile',['require','exports','module','lodash','../utils/common'
       profiles = {};
       createDefaultProfiles();
     },
-    
+
     /**
-     * Helper function that converts string case depending on 
-     * <code>caseValue</code> 
+     * Helper function that converts string case depending on
+     * <code>caseValue</code>
      * @param {String} str String to transform
-     * @param {String} caseValue Case value: can be <i>lower</i>, 
+     * @param {String} caseValue Case value: can be <i>lower</i>,
      * <i>upper</i> and <i>leave</i>
      * @returns {String}
      */
@@ -10094,14 +10094,14 @@ if (typeof module === 'object' && typeof define !== 'function') {
 
 define('resolver/tagName',['require','exports','module','lodash'],function(require, exports, module) {
   var _ = require('lodash');
-  
+
   var elementTypes = {
 //    empty: 'area,base,basefont,br,col,frame,hr,img,input,isindex,link,meta,param,embed,keygen,command'.split(','),
     empty: [],
     blockLevel: 'address,applet,blockquote,button,center,dd,del,dir,div,dl,dt,fieldset,form,frameset,hr,iframe,ins,isindex,li,link,map,menu,noframes,noscript,object,ol,p,pre,script,table,tbody,td,tfoot,th,thead,tr,ul,h1,h2,h3,h4,h5,h6'.split(','),
     inlineLevel: 'a,abbr,acronym,applet,b,basefont,bdo,big,br,button,cite,code,del,dfn,em,font,i,iframe,img,input,ins,kbd,label,map,object,q,s,samp,select,small,span,strike,strong,sub,sup,textarea,tt,u,var'.split(',')
   };
-  
+
   var elementMap = {
     'p': 'span',
     'ul': 'li',
@@ -10119,7 +10119,7 @@ define('resolver/tagName',['require','exports','module','lodash'],function(requi
     'object': 'param',
     'map': 'area'
   };
-  
+
   return {
     /**
      * Returns best matched child element name for passed parent's
@@ -10130,25 +10130,25 @@ define('resolver/tagName',['require','exports','module','lodash'],function(requi
      */
     resolve: function(name) {
       name = (name || '').toLowerCase();
-      
+
       if (name in elementMap)
         return this.getMapping(name);
-      
+
       if (this.isInlineLevel(name))
         return 'span';
-      
+
       return 'div';
     },
-    
+
     /**
-     * Returns mapped child element name for passed parent's name 
+     * Returns mapped child element name for passed parent's name
      * @param {String} name
      * @returns {String}
      */
     getMapping: function(name) {
       return elementMap[name.toLowerCase()];
     },
-    
+
     /**
      * Check if passed element name belongs to inline-level element
      * @param {String} name
@@ -10157,17 +10157,17 @@ define('resolver/tagName',['require','exports','module','lodash'],function(requi
     isInlineLevel: function(name) {
       return this.isTypeOf(name, 'inlineLevel');
     },
-    
+
     /**
      * Check if passed element belongs to block-level element.
-     * For better matching of unknown elements (for XML, for example), 
+     * For better matching of unknown elements (for XML, for example),
      * you should use <code>!this.isInlineLevel(name)</code>
      * @returns {Boolean}
      */
     isBlockLevel: function(name) {
       return this.isTypeOf(name, 'blockLevel');
     },
-    
+
     /**
      * Check if passed element is void (i.e. should not have closing tag).
      * @returns {Boolean}
@@ -10175,7 +10175,7 @@ define('resolver/tagName',['require','exports','module','lodash'],function(requi
     isEmptyElement: function(name) {
       return this.isTypeOf(name, 'empty');
     },
-    
+
     /**
      * Generic function for testing if element name belongs to specified
      * elements collection
@@ -10186,7 +10186,7 @@ define('resolver/tagName',['require','exports','module','lodash'],function(requi
     isTypeOf: function(name, type) {
       return _.include(elementTypes[type], name);
     },
-    
+
     /**
      * Adds new parent–child mapping
      * @param {String} parent
@@ -10195,7 +10195,7 @@ define('resolver/tagName',['require','exports','module','lodash'],function(requi
     addMapping: function(parent, child) {
       elementMap[parent] = child;
     },
-    
+
     /**
      * Removes parent-child mapping
      */
@@ -10203,7 +10203,7 @@ define('resolver/tagName',['require','exports','module','lodash'],function(requi
       if (parent in elementMap)
         delete elementMap[parent];
     },
-    
+
     /**
      * Adds new element into collection
      * @param {String} name Element name
@@ -10212,12 +10212,12 @@ define('resolver/tagName',['require','exports','module','lodash'],function(requi
     addElementToCollection: function(name, collection) {
       if (!elementTypes[collection])
         elementTypes[collection] = [];
-      
+
       var col = this.getCollection(collection);
       if (!_.include(col, name))
         col.push(name);
     },
-    
+
     /**
      * Removes element name from specified collection
      * @param {String} name Element name
@@ -10229,7 +10229,7 @@ define('resolver/tagName',['require','exports','module','lodash'],function(requi
         elementTypes[collection] = _.without(this.getCollection(collection), name);
       }
     },
-    
+
     /**
      * Returns elements name collection
      * @param {String} name Collection name
@@ -10268,22 +10268,22 @@ define('utils/abbreviation',['require','exports','module','lodash','../assets/el
       if (node.children.length || node._text || this.isSnippet(node)) {
         return false;
       }
-      
+
       var r = node.data('resource');
       return r && r.is_empty;
     },
-    
+
     /**
      * Test if passed node is inline-level (like &lt;strong&gt;, &lt;img&gt;)
      * @param {AbbreviationNode} node
      * @return {Boolean}
      */
     isInline: function(node) {
-      return node.isTextNode() 
-        || !node.name() 
+      return node.isTextNode()
+        || !node.name()
         || tagName.isInlineLevel(node.name());
     },
-    
+
     /**
      * Test if passed node is block-level
      * @param {AbbreviationNode} node
@@ -10292,7 +10292,7 @@ define('utils/abbreviation',['require','exports','module','lodash','../assets/el
     isBlock: function(node) {
       return this.isSnippet(node) || !this.isInline(node);
     },
-    
+
     /**
      * Test if given node is a snippet
      * @param {AbbreviationNode} node
@@ -10301,9 +10301,9 @@ define('utils/abbreviation',['require','exports','module','lodash','../assets/el
     isSnippet: function(node) {
       return elements.is(node.data('resource'), 'snippet');
     },
-    
+
     /**
-     * This function tests if passed node content contains HTML tags. 
+     * This function tests if passed node content contains HTML tags.
      * This function is mostly used for output formatting
      * @param {AbbreviationNode} node
      * @returns {Boolean}
@@ -10311,19 +10311,19 @@ define('utils/abbreviation',['require','exports','module','lodash','../assets/el
     hasTagsInContent: function(node) {
       return utils.matchesTag(node.content);
     },
-    
+
     /**
      * Test if current element contains block-level children
      * @param {AbbreviationNode} node
      * @return {Boolean}
      */
     hasBlockChildren: function(node) {
-      return (this.hasTagsInContent(node) && this.isBlock(node)) 
+      return (this.hasTagsInContent(node) && this.isBlock(node))
         || _.any(node.children, function(child) {
           return this.isBlock(child);
         }, this);
     },
-    
+
     /**
      * Utility function that inserts content instead of <code>${child}</code>
      * variables on <code>text</code>
@@ -10337,7 +10337,7 @@ define('utils/abbreviation',['require','exports','module','lodash','../assets/el
         keepVariable: true,
         appendIfNoChild: true
       }, options || {});
-      
+
       var childVariableReplaced = false;
       text = tabStops.replaceVariables(text, function(variable, name, data) {
         var output = variable;
@@ -10348,14 +10348,14 @@ define('utils/abbreviation',['require','exports','module','lodash','../assets/el
           if (options.keepVariable)
             output += variable;
         }
-        
+
         return output;
       });
-      
+
       if (!childVariableReplaced && options.appendIfNoChild) {
         text += childContent;
       }
-      
+
       return text;
     }
   };
@@ -10364,7 +10364,7 @@ define('utils/abbreviation',['require','exports','module','lodash','../assets/el
  * Generic formatting filter: creates proper indentation for each tree node,
  * placing "%s" placeholder where the actual output should be. You can use
  * this filter to preformat tree and then replace %s placeholder to whatever you
- * need. This filter should't be called directly from editor as a part 
+ * need. This filter should't be called directly from editor as a part
  * of abbreviation.
  */
 if (typeof module === 'object' && typeof define !== 'function') {
@@ -10380,14 +10380,14 @@ define('filter/format',['require','exports','module','lodash','../utils/common',
   var prefs = require('../assets/preferences');
   var resources = require('../assets/resources');
 
-  prefs.define('format.noIndentTags', 'html', 
+  prefs.define('format.noIndentTags', 'html',
       'A comma-separated list of tag names that should not get inner indentation.');
-  
-  prefs.define('format.forceIndentationForTags', 'body', 
+
+  prefs.define('format.forceIndentationForTags', 'body',
     'A comma-separated list of tag names that should <em>always</em> get inner indentation.');
 
   var placeholder = '%s';
-  
+
   /**
    * Get indentation for given node
    * @param {AbbreviationNode} node
@@ -10397,10 +10397,10 @@ define('filter/format',['require','exports','module','lodash','../utils/common',
     if (_.include(prefs.getArray('format.noIndentTags') || [], node.name())) {
       return '';
     }
-    
+
     return '\t';
   }
-  
+
   /**
    * Test if passed node has block-level sibling element
    * @param {AbbreviationNode} item
@@ -10409,7 +10409,7 @@ define('filter/format',['require','exports','module','lodash','../utils/common',
   function hasBlockSibling(item) {
     return item.parent && abbrUtils.hasBlockChildren(item.parent);
   }
-  
+
   /**
    * Test if passed item is very first child in parsed tree
    * @param {AbbreviationNode} item
@@ -10417,7 +10417,7 @@ define('filter/format',['require','exports','module','lodash','../utils/common',
   function isVeryFirstChild(item) {
     return item.parent && !item.parent.parent && !item.index();
   }
-  
+
   /**
    * Check if a newline should be added before element
    * @param {AbbreviationNode} node
@@ -10427,25 +10427,25 @@ define('filter/format',['require','exports','module','lodash','../utils/common',
   function shouldAddLineBreak(node, profile) {
     if (profile.tag_nl === true || abbrUtils.isBlock(node))
       return true;
-    
+
     if (!node.parent || !profile.inline_break)
       return false;
-    
+
     // check if there are required amount of adjacent inline element
     return shouldFormatInline(node.parent, profile);
 }
-  
+
   /**
    * Need to add newline because <code>item</code> has too many inline children
    * @param {AbbreviationNode} node
    * @param {OutputProfile} profile
    */
   function shouldBreakChild(node, profile) {
-    // we need to test only one child element, because 
+    // we need to test only one child element, because
     // hasBlockChildren() method will do the rest
     return node.children.length && shouldAddLineBreak(node.children[0], profile);
   }
-  
+
   function shouldFormatInline(node, profile) {
     var nodeCount = 0;
     return !!_.find(node.children, function(child) {
@@ -10453,16 +10453,16 @@ define('filter/format',['require','exports','module','lodash','../utils/common',
         nodeCount = 0;
       else if (abbrUtils.isInline(child))
         nodeCount++;
-      
+
       if (nodeCount >= profile.inline_break)
         return true;
     });
   }
-  
+
   function isRoot(item) {
     return !item.parent;
   }
-  
+
   /**
    * Processes element with matched resource of type <code>snippet</code>
    * @param {AbbreviationNode} item
@@ -10476,10 +10476,10 @@ define('filter/format',['require','exports','module','lodash','../utils/common',
         item.start = '\n' + item.start;
       }
     }
-    
+
     return item;
   }
-  
+
   /**
    * Check if we should add line breaks inside inline element
    * @param {AbbreviationNode} node
@@ -10490,17 +10490,17 @@ define('filter/format',['require','exports','module','lodash','../utils/common',
     var hasBlockElems = _.any(node.children, function(child) {
       if (abbrUtils.isSnippet(child))
         return false;
-      
+
       return !abbrUtils.isInline(child);
     });
-    
+
     if (!hasBlockElems) {
       return shouldFormatInline(node, profile);
     }
-    
+
     return true;
   }
-  
+
   /**
    * Processes element with <code>tag</code> type
    * @param {AbbreviationNode} item
@@ -10511,14 +10511,14 @@ define('filter/format',['require','exports','module','lodash','../utils/common',
     var isUnary = abbrUtils.isUnary(item);
     var nl = '\n';
     var indent = getIndentation(item);
-      
+
     // formatting output
     if (profile.tag_nl !== false) {
       var forceNl = profile.tag_nl === true && (profile.tag_nl_leaf || item.children.length);
       if (!forceNl) {
         forceNl = _.include(prefs.getArray('format.forceIndentationForTags') || [], item.name());
       }
-      
+
       // formatting block-level elements
       if (!item.isTextNode()) {
         if (shouldAddLineBreak(item, profile)) {
@@ -10526,10 +10526,10 @@ define('filter/format',['require','exports','module','lodash','../utils/common',
           // - do not indent first child of a snippet
           if (!isVeryFirstChild(item) && (!abbrUtils.isSnippet(item.parent) || item.index()))
             item.start = nl + item.start;
-            
+
           if (abbrUtils.hasBlockChildren(item) || shouldBreakChild(item, profile) || (forceNl && !isUnary))
             item.end = nl + item.end;
-            
+
           if (abbrUtils.hasTagsInContent(item) || (forceNl && !item.children.length && !isUnary))
             item.start += nl + indent;
         } else if (abbrUtils.isInline(item) && hasBlockSibling(item) && !isVeryFirstChild(item)) {
@@ -10537,11 +10537,11 @@ define('filter/format',['require','exports','module','lodash','../utils/common',
         } else if (abbrUtils.isInline(item) && shouldBreakInsideInline(item, profile)) {
           item.end = nl + item.end;
         }
-        
+
         item.padding = indent;
       }
     }
-    
+
     return item;
   }
 
@@ -10553,17 +10553,17 @@ define('filter/format',['require','exports','module','lodash','../utils/common',
    */
   return function process(tree, profile, level) {
     level = level || 0;
-  
+
     _.each(tree.children, function(item) {
       if (abbrUtils.isSnippet(item)) {
         processSnippet(item, profile, level);
       } else {
         processTag(item, profile, level);
       }
-      
+
       process(item, profile, level + 1);
     });
-    
+
     return tree;
   };
 });
@@ -10591,7 +10591,7 @@ define('filter/html',['require','exports','module','lodash','../utils/abbreviati
   function makeAttributesString(node, profile) {
     var attrQuote = profile.attributeQuote();
     var cursor = profile.cursor();
-    
+
     return _.map(node.attributeList(), function(a) {
       var isBoolean = profile.isBoolean(a.name, a.value);
       var attrName = profile.attributeName(a.name);
@@ -10602,7 +10602,7 @@ define('filter/html',['require','exports','module','lodash','../utils/abbreviati
       return ' ' + attrName + '=' + attrQuote + (attrValue || cursor) + attrQuote;
     }).join('');
   }
-  
+
   /**
    * Processes element with <code>tag</code> type
    * @param {AbbreviationNode} item
@@ -10612,13 +10612,13 @@ define('filter/html',['require','exports','module','lodash','../utils/abbreviati
     if (!item.parent) { // looks like it's root element
       return item;
     }
-    
-    var attrs = makeAttributesString(item, profile); 
+
+    var attrs = makeAttributesString(item, profile);
     var cursor = profile.cursor();
     var isUnary = abbrUtils.isUnary(item);
     var start = '';
     var end = '';
-      
+
     // define opening and closing tags
     if (!item.isTextNode()) {
       var tagName = profile.tagName(item.name());
@@ -10630,42 +10630,42 @@ define('filter/html',['require','exports','module','lodash','../utils/abbreviati
         end = '</' + tagName + '>';
       }
     }
-    
+
     var placeholder = '%s';
     // We can't just replace placeholder with new value because
     // JavaScript will treat double $ character as a single one, assuming
     // we're using RegExp literal.
     item.start = utils.replaceSubstring(item.start, start, item.start.indexOf(placeholder), placeholder);
     item.end = utils.replaceSubstring(item.end, end, item.end.indexOf(placeholder), placeholder);
-    
+
     // should we put caret placeholder after opening tag?
     if (
-        !item.children.length 
-        && !isUnary 
+        !item.children.length
+        && !isUnary
         && !~item.content.indexOf(cursor)
         && !tabStops.extract(item.content).tabstops.length
       ) {
       item.start += cursor;
     }
-    
+
     return item;
   }
 
   return function process(tree, profile, level) {
     level = level || 0;
-    
+
     if (!level) {
       tree = formatFilter(tree, profile, level)
     }
-    
+
     _.each(tree.children, function(item) {
       if (!abbrUtils.isSnippet(item)) {
         processTag(item, profile, level);
       }
-      
+
       process(item, profile, level + 1);
     });
-    
+
     return tree;
   };
 });
@@ -10730,7 +10730,7 @@ define('filter/haml',['require','exports','module','lodash','../utils/common','.
       return ':' + attr.name + ' => ' + value
     }).join(', ') + '}';
   }
-  
+
   /**
    * Creates HAML attributes string from tag according to profile settings
    * @param {AbbreviationNode} tag
@@ -10741,7 +10741,7 @@ define('filter/haml',['require','exports','module','lodash','../utils/common','.
     var otherAttrs = [];
     var attrQuote = profile.attributeQuote();
     var cursor = profile.cursor();
-    
+
     _.each(tag.attributeList(), function(a) {
       var attrName = profile.attributeName(a.name);
       switch (attrName.toLowerCase()) {
@@ -10761,14 +10761,14 @@ define('filter/haml',['require','exports','module','lodash','../utils/common','.
           });
       }
     });
-    
+
     if (otherAttrs.length) {
       attrs += stringifyAttrs(condenseDataAttrs(otherAttrs), profile);
     }
-    
+
     return attrs;
   }
-  
+
   /**
    * Processes element with <code>tag</code> type
    * @param {AbbreviationNode} item
@@ -10778,52 +10778,52 @@ define('filter/haml',['require','exports','module','lodash','../utils/common','.
     if (!item.parent)
       // looks like it's root element
       return item;
-    
+
     var attrs = makeAttributesString(item, profile);
     var cursor = profile.cursor();
     var isUnary = abbrUtils.isUnary(item);
     var selfClosing = profile.self_closing_tag && isUnary ? '/' : '';
     var start= '';
-      
+
     // define tag name
     var tagName = '%' + profile.tagName(item.name());
     if (tagName.toLowerCase() == '%div' && attrs && attrs.indexOf('{') == -1)
       // omit div tag
       tagName = '';
-      
+
     item.end = '';
     start = tagName + attrs + selfClosing;
     if (item.content && !/^\s/.test(item.content)) {
       item.content = ' ' + item.content;
     }
-    
+
     var placeholder = '%s';
     // We can't just replace placeholder with new value because
     // JavaScript will treat double $ character as a single one, assuming
     // we're using RegExp literal.
     item.start = utils.replaceSubstring(item.start, start, item.start.indexOf(placeholder), placeholder);
-    
+
     if (!item.children.length && !isUnary)
       item.start += cursor;
-    
+
     return item;
   }
 
   return function process(tree, profile, level) {
     level = level || 0;
-    
+
     if (!level) {
       tree = formatFilter(tree, '_format', profile);
     }
-    
+
     _.each(tree.children, function(item) {
       if (!abbrUtils.isSnippet(item)) {
         processTag(item, profile, level);
       }
-      
+
       process(item, profile, level + 1);
     });
-    
+
     return tree;
   };
 });
@@ -10862,7 +10862,7 @@ define('filter/jade',['require','exports','module','lodash','../utils/common','.
       return attr.name + '=' + attrQuote + attr.value + attrQuote;
     }).join(', ') + ')';
   }
-  
+
   /**
    * Creates HAML attributes string from tag according to profile settings
    * @param {AbbreviationNode} tag
@@ -10873,7 +10873,7 @@ define('filter/jade',['require','exports','module','lodash','../utils/common','.
     var otherAttrs = [];
     var attrQuote = profile.attributeQuote();
     var cursor = profile.cursor();
-    
+
     _.each(tag.attributeList(), function(a) {
       var attrName = profile.attributeName(a.name);
       switch (attrName.toLowerCase()) {
@@ -10893,11 +10893,11 @@ define('filter/jade',['require','exports','module','lodash','../utils/common','.
           });
       }
     });
-    
+
     if (otherAttrs.length) {
       attrs += stringifyAttrs(otherAttrs, profile);
     }
-    
+
     return attrs;
   }
 
@@ -10921,7 +10921,7 @@ define('filter/jade',['require','exports','module','lodash','../utils/common','.
       item.content = ' ' + content;
     }
   }
-  
+
   /**
    * Processes element with <code>tag</code> type
    * @param {AbbreviationNode} item
@@ -10931,17 +10931,17 @@ define('filter/jade',['require','exports','module','lodash','../utils/common','.
     if (!item.parent)
       // looks like it's a root (empty) element
       return item;
-    
+
     var attrs = makeAttributesString(item, profile);
     var cursor = profile.cursor();
     var isUnary = abbrUtils.isUnary(item);
-      
+
     // define tag name
     var tagName = profile.tagName(item.name());
     if (tagName.toLowerCase() == 'div' && attrs && attrs.charAt(0) != '(')
       // omit div tag
       tagName = '';
-      
+
     item.end = '';
     var start = tagName + attrs;
     processTagContent(item);
@@ -10951,30 +10951,30 @@ define('filter/jade',['require','exports','module','lodash','../utils/common','.
     // JavaScript will treat double $ character as a single one, assuming
     // we're using RegExp literal.
     item.start = utils.replaceSubstring(item.start, start, item.start.indexOf(placeholder), placeholder);
-    
+
     if (!item.children.length && !isUnary)
       item.start += cursor;
-    
+
     return item;
   }
 
   return function process(tree, curProfile, level) {
     level = level || 0;
-    
+
     if (!level) {
       // always format with `xml` profile since
       // Jade requires all tags to be on separate lines
       tree = formatFilter(tree, profile.get('xml'));
     }
-    
+
     _.each(tree.children, function(item) {
       if (!abbrUtils.isSnippet(item)) {
         processTag(item, curProfile, level);
       }
-      
+
       process(item, curProfile, level + 1);
     });
-    
+
     return tree;
   };
 });
@@ -11000,7 +11000,7 @@ define('filter/slim',['require','exports','module','lodash','../utils/common','.
   var reIndentedText = /^\s*\|/;
   var reSpace = /^\s/;
 
-  prefs.define('slim.attributesWrapper', 'none', 
+  prefs.define('slim.attributesWrapper', 'none',
     'Defines how attributes will be wrapped:' +
     '<ul>' +
     '<li><code>none</code> – no wrapping;</li>' +
@@ -11052,7 +11052,7 @@ define('filter/slim',['require','exports','module','lodash','../utils/common','.
       return attr.name + '=' + value;
     }).join(' ') + attrWrap.end;
   }
-  
+
   /**
    * Creates HAML attributes string from tag according to profile settings
    * @param {AbbreviationNode} tag
@@ -11063,7 +11063,7 @@ define('filter/slim',['require','exports','module','lodash','../utils/common','.
     var otherAttrs = [];
     var attrQuote = profile.attributeQuote();
     var cursor = profile.cursor();
-    
+
     _.each(tag.attributeList(), function(a) {
       var attrName = profile.attributeName(a.name);
       switch (attrName.toLowerCase()) {
@@ -11083,11 +11083,11 @@ define('filter/slim',['require','exports','module','lodash','../utils/common','.
           });
       }
     });
-    
+
     if (otherAttrs.length) {
       attrs += stringifyAttrs(otherAttrs, profile);
     }
-    
+
     return attrs;
   }
 
@@ -11111,7 +11111,7 @@ define('filter/slim',['require','exports','module','lodash','../utils/common','.
       item.content = ' ' + content;
     }
   }
-  
+
   /**
    * Processes element with <code>tag</code> type
    * @param {AbbreviationNode} item
@@ -11121,18 +11121,18 @@ define('filter/slim',['require','exports','module','lodash','../utils/common','.
     if (!item.parent)
       // looks like it's a root (empty) element
       return item;
-    
+
     var attrs = makeAttributesString(item, profile);
     var cursor = profile.cursor();
     var isUnary = abbrUtils.isUnary(item);
     var selfClosing = profile.self_closing_tag && isUnary ? '/' : '';
-      
+
     // define tag name
     var tagName = profile.tagName(item.name());
     if (tagName.toLowerCase() == 'div' && attrs && '([{'.indexOf(attrs.charAt(0)) == -1)
       // omit div tag
       tagName = '';
-      
+
     item.end = '';
     var start = tagName + attrs + selfClosing;
     processTagContent(item);
@@ -11142,30 +11142,30 @@ define('filter/slim',['require','exports','module','lodash','../utils/common','.
     // JavaScript will treat double $ character as a single one, assuming
     // we're using RegExp literal.
     item.start = utils.replaceSubstring(item.start, start, item.start.indexOf(placeholder), placeholder);
-    
+
     if (!item.children.length && !isUnary)
       item.start += cursor;
-    
+
     return item;
   }
 
   return function process(tree, curProfile, level) {
     level = level || 0;
-    
+
     if (!level) {
       // always format with `xml` profile since
       // Slim requires all tags to be on separate lines
       tree = formatFilter(tree, profile.get('xml'));
     }
-    
+
     _.each(tree.children, function(item) {
       if (!abbrUtils.isSnippet(item)) {
         processTag(item, curProfile, level);
       }
-      
+
       process(item, curProfile, level + 1);
     });
-    
+
     return tree;
   };
 });
@@ -11187,7 +11187,7 @@ define('filter/xsl',['require','exports','module','lodash','../utils/abbreviatio
     'xsl:variable': 1,
     'xsl:with-param': 1
   };
-  
+
   /**
    * Removes "select" attribute from node
    * @param {AbbreviationNode} node
@@ -11199,12 +11199,12 @@ define('filter/xsl',['require','exports','module','lodash','../utils/abbreviatio
   return function process(tree) {
     _.each(tree.children, function(item) {
       if (!abbrUtils.isSnippet(item)
-          && (item.name() || '').toLowerCase() in tags 
+          && (item.name() || '').toLowerCase() in tags
           && item.children.length)
         trimAttribute(item);
       process(item);
     });
-    
+
     return tree;
   };
 });
@@ -11230,14 +11230,14 @@ define('filter/css',['require','exports','module','lodash'],function(require, ex
 
   return function process(tree, profile, level) {
     level = level || 0;
-    
+
     _.each(tree.children, function(item) {
       if (!isVeryFirstChild(item) && profile.tag_nl !== false) {
         item.start = '\n' + item.start;
       }
       process(item, profile, level + 1);
     });
-    
+
     return tree;
   };
 });
@@ -11262,43 +11262,43 @@ define('filter/bem',['require','exports','module','lodash','./html','../assets/p
 
   prefs.define('bem.elementSeparator', '__', 'Class name’s element separator.');
   prefs.define('bem.modifierSeparator', '_', 'Class name’s modifier separator.');
-  prefs.define('bem.shortElementPrefix', '-', 
+  prefs.define('bem.shortElementPrefix', '-',
       'Symbol for describing short “block-element” notation. Class names '
       + 'prefixed with this symbol will be treated as element name for parent‘s '
-      + 'block name. Each symbol instance traverses one level up in parsed ' 
+      + 'block name. Each symbol instance traverses one level up in parsed '
       + 'tree for block name lookup. Empty value will disable short notation.');
-  
+
   var shouldRunHtmlFilter = false;
-  
+
   function getSeparators() {
     return {
       element: prefs.get('bem.elementSeparator'),
       modifier: prefs.get('bem.modifierSeparator')
     };
   }
-  
+
   /**
    * @param {AbbreviationNode} item
    */
   function bemParse(item) {
     if (abbreviationUtils.isSnippet(item))
       return item;
-    
+
     // save BEM stuff in cache for faster lookups
     item.__bem = {
       block: '',
       element: '',
       modifier: ''
     };
-    
+
     var classNames = normalizeClassName(item.attribute('class')).split(' ');
-    
+
     // guess best match for block name
     var reBlockName = /^[a-z]\-/i;
     item.__bem.block = _.find(classNames, function(name) {
       return reBlockName.test(name);
     });
-    
+
     // guessing doesn't worked, pick first class name as block name
     if (!item.__bem.block) {
       reBlockName = /^[a-z]/i;
@@ -11306,27 +11306,27 @@ define('filter/bem',['require','exports','module','lodash','./html','../assets/p
         return reBlockName.test(name);
       }) || '';
     }
-    
+
     classNames = _.chain(classNames)
       .map(function(name) {return processClassName(name, item);})
       .flatten()
       .uniq()
       .value()
       .join(' ');
-    
+
     if (classNames)
       item.attribute('class', classNames);
-    
+
     return item;
   }
-  
+
   /**
    * @param {String} className
    * @returns {String}
    */
   function normalizeClassName(className) {
     className = (' ' + (className || '') + ' ').replace(/\s+/g, ' ');
-    
+
     var shortSymbol = prefs.get('bem.shortElementPrefix');
     if (shortSymbol) {
       var re = new RegExp('\\s(' + utils.escapeForRegexp(shortSymbol) + '+)', 'g');
@@ -11334,21 +11334,21 @@ define('filter/bem',['require','exports','module','lodash','./html','../assets/p
         return ' ' + utils.repeatString(getSeparators().element, p1.length);
       });
     }
-    
+
     return utils.trim(className);
   }
-  
+
   /**
    * Processes class name
    * @param {String} name Class name item to process
    * @param {AbbreviationNode} item Host node for provided class name
    * @returns Processed class name. May return <code>Array</code> of
-   * class names 
+   * class names
    */
   function processClassName(name, item) {
     name = transformClassName(name, item, 'element');
     name = transformClassName(name, item, 'modifier');
-    
+
     // expand class name
     // possible values:
     // * block__element
@@ -11367,51 +11367,51 @@ define('filter/bem',['require','exports','module','lodash','./html','../assets/p
       modifier = modifiers.join(separators.modifier);
     } else if (~name.indexOf(separators.modifier)) {
       var blockModifiers = name.split(separators.modifier);
-      
+
       block = blockModifiers.shift();
       modifier = blockModifiers.join(separators.modifier);
     }
-    
+
     if (block || element || modifier) {
       if (!block) {
         block = item.__bem.block;
       }
-      
+
       // inherit parent bem element, if exists
 //      if (item.parent && item.parent.__bem && item.parent.__bem.element)
 //        element = item.parent.__bem.element + separators.element + element;
-      
+
       // produce multiple classes
       var prefix = block;
       var result = [];
-      
+
       if (element) {
         prefix += separators.element + element;
         result.push(prefix);
       } else {
         result.push(prefix);
       }
-      
+
       if (modifier) {
         result.push(prefix + separators.modifier + modifier);
       }
-      
+
       item.__bem.block = block;
       item.__bem.element = element;
       item.__bem.modifier = modifier;
-      
+
       return result;
     }
-    
+
     // ...otherwise, return processed or original class name
     return name;
   }
-  
+
   /**
    * Low-level function to transform user-typed class name into full BEM class
    * @param {String} name Class name item to process
    * @param {AbbreviationNode} item Host node for provided class name
-   * @param {String} entityType Type of entity to be tried to transform 
+   * @param {String} entityType Type of entity to be tried to transform
    * ('element' or 'modifier')
    * @returns {String} Processed class name or original one if it can't be
    * transformed
@@ -11425,38 +11425,38 @@ define('filter/bem',['require','exports','module','lodash','./html','../assets/p
         depth = str.length / separators[entityType].length;
         return '';
       });
-      
+
       // find donor element
       var donor = item;
       while (donor.parent && depth--) {
         donor = donor.parent;
       }
-      
+
       if (!donor || !donor.__bem)
         donor = item;
-      
+
       if (donor && donor.__bem) {
         var prefix = donor.__bem.block;
-        
+
         // decide if we should inherit element name
 //        if (entityType == 'element') {
 //          var curElem = cleanName.split(separators.modifier, 1)[0];
 //          if (donor.__bem.element && donor.__bem.element != curElem)
 //            prefix += separators.element + donor.__bem.element;
 //        }
-        
+
         if (entityType == 'modifier' &&  donor.__bem.element)
           prefix += separators.element + donor.__bem.element;
-        
+
         return prefix + separators[entityType] + cleanName;
       }
     }
-    
+
     return name;
   }
-  
+
   /**
-   * Recursive function for processing tags, which extends class names 
+   * Recursive function for processing tags, which extends class names
    * according to BEM specs: http://bem.github.com/bem-method/pages/beginning/beginning.ru.html
    * <br><br>
    * It does several things:<br>
@@ -11464,17 +11464,17 @@ define('filter/bem',['require','exports','module','lodash','./html','../assets/p
    * <li>Expands complex class name (according to BEM symbol semantics):
    * .block__elem_modifier → .block.block__elem.block__elem_modifier
    * </li>
-   * <li>Inherits block name on child elements: 
+   * <li>Inherits block name on child elements:
    * .b-block > .__el > .__el → .b-block > .b-block__el > .b-block__el__el
    * </li>
    * <li>Treats first dash symbol as '__'</li>
-   * <li>Double underscore (or typographic '–') is also treated as an element 
-   * level lookup, e.g. ____el will search for element definition in parent’s 
+   * <li>Double underscore (or typographic '–') is also treated as an element
+   * level lookup, e.g. ____el will search for element definition in parent’s
    * parent element:
    * .b-block > .__el1 > .____el2 → .b-block > .b-block__el1 > .b-block__el2
    * </li>
    * </ul>
-   * 
+   *
    * @param {AbbreviationNode} tree
    * @param {Object} profile
    */
@@ -11482,14 +11482,14 @@ define('filter/bem',['require','exports','module','lodash','./html','../assets/p
     if (tree.name) {
       bemParse(tree, profile);
     }
-    
+
     _.each(tree.children, function(item) {
       process(item, profile);
       if (!abbreviationUtils.isSnippet(item) && item.start) {
         shouldRunHtmlFilter = true;
       }
     });
-    
+
     return tree;
   }
 
@@ -11501,7 +11501,7 @@ define('filter/bem',['require','exports','module','lodash','./html','../assets/p
     if (shouldRunHtmlFilter) {
       tree = htmlFilter(tree, profile);
     }
-    
+
     return tree;
   };
 });
@@ -11520,8 +11520,8 @@ define('filter/comment',['require','exports','module','lodash','../assets/prefer
   var utils = require('../utils/common');
   var abbrUtils = require('../utils/abbreviation');
   var filterCore = require('./main');
-  
-  prefs.define('filter.commentAfter', 
+
+  prefs.define('filter.commentAfter',
       '\n<!-- /<%= attr("id", "#") %><%= attr("class", ".") %> -->',
       'A definition of comment that should be placed <i>after</i> matched '
       + 'element when <code>comment</code> filter is applied. This definition '
@@ -11529,33 +11529,33 @@ define('filter/comment',['require','exports','module','lodash','../assets/prefer
       + 'function (see Underscore.js docs for details). In template context, '
       + 'the following properties and functions are availabe:\n'
       + '<ul>'
-      
-      + '<li><code>attr(name, before, after)</code> – a function that outputs' 
-      + 'specified attribute value concatenated with <code>before</code> ' 
-      + 'and <code>after</code> strings. If attribute doesn\'t exists, the ' 
+
+      + '<li><code>attr(name, before, after)</code> – a function that outputs'
+      + 'specified attribute value concatenated with <code>before</code> '
+      + 'and <code>after</code> strings. If attribute doesn\'t exists, the '
       + 'empty string will be returned.</li>'
-      
+
       + '<li><code>node</code> – current node (instance of <code>AbbreviationNode</code>)</li>'
-      
+
       + '<li><code>name</code> – name of current tag</li>'
-      
-      + '<li><code>padding</code> – current string padding, can be used ' 
+
+      + '<li><code>padding</code> – current string padding, can be used '
       + 'for formatting</li>'
-      
+
       +'</ul>');
-  
-  prefs.define('filter.commentBefore', 
+
+  prefs.define('filter.commentBefore',
       '',
       'A definition of comment that should be placed <i>before</i> matched '
       + 'element when <code>comment</code> filter is applied. '
       + 'For more info, read description of <code>filter.commentAfter</code> '
       + 'property');
-  
+
   prefs.define('filter.commentTrigger', 'id, class',
       'A comma-separated list of attribute names that should exist in abbreviatoin '
       + 'where comment should be added. If you wish to add comment for '
       + 'every element, set this option to <code>*</code>');
-  
+
   /**
    * Add comments to tag
    * @param {AbbreviationNode} node
@@ -11572,7 +11572,7 @@ define('filter/comment',['require','exports','module','lodash','../assets/prefer
         return;
       }
     }
-    
+
     var ctx = {
       node: node,
       name: node.name(),
@@ -11582,34 +11582,34 @@ define('filter/comment',['require','exports','module','lodash','../assets/prefer
         if (attr) {
           return (before || '') + attr + (after || '');
         }
-        
+
         return '';
       }
     };
-    
+
     var nodeBefore = templateBefore ? templateBefore(ctx) : '';
     var nodeAfter = templateAfter ? templateAfter(ctx) : '';
-    
+
     node.start = node.start.replace(/</, nodeBefore + '<');
     node.end = node.end.replace(/>/, '>' + nodeAfter);
   }
-  
+
   function process(tree, before, after) {
     _.each(tree.children, function(item) {
       if (abbrUtils.isBlock(item)) {
         addComments(item, before, after);
       }
-      
+
       process(item, before, after);
     });
-      
+
     return tree;
   }
 
   return function(tree) {
     var templateBefore = _.template(prefs.get('filter.commentBefore'));
     var templateAfter = _.template(prefs.get('filter.commentAfter'));
-    
+
     return process(tree, templateBefore, templateAfter);
   };
 });
@@ -11630,13 +11630,13 @@ define('filter/escape',['require','exports','module','lodash'],function(require,
     '>': '&gt;',
     '&': '&amp;'
   };
-  
+
   function escapeChars(str) {
     return str.replace(/([<>&])/g, function(str, p1){
       return charMap[p1];
     });
   }
-  
+
   return function process(tree) {
     _.each(tree.children, function(item) {
       item.start = escapeChars(item.start);
@@ -11644,7 +11644,7 @@ define('filter/escape',['require','exports','module','lodash'],function(require,
       item.content = escapeChars(item.content);
       process(item);
     });
-    
+
     return tree;
   };
 });
@@ -11666,19 +11666,19 @@ define('filter/singleLine',['require','exports','module','lodash','../utils/abbr
   return function process(tree) {
     _.each(tree.children, function(item) {
       if (!abbrUtils.isSnippet(item)) {
-        // remove padding from item 
+        // remove padding from item
         item.start = item.start.replace(rePad, '');
         item.end = item.end.replace(rePad, '');
       }
-      
-      // remove newlines 
+
+      // remove newlines
       item.start = item.start.replace(reNl, '');
       item.end = item.end.replace(reNl, '');
       item.content = item.content.replace(reNl, '');
-      
+
       process(item);
     });
-    
+
     return tree;
   };
 });
@@ -11686,7 +11686,7 @@ define('filter/singleLine',['require','exports','module','lodash','../utils/abbr
 /**
  * Trim filter: removes characters at the beginning of the text
  * content that indicates lists: numbers, #, *, -, etc.
- * 
+ *
  * Useful for wrapping lists with abbreviation.
  */
 if (typeof module === 'object' && typeof define !== 'function') {
@@ -11698,22 +11698,22 @@ if (typeof module === 'object' && typeof define !== 'function') {
 define('filter/trim',['require','exports','module','lodash','../assets/preferences'],function(require, exports, module) {
   var _ = require('lodash');
   var prefs = require('../assets/preferences');
-  prefs.define('filter.trimRegexp', 
+  prefs.define('filter.trimRegexp',
     '[\\s|\\u00a0]*[\\d|#|\\-|\*|\\u2022]+\\.?\\s*',
-    'Regular expression used to remove list markers (numbers, dashes, ' 
+    'Regular expression used to remove list markers (numbers, dashes, '
     + 'bullets, etc.) in <code>t</code> (trim) filter. The trim filter '
-    + 'is useful for wrapping with abbreviation lists, pased from other ' 
+    + 'is useful for wrapping with abbreviation lists, pased from other '
     + 'documents (for example, Word documents).');
-  
+
   function process(tree, re) {
     _.each(tree.children, function(item) {
       if (item.content) {
         item.content = item.content.replace(re, '');
       }
-      
+
       process(item, re);
     });
-    
+
     return tree;
   }
 
@@ -11755,20 +11755,20 @@ define('filter/main',['require','exports','module','lodash','../utils/common','.
     s: require('./singleLine'),
     t: require('./trim')
   };
-  
+
   /** Filters that will be applied for unknown syntax */
   var basicFilters = 'html';
-  
+
   function list(filters) {
     if (!filters)
       return [];
-    
+
     if (_.isString(filters))
       return filters.split(/[\|,]/g);
-    
+
     return filters;
   }
-  
+
   return  {
     /**
      * Register new filter
@@ -11778,13 +11778,13 @@ define('filter/main',['require','exports','module','lodash','../utils/common','.
     add: function(name, fn) {
       registeredFilters[name] = fn;
     },
-    
+
     /**
      * Apply filters for final output tree
      * @param {AbbreviationNode} tree Output tree
-     * @param {Array} filters List of filters to apply. Might be a 
+     * @param {Array} filters List of filters to apply. Might be a
      * <code>String</code>
-     * @param {Object} profile Output profile, defined in <i>profile</i> 
+     * @param {Object} profile Output profile, defined in <i>profile</i>
      * module. Filters defined it profile are not used, <code>profile</code>
      * is passed to filter function
      * @memberOf emmet.filters
@@ -11792,19 +11792,19 @@ define('filter/main',['require','exports','module','lodash','../utils/common','.
      */
     apply: function(tree, filters, profileName) {
       profileName = profile.get(profileName);
-      
+
       _.each(list(filters), function(filter) {
         var name = utils.trim(filter.toLowerCase());
         if (name && name in registeredFilters) {
           tree = registeredFilters[name](tree, profileName);
         }
       });
-      
+
       return tree;
     },
-    
+
     /**
-     * Composes list of filters that should be applied to a tree, based on 
+     * Composes list of filters that should be applied to a tree, based on
      * passed data
      * @param {String} syntax Syntax name ('html', 'css', etc.)
      * @param {Object} profile Output profile
@@ -11815,27 +11815,27 @@ define('filter/main',['require','exports','module','lodash','../utils/common','.
     composeList: function(syntax, profileName, additionalFilters) {
       profileName = profile.get(profileName);
       var filters = list(profileName.filters || resources.findItem(syntax, 'filters') || basicFilters);
-      
+
       if (profileName.extraFilters) {
         filters = filters.concat(list(profileName.extraFilters));
       }
-        
+
       if (additionalFilters) {
         filters = filters.concat(list(additionalFilters));
       }
-        
+
       if (!filters || !filters.length) {
         // looks like unknown syntax, apply basic filters
         filters = list(basicFilters);
       }
-        
+
       return filters;
     },
-    
+
     /**
      * Extracts filter list from abbreviation
      * @param {String} abbr
-     * @returns {Array} Array with cleaned abbreviation and list of 
+     * @returns {Array} Array with cleaned abbreviation and list of
      * extracted filters
      */
     extract: function(abbr) {
@@ -11844,15 +11844,15 @@ define('filter/main',['require','exports','module','lodash','../utils/common','.
         filters = p1;
         return '';
       });
-      
+
       return [abbr, list(filters)];
     }
   };
 });
 /**
- * "Lorem ipsum" text generator. Matches <code>lipsum(num)?</code> or 
+ * "Lorem ipsum" text generator. Matches <code>lipsum(num)?</code> or
  * <code>lorem(num)?</code> abbreviation.
- * This code is based on Django's contribution: 
+ * This code is based on Django's contribution:
  * https://code.djangoproject.com/browser/django/trunk/django/contrib/webdesign/lorem_ipsum.py
  * <br><br>
  * Examples to test:<br>
@@ -11861,7 +11861,7 @@ define('filter/main',['require','exports','module','lodash','../utils/common','.
  * <code>ol>lipsum10*5</code> — generates ordered list with 5 list items (autowrapped with &lt;li&gt; tag)
  * with text of 10 words on each line<br>
  * <code>span*3>lipsum20</code> – generates 3 paragraphs of 20-words text, each wrapped with &lt;span&gt; element .
- * Each paragraph phrase is unique   
+ * Each paragraph phrase is unique
  */
 if (typeof module === 'object' && typeof define !== 'function') {
   var define = function (factory) {
@@ -11908,43 +11908,43 @@ define('generator/lorem',['require','exports','module','lodash','../assets/prefe
     },
     ru: {
       common: ['далеко-далеко', 'за', 'словесными', 'горами', 'в стране', 'гласных', 'и согласных', 'живут', 'рыбные', 'тексты'],
-      words: ['вдали', 'от всех', 'они', 'буквенных', 'домах', 'на берегу', 'семантика', 
-        'большого', 'языкового', 'океана', 'маленький', 'ручеек', 'даль', 
-        'журчит', 'по всей', 'обеспечивает', 'ее','всеми', 'необходимыми', 
-        'правилами', 'эта', 'парадигматическая', 'страна', 'которой', 'жаренные', 
-        'предложения', 'залетают', 'прямо', 'рот', 'даже', 'всемогущая', 
-        'пунктуация', 'не', 'имеет', 'власти', 'над', 'рыбными', 'текстами', 
-        'ведущими', 'безорфографичный', 'образ', 'жизни', 'однажды', 'одна', 
-        'маленькая', 'строчка','рыбного', 'текста', 'имени', 'lorem', 'ipsum', 
-        'решила', 'выйти', 'большой', 'мир', 'грамматики', 'великий', 'оксмокс', 
-        'предупреждал', 'о', 'злых', 'запятых', 'диких', 'знаках', 'вопроса', 
-        'коварных', 'точках', 'запятой', 'но', 'текст', 'дал', 'сбить', 
-        'себя', 'толку', 'он', 'собрал', 'семь', 'своих', 'заглавных', 'букв', 
-        'подпоясал', 'инициал', 'за', 'пояс', 'пустился', 'дорогу', 
-        'взобравшись', 'первую', 'вершину', 'курсивных', 'гор', 'бросил', 
-        'последний', 'взгляд', 'назад', 'силуэт', 'своего', 'родного', 'города', 
-        'буквоград', 'заголовок', 'деревни', 'алфавит', 'подзаголовок', 'своего', 
-        'переулка', 'грустный', 'реторический', 'вопрос', 'скатился', 'его', 
-        'щеке', 'продолжил', 'свой', 'путь', 'дороге', 'встретил', 'рукопись', 
-        'она', 'предупредила',  'моей', 'все', 'переписывается', 'несколько', 
-        'раз', 'единственное', 'что', 'меня', 'осталось', 'это', 'приставка', 
-        'возвращайся', 'ты', 'лучше', 'свою', 'безопасную', 'страну', 'послушавшись', 
-        'рукописи', 'наш', 'продолжил', 'свой', 'путь', 'вскоре', 'ему', 
-        'повстречался', 'коварный', 'составитель', 'рекламных', 'текстов', 
-        'напоивший', 'языком', 'речью', 'заманивший', 'свое', 'агенство', 
-        'которое', 'использовало', 'снова', 'снова', 'своих', 'проектах', 
+      words: ['вдали', 'от всех', 'они', 'буквенных', 'домах', 'на берегу', 'семантика',
+        'большого', 'языкового', 'океана', 'маленький', 'ручеек', 'даль',
+        'журчит', 'по всей', 'обеспечивает', 'ее','всеми', 'необходимыми',
+        'правилами', 'эта', 'парадигматическая', 'страна', 'которой', 'жаренные',
+        'предложения', 'залетают', 'прямо', 'рот', 'даже', 'всемогущая',
+        'пунктуация', 'не', 'имеет', 'власти', 'над', 'рыбными', 'текстами',
+        'ведущими', 'безорфографичный', 'образ', 'жизни', 'однажды', 'одна',
+        'маленькая', 'строчка','рыбного', 'текста', 'имени', 'lorem', 'ipsum',
+        'решила', 'выйти', 'большой', 'мир', 'грамматики', 'великий', 'оксмокс',
+        'предупреждал', 'о', 'злых', 'запятых', 'диких', 'знаках', 'вопроса',
+        'коварных', 'точках', 'запятой', 'но', 'текст', 'дал', 'сбить',
+        'себя', 'толку', 'он', 'собрал', 'семь', 'своих', 'заглавных', 'букв',
+        'подпоясал', 'инициал', 'за', 'пояс', 'пустился', 'дорогу',
+        'взобравшись', 'первую', 'вершину', 'курсивных', 'гор', 'бросил',
+        'последний', 'взгляд', 'назад', 'силуэт', 'своего', 'родного', 'города',
+        'буквоград', 'заголовок', 'деревни', 'алфавит', 'подзаголовок', 'своего',
+        'переулка', 'грустный', 'реторический', 'вопрос', 'скатился', 'его',
+        'щеке', 'продолжил', 'свой', 'путь', 'дороге', 'встретил', 'рукопись',
+        'она', 'предупредила',  'моей', 'все', 'переписывается', 'несколько',
+        'раз', 'единственное', 'что', 'меня', 'осталось', 'это', 'приставка',
+        'возвращайся', 'ты', 'лучше', 'свою', 'безопасную', 'страну', 'послушавшись',
+        'рукописи', 'наш', 'продолжил', 'свой', 'путь', 'вскоре', 'ему',
+        'повстречался', 'коварный', 'составитель', 'рекламных', 'текстов',
+        'напоивший', 'языком', 'речью', 'заманивший', 'свое', 'агенство',
+        'которое', 'использовало', 'снова', 'снова', 'своих', 'проектах',
         'если', 'переписали', 'то', 'живет', 'там', 'до', 'сих', 'пор']
     }
   };
 
-  
-  prefs.define('lorem.defaultLang', 'en', 
+
+  prefs.define('lorem.defaultLang', 'en',
     'Default language of generated dummy text. Currently, <code>en</code>\
     and <code>ru</code> are supported, but users can add their own syntaxes\
     see <a href="http://docs.emmet.io/abbreviations/lorem-ipsum/">docs</a>.');
   prefs.define('lorem.omitCommonPart', false,
     'Omit commonly used part (e.g. “Lorem ipsum dolor sit amet“) from generated text.');
-  
+
   /**
    * Returns random integer between <code>from</code> and <code>to</code> values
    * @param {Number} from
@@ -11954,7 +11954,7 @@ define('generator/lorem',['require','exports','module','lodash','../assets/prefe
   function randint(from, to) {
     return Math.round(Math.random() * (to - from) + from);
   }
-  
+
   /**
    * @param {Array} arr
    * @param {Number} count
@@ -11969,36 +11969,36 @@ define('generator/lorem',['require','exports','module','lodash','../assets/prefe
       if (!_.include(result, randIx))
         result.push(randIx);
     }
-    
+
     return _.map(result, function(ix) {
       return arr[ix];
     });
   }
-  
+
   function choice(val) {
     if (_.isString(val))
       return val.charAt(randint(0, val.length - 1));
-    
+
     return val[randint(0, val.length - 1)];
   }
-  
+
   function sentence(words, end) {
     if (words.length) {
       words[0] = words[0].charAt(0).toUpperCase() + words[0].substring(1);
     }
-    
+
     return words.join(' ') + (end || choice('?!...')); // more dots than question marks
   }
-  
+
   /**
    * Insert commas at randomly selected words. This function modifies values
-   * inside <code>words</code> array 
+   * inside <code>words</code> array
    * @param {Array} words
    */
   function insertCommas(words) {
     var len = words.length;
     var totalCommas = 0;
-    
+
     if (len > 3 && len <= 6) {
       totalCommas = randint(0, 1);
     } else if (len > 6 && len <= 12) {
@@ -12023,11 +12023,11 @@ define('generator/lorem',['require','exports','module','lodash','../assets/prefe
       }
     });
   }
-  
+
   /**
    * Generate a paragraph of "Lorem ipsum" text
    * @param {Number} wordCount Words count in paragraph
-   * @param {Boolean} startWithCommon Should paragraph start with common 
+   * @param {Boolean} startWithCommon Should paragraph start with common
    * "lorem ipsum" sentence.
    * @returns {String}
    */
@@ -12040,9 +12040,9 @@ define('generator/lorem',['require','exports','module','lodash','../assets/prefe
     var result = [];
     var totalWords = 0;
     var words;
-    
+
     wordCount = parseInt(wordCount, 10);
-    
+
     if (startWithCommon && data.common) {
       words = data.common.slice(0, wordCount);
       if (words.length > 5) {
@@ -12051,14 +12051,14 @@ define('generator/lorem',['require','exports','module','lodash','../assets/prefe
       totalWords += words.length;
       result.push(sentence(words, '.'));
     }
-    
+
     while (totalWords < wordCount) {
       words = sample(data.words, Math.min(randint(2, 30), wordCount - totalWords));
       totalWords += words.length;
       insertCommas(words);
       result.push(sentence(words));
     }
-    
+
     return result.join(' ');
   }
 
@@ -12066,7 +12066,7 @@ define('generator/lorem',['require','exports','module','lodash','../assets/prefe
     /**
      * Adds new language words for Lorem Ipsum generator
      * @param {String} lang Two-letter lang definition
-     * @param {Object} data Words for language. Maight be either a space-separated 
+     * @param {Object} data Words for language. Maight be either a space-separated
      * list of words (String), Array of words or object with <code>text</code> and
      * <code>common</code> properties
      */
@@ -12082,13 +12082,13 @@ define('generator/lorem',['require','exports','module','lodash','../assets/prefe
     preprocessor: function(tree) {
       var re = /^(?:lorem|lipsum)([a-z]{2})?(\d*)$/i, match;
       var allowCommon = !prefs.get('lorem.omitCommonPart');
-      
+
       /** @param {AbbreviationNode} node */
       tree.findAll(function(node) {
         if (node._name && (match = node._name.match(re))) {
           var wordCound = match[2] || 30;
           var lang = match[1] || prefs.get('lorem.defaultLang') || 'en';
-          
+
           // force node name resolving if node should be repeated
           // or contains attributes. In this case, node should be outputed
           // as tag, otherwise as text-only node
@@ -12122,7 +12122,7 @@ define('parser/processor/pastedContent',['require','exports','module','lodash','
   var range = require('../../assets/range');
 
   var outputPlaceholder = '$#';
-  
+
   /**
    * Locates output placeholders inside text
    * @param {String} text
@@ -12130,9 +12130,9 @@ define('parser/processor/pastedContent',['require','exports','module','lodash','
    */
   function locateOutputPlaceholder(text) {
     var result = [];
-    
+
     var stream = stringStream.create(text);
-    
+
     while (!stream.eol()) {
       if (stream.peek() == '\\') {
         stream.next();
@@ -12145,12 +12145,12 @@ define('parser/processor/pastedContent',['require','exports','module','lodash','
       }
       stream.next();
     }
-    
+
     return result;
   }
-  
+
   /**
-   * Replaces output placeholders inside <code>source</code> with 
+   * Replaces output placeholders inside <code>source</code> with
    * <code>value</code>
    * @param {String} source
    * @param {String} value
@@ -12158,15 +12158,15 @@ define('parser/processor/pastedContent',['require','exports','module','lodash','
    */
   function replaceOutputPlaceholders(source, value) {
     var ranges = locateOutputPlaceholder(source);
-    
+
     ranges.reverse();
     _.each(ranges, function(r) {
       source = utils.replaceSubstring(source, value, r);
     });
-    
+
     return source;
   }
-  
+
   /**
    * Check if parsed node contains output placeholder – a target where
    * pasted content should be inserted
@@ -12176,13 +12176,13 @@ define('parser/processor/pastedContent',['require','exports','module','lodash','
   function hasOutputPlaceholder(node) {
     if (locateOutputPlaceholder(node.content).length)
       return true;
-    
+
     // check if attributes contains placeholder
     return !!_.find(node.attributeList(), function(attr) {
       return !!locateOutputPlaceholder(attr.value).length;
     });
   }
-  
+
   /**
    * Insert pasted content into correct positions of parsed node
    * @param {AbbreviationNode} node
@@ -12194,10 +12194,10 @@ define('parser/processor/pastedContent',['require','exports','module','lodash','
     var nodesWithPlaceholders = node.findAll(function(item) {
       return hasOutputPlaceholder(item);
     });
-    
+
     if (hasOutputPlaceholder(node))
       nodesWithPlaceholders.unshift(node);
-    
+
     if (nodesWithPlaceholders.length) {
       _.each(nodesWithPlaceholders, function(item) {
         item.content = replaceOutputPlaceholders(item.content, content);
@@ -12236,7 +12236,7 @@ define('parser/processor/pastedContent',['require','exports','module','lodash','
     preprocessor: function(tree, options) {
       if (options.pastedContent) {
         var lines = _.map(utils.splitByLines(options.pastedContent, true), utils.trim);
-        
+
         // set repeat count for implicitly repeated elements before
         // tree is unrolled
         tree.findAll(function(item) {
@@ -12260,10 +12260,10 @@ define('parser/processor/pastedContent',['require','exports','module','lodash','
         if (pastedContent) {
           insertPastedContent(item, pastedContent, !!item.data('pasteOverwrites'));
         }
-        
+
         return !!pastedContent;
       });
-      
+
       if (!targets.length && options.pastedContent) {
         // no implicitly repeated elements, put pasted content in
         // the deepest child
@@ -12297,7 +12297,7 @@ define('parser/processor/tagName',['require','exports','module','lodash','../../
       }
       resolveNodeNames(node);
     });
-    
+
     return tree;
   }
 
@@ -12308,7 +12308,7 @@ define('parser/processor/tagName',['require','exports','module','lodash','../../
 /**
  * Processor function that matches parsed <code>AbbreviationNode</code>
  * against resources defined in <code>resource</code> module
- */ 
+ */
 if (typeof module === 'object' && typeof define !== 'function') {
   var define = function (factory) {
     module.exports = factory(require, exports, module);
@@ -12323,9 +12323,9 @@ define('parser/processor/resourceMatcher',['require','exports','module','lodash'
   var abbreviationUtils = require('../../utils/abbreviation');
 
   /**
-   * Finds matched resources for child nodes of passed <code>node</code> 
+   * Finds matched resources for child nodes of passed <code>node</code>
    * element. A matched resource is a reference to <i>snippets.json</i> entry
-   * that describes output of parsed node 
+   * that describes output of parsed node
    * @param {AbbreviationNode} node
    * @param {String} syntax
    */
@@ -12362,7 +12362,7 @@ define('parser/processor/resourceMatcher',['require','exports','module','lodash'
           syntax: syntax
         });
 
-        // if context element should be repeated, check if we need to 
+        // if context element should be repeated, check if we need to
         // transfer repeated element to specific child node
         if (child.repeatCount > 1) {
           var repeatedChildren = subtree.findAll(function(node) {
@@ -12372,7 +12372,7 @@ define('parser/processor/resourceMatcher',['require','exports','module','lodash'
           if (!repeatedChildren.length) {
             repeatedChildren = subtree.children
           }
-          
+
           _.each(repeatedChildren, function(node) {
             node.repeatCount = child.repeatCount;
             node.hasImplicitRepeat = false;
@@ -12394,14 +12394,14 @@ define('parser/processor/resourceMatcher',['require','exports','module','lodash'
             node.attribute(attr.name, attr.value);
           });
         });
-        
+
         child.replace(subtree.children);
       }
-      
+
       matchResources(child, syntax, parser);
     });
   }
-  
+
   return {
     preprocessor: function(tree, options, parser) {
       var syntax = options.syntax || utils.defaultSyntax();
@@ -12444,16 +12444,16 @@ define('parser/processor/attributes',['require','exports','module','lodash','../
       if (!_.isUndefined(defaultAttrValue)) {
         // remove stub attribute
         item.attribute(parser.DEFAULT_ATTR_NAME, null);
-        
+
         if (attrList.length) {
           // target for default value:
           // 1. default attribute
           // 2. implied attribute
           // 3. first empty attribute
-        
+
           // find attribute marked as default
-          var defaultAttr = _.find(attrList, findDefault) 
-            || _.find(attrList, findImplied) 
+          var defaultAttr = _.find(attrList, findDefault)
+            || _.find(attrList, findImplied)
             || _.find(attrList, findEmpty);
 
           if (defaultAttr) {
@@ -12463,7 +12463,7 @@ define('parser/processor/attributes',['require','exports','module','lodash','../
             if (oldVal == newVal) {
               newVal = defaultAttrValue
             }
-            
+
             item.attribute(defaultAttr.name, newVal);
           }
         }
@@ -12493,7 +12493,7 @@ define('parser/processor/attributes',['require','exports','module','lodash','../
 });
 /**
  * A preptocessor for &lt;a&gt; tag: tests wrapped content
- * for common URL patterns and, if matched, inserts it as 
+ * for common URL patterns and, if matched, inserts it as
  * `href` attribute
  */
 if (typeof module === 'object' && typeof define !== 'function') {
@@ -12507,16 +12507,16 @@ define('parser/processor/href',['require','exports','module','../../assets/prefe
   var utils = require('../../utils/common');
   var pc = require('./pastedContent');
 
-  prefs.define('href.autodetect', true, 
+  prefs.define('href.autodetect', true,
     'Enables or disables automatic URL recognition when wrapping\
     text with <code>&lt;a&gt;</code> tag. With this option enabled,\
     if wrapped text matches URL or e-mail pattern it will be automatically\
     inserted into <code>href</code> attribute.');
-  prefs.define('href.urlPattern', '^(?:(?:https?|ftp|file)://|www\\.|ftp\\.)(?:\\([-A-Z0-9+&@#/%=~_|$?!:,.]*\\)|[-A-Z0-9+&@#/%=~_|$?!:,.])*(?:\\([-A-Z0-9+&@#/%=~_|$?!:,.]*\\)|[A-Z0-9+&@#/%=~_|$])', 
+  prefs.define('href.urlPattern', '^(?:(?:https?|ftp|file)://|www\\.|ftp\\.)(?:\\([-A-Z0-9+&@#/%=~_|$?!:,.]*\\)|[-A-Z0-9+&@#/%=~_|$?!:,.])*(?:\\([-A-Z0-9+&@#/%=~_|$?!:,.]*\\)|[A-Z0-9+&@#/%=~_|$])',
     'RegExp pattern to match wrapped URLs. Matched content will be inserts\
     as-is into <code>href</code> attribute, only whitespace will be trimmed.');
 
-  prefs.define('href.emailPattern', '^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,5}$', 
+  prefs.define('href.emailPattern', '^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,5}$',
     'RegExp pattern to match wrapped e-mails. Unlike <code>href.urlPattern</code>,\
     wrapped content will be prefixed with <code>mailto:</code> in <code>href</code>\
     attribute');
@@ -12559,14 +12559,14 @@ define('parser/processor/href',['require','exports','module','../../assets/prefe
 });
 /**
  * Emmet abbreviation parser.
- * Takes string abbreviation and recursively parses it into a tree. The parsed 
- * tree can be transformed into a string representation with 
+ * Takes string abbreviation and recursively parses it into a tree. The parsed
+ * tree can be transformed into a string representation with
  * <code>toString()</code> method. Note that string representation is defined
- * by custom processors (called <i>filters</i>), not by abbreviation parser 
+ * by custom processors (called <i>filters</i>), not by abbreviation parser
  * itself.
- * 
+ *
  * This module can be extended with custom pre-/post-processors to shape-up
- * final tree or its representation. Actually, many features of abbreviation 
+ * final tree or its representation. Actually, many features of abbreviation
  * engine are defined in other modules as tree processors
  */
 if (typeof module === 'object' && typeof define !== 'function') {
@@ -12595,19 +12595,19 @@ define('parser/abbreviation',['require','exports','module','lodash','../assets/t
   var reValidName = /^[\w\-\$\:@\!%]+\+?$/i;
   var reWord = /[\w\-:\$@]/;
   var DEFAULT_ATTR_NAME = '%default';
-  
+
   var pairs = {
     '[': ']',
     '(': ')',
     '{': '}'
   };
-  
+
   var spliceFn = Array.prototype.splice;
-  
+
   var preprocessors = [];
   var postprocessors = [];
   var outputProcessors = [];
-  
+
   /**
    * @type AbbreviationNode
    */
@@ -12616,7 +12616,7 @@ define('parser/abbreviation',['require','exports','module','lodash','../assets/t
     this.parent = null;
     this.children = [];
     this._attributes = [];
-    
+
     /** @type String Raw abbreviation for current node */
     this.abbreviation = '';
     this.counter = 1;
@@ -12624,38 +12624,38 @@ define('parser/abbreviation',['require','exports','module','lodash','../assets/t
     this._text = '';
     this.repeatCount = 1;
     this.hasImplicitRepeat = false;
-    
+
     /** Custom data dictionary */
     this._data = {};
-    
+
     // output properties
     this.start = '';
     this.end = '';
     this.content = '';
     this.padding = '';
   }
-  
+
   AbbreviationNode.prototype = {
     /**
      * Adds passed node as child or creates new child
      * @param {AbbreviationNode} child
-     * @param {Number} position Index in children array where child should 
+     * @param {Number} position Index in children array where child should
      * be inserted
      * @return {AbbreviationNode}
      */
     addChild: function(child, position) {
       child = child || new AbbreviationNode();
       child.parent = this;
-      
+
       if (_.isUndefined(position)) {
         this.children.push(child);
       } else {
         this.children.splice(position, 0, child);
       }
-      
+
       return child;
     },
-    
+
     /**
      * Creates a deep copy of current node
      * @returns {AbbreviationNode}
@@ -12666,24 +12666,24 @@ define('parser/abbreviation',['require','exports','module','lodash','../assets/t
       _.each(attrs, function(a) {
         node[a] = this[a];
       }, this);
-      
+
       // clone attributes
       node._attributes = _.map(this._attributes, function(attr) {
         return _.clone(attr);
       });
-      
+
       node._data = _.clone(this._data);
-      
+
       // clone children
       node.children = _.map(this.children, function(child) {
         child = child.clone();
         child.parent = node;
         return child;
       });
-      
+
       return node;
     },
-    
+
     /**
      * Removes current node from parent‘s child list
      * @returns {AbbreviationNode} Current node itself
@@ -12692,10 +12692,10 @@ define('parser/abbreviation',['require','exports','module','lodash','../assets/t
       if (this.parent) {
         this.parent.children = _.without(this.parent.children, this);
       }
-      
+
       return this;
     },
-    
+
     /**
      * Replaces current node in parent‘s children list with passed nodes
      * @param {AbbreviationNode} node Replacement node or array of nodes
@@ -12705,16 +12705,16 @@ define('parser/abbreviation',['require','exports','module','lodash','../assets/t
       var ix = _.indexOf(parent.children, this);
       var items = _.flatten(arguments);
       spliceFn.apply(parent.children, [ix, 1].concat(items));
-      
+
       // update parent
       _.each(items, function(item) {
         item.parent = parent;
       });
     },
-    
+
     /**
      * Recursively sets <code>property</code> to <code>value</code> of current
-     * node and its children 
+     * node and its children
      * @param {String} name Property to update
      * @param {Object} value New property value
      */
@@ -12723,12 +12723,12 @@ define('parser/abbreviation',['require','exports','module','lodash','../assets/t
       _.each(this.children, function(child) {
         child.updateProperty(name, value);
       });
-      
+
       return this;
     },
-    
+
     /**
-     * Finds first child node that matches truth test for passed 
+     * Finds first child node that matches truth test for passed
      * <code>fn</code> function
      * @param {Function} fn
      * @returns {AbbreviationNode}
@@ -12736,9 +12736,9 @@ define('parser/abbreviation',['require','exports','module','lodash','../assets/t
     find: function(fn) {
       return this.findAll(fn, {amount: 1})[0];
     },
-    
+
     /**
-     * Finds all child nodes that matches truth test for passed 
+     * Finds all child nodes that matches truth test for passed
      * <code>fn</code> function
      * @param {Function} fn
      * @returns {Array}
@@ -12750,7 +12750,7 @@ define('parser/abbreviation',['require','exports','module','lodash','../assets/t
         var elemName = fn.toLowerCase();
         fn = function(item) {return item.name().toLowerCase() == elemName;};
       }
-        
+
       var result = [];
       _.each(this.children, function(child) {
         if (fn(child)) {
@@ -12760,13 +12760,13 @@ define('parser/abbreviation',['require','exports','module','lodash','../assets/t
             return;
           }
         }
-        
+
         result = result.concat(child.findAll(fn));
       });
-      
+
       return _.compact(result);
     },
-    
+
     /**
      * Sets/gets custom data
      * @param {String} name
@@ -12777,10 +12777,10 @@ define('parser/abbreviation',['require','exports','module','lodash','../assets/t
       if (arguments.length == 2) {
         this._data[name] = value;
       }
-      
+
       return this._data[name];
     },
-    
+
     /**
      * Returns name of current node
      * @returns {String}
@@ -12788,7 +12788,7 @@ define('parser/abbreviation',['require','exports','module','lodash','../assets/t
     name: function() {
       return this._name;
     },
-    
+
     /**
      * Returns list of attributes for current node
      * @returns {Array}
@@ -12796,11 +12796,11 @@ define('parser/abbreviation',['require','exports','module','lodash','../assets/t
     attributeList: function() {
       return optimizeAttributes(this._attributes.slice(0));
     },
-    
+
     /**
      * Returns or sets attribute value
      * @param {String} name Attribute name
-     * @param {String} value New attribute value. `Null` value 
+     * @param {String} value New attribute value. `Null` value
      * will remove attribute
      * @returns {String}
      */
@@ -12831,12 +12831,12 @@ define('parser/abbreviation',['require','exports','module','lodash','../assets/t
           });
         }
       }
-      
+
       return (_.find(this.attributeList(), function(attr) {
         return attr.name == name;
       }) || {}).value;
     },
-    
+
     /**
      * Returns index of current node in parent‘s children list
      * @returns {Number}
@@ -12844,7 +12844,7 @@ define('parser/abbreviation',['require','exports','module','lodash','../assets/t
     index: function() {
       return this.parent ? _.indexOf(this.parent.children, this) : -1;
     },
-    
+
     /**
      * Sets how many times current element should be repeated
      * @private
@@ -12856,44 +12856,44 @@ define('parser/abbreviation',['require','exports','module','lodash','../assets/t
         this.hasImplicitRepeat = true;
       }
     },
-    
+
     /**
      * Sets abbreviation that belongs to current node
      * @param {String} abbr
      */
     setAbbreviation: function(abbr) {
       abbr = abbr || '';
-      
+
       var that = this;
-      
+
       // find multiplier
       abbr = abbr.replace(/\*(\d+)?$/, function(str, repeatCount) {
         that._setRepeat(repeatCount);
         return '';
       });
-      
+
       this.abbreviation = abbr;
-      
+
       var abbrText = extractText(abbr);
       if (abbrText) {
         abbr = abbrText.element;
         this.content = this._text = abbrText.text;
       }
-      
+
       var abbrAttrs = parseAttributes(abbr);
       if (abbrAttrs) {
         abbr = abbrAttrs.element;
         this._attributes = abbrAttrs.attributes;
       }
-      
+
       this._name = abbr;
-      
+
       // validate name
       if (this._name && !reValidName.test(this._name)) {
         throw new Error('Invalid abbreviation');
       }
     },
-    
+
     /**
      * Returns string representation of current node
      * @return {String}
@@ -12902,7 +12902,7 @@ define('parser/abbreviation',['require','exports','module','lodash','../assets/t
       var start = this.start;
       var end = this.end;
       var content = this.content;
-      
+
       // apply output processors
       var node = this;
       _.each(outputProcessors, function(fn) {
@@ -12910,23 +12910,23 @@ define('parser/abbreviation',['require','exports','module','lodash','../assets/t
         content = fn(content, node, 'content');
         end = fn(end, node, 'end');
       });
-      
-      
+
+
       var innerContent = _.map(this.children, function(child) {
         return child.valueOf();
       }).join('');
-      
+
       content = abbreviationUtils.insertChildContent(content, innerContent, {
         keepVariable: false
       });
-      
+
       return start + utils.padString(content, this.padding) + end;
     },
 
     toString: function() {
       return this.valueOf();
     },
-    
+
     /**
      * Check if current node contains children with empty <code>expr</code>
      * property
@@ -12937,7 +12937,7 @@ define('parser/abbreviation',['require','exports','module','lodash','../assets/t
         return child.isEmpty();
       });
     },
-    
+
     /**
      * Check if current node has implied name that should be resolved
      * @returns {Boolean}
@@ -12945,25 +12945,25 @@ define('parser/abbreviation',['require','exports','module','lodash','../assets/t
     hasImplicitName: function() {
       return !this._name && !this.isTextNode();
     },
-    
+
     /**
-     * Indicates that current element is a grouping one, e.g. has no 
+     * Indicates that current element is a grouping one, e.g. has no
      * representation but serves as a container for other nodes
      * @returns {Boolean}
      */
     isGroup: function() {
       return !this.abbreviation;
     },
-    
+
     /**
-     * Indicates empty node (i.e. without abbreviation). It may be a 
+     * Indicates empty node (i.e. without abbreviation). It may be a
      * grouping node and should not be outputted
      * @return {Boolean}
      */
     isEmpty: function() {
       return !this.abbreviation && !this.children.length;
     },
-    
+
     /**
      * Indicates that current node should be repeated
      * @returns {Boolean}
@@ -12971,7 +12971,7 @@ define('parser/abbreviation',['require','exports','module','lodash','../assets/t
     isRepeating: function() {
       return this.repeatCount > 1 || this.hasImplicitRepeat;
     },
-    
+
     /**
      * Check if current node is a text-only node
      * @return {Boolean}
@@ -12979,7 +12979,7 @@ define('parser/abbreviation',['require','exports','module','lodash','../assets/t
     isTextNode: function() {
       return !this.name() && !this.attributeList().length;
     },
-    
+
     /**
      * Indicates whether this node may be used to build elements or snippets
      * @returns {Boolean}
@@ -12987,7 +12987,7 @@ define('parser/abbreviation',['require','exports','module','lodash','../assets/t
     isElement: function() {
       return !this.isEmpty() && !this.isTextNode();
     },
-    
+
     /**
      * Returns latest and deepest child of current tree
      * @returns {AbbreviationNode}
@@ -12995,16 +12995,16 @@ define('parser/abbreviation',['require','exports','module','lodash','../assets/t
     deepestChild: function() {
       if (!this.children.length)
         return null;
-        
+
       var deepestChild = this;
       while (deepestChild.children.length) {
         deepestChild = _.last(deepestChild.children);
       }
-      
+
       return deepestChild;
     }
   };
-  
+
   /**
    * Returns stripped string: a string without first and last character.
    * Used for “unquoting” strings
@@ -13014,20 +13014,20 @@ define('parser/abbreviation',['require','exports','module','lodash','../assets/t
   function stripped(str) {
     return str.substring(1, str.length - 1);
   }
-  
+
   function consumeQuotedValue(stream, quote) {
     var ch;
     while ((ch = stream.next())) {
       if (ch === quote)
         return true;
-      
+
       if (ch == '\\')
         continue;
     }
-    
+
     return false;
   }
-  
+
   /**
    * Parses abbreviation into a tree
    * @param {String} abbr
@@ -13035,10 +13035,10 @@ define('parser/abbreviation',['require','exports','module','lodash','../assets/t
    */
   function parseAbbreviation(abbr) {
     abbr = utils.trim(abbr);
-    
+
     var root = new AbbreviationNode();
     var context = root.addChild(), ch;
-    
+
     /** @type StringStream */
     var stream = stringStream.create(abbr);
     var loopProtector = 1000, multiplier;
@@ -13054,10 +13054,10 @@ define('parser/abbreviation',['require','exports','module','lodash','../assets/t
             stream.backUp(1);
             return true;
           }
-          
+
           throw 'Invalid abbreviation: mo matching "' + pairs[c] + '" found for character at ' + stream.pos;
         }
-        
+
         if (c == '+') {
           // let's see if this is an expando marker
           stream.next();
@@ -13065,14 +13065,14 @@ define('parser/abbreviation',['require','exports','module','lodash','../assets/t
           stream.backUp(1);
           return isMarker;
         }
-        
+
         return c != '(' && isAllowedChar(c);
       });
     };
-    
+
     while (!stream.eol() && --loopProtector > 0) {
       ch = stream.peek();
-      
+
       switch (ch) {
         case '(': // abbreviation group
           stream.start = stream.pos;
@@ -13081,45 +13081,45 @@ define('parser/abbreviation',['require','exports','module','lodash','../assets/t
             if ((multiplier = stream.match(/^\*(\d+)?/, true))) {
               context._setRepeat(multiplier[1]);
             }
-            
+
             _.each(inner.children, addChild);
           } else {
             throw 'Invalid abbreviation: mo matching ")" found for character at ' + stream.pos;
           }
           break;
-          
+
         case '>': // child operator
           context = context.addChild();
           stream.next();
           break;
-          
+
         case '+': // sibling operator
           context = context.parent.addChild();
           stream.next();
           break;
-          
+
         case '^': // climb up operator
           var parent = context.parent || context;
           context = (parent.parent || parent).addChild();
           stream.next();
           break;
-          
+
         default: // consume abbreviation
           consumeAbbr();
           context.setAbbreviation(stream.current());
           stream.start = stream.pos;
       }
     }
-    
+
     if (loopProtector < 1)
       throw 'Endless loop detected';
-    
+
     return root;
   }
 
   /**
    * Splits attribute set into a list of attributes string
-   * @param  {String} attrSet 
+   * @param  {String} attrSet
    * @return {Array}
    */
   function splitAttributes(attrSet) {
@@ -13168,7 +13168,7 @@ define('parser/abbreviation',['require','exports','module','lodash','../assets/t
   }
 
   /**
-   * Extract attributes and their values from attribute set: 
+   * Extract attributes and their values from attribute set:
    * <code>[attr col=3 title="Quoted string"]</code> (without square braces)
    * @param {String} attrSet
    * @returns {Array}
@@ -13206,13 +13206,13 @@ define('parser/abbreviation',['require','exports','module','lodash','../assets/t
       };
     });
   }
-  
+
   /**
-   * Parses tag attributes extracted from abbreviation. If attributes found, 
+   * Parses tag attributes extracted from abbreviation. If attributes found,
    * returns object with <code>element</code> and <code>attributes</code>
    * properties
    * @param {String} abbr
-   * @returns {Object} Returns <code>null</code> if no attributes found in 
+   * @returns {Object} Returns <code>null</code> if no attributes found in
    * abbreviation
    */
   function parseAttributes(abbr) {
@@ -13227,7 +13227,7 @@ define('parser/abbreviation',['require','exports','module','lodash','../assets/t
     var result = [];
     var attrMap = {'#': 'id', '.': 'class'};
     var nameEnd = null;
-    
+
     /** @type StringStream */
     var stream = stringStream.create(abbr);
     while (!stream.eol()) {
@@ -13236,26 +13236,26 @@ define('parser/abbreviation',['require','exports','module','lodash','../assets/t
         case '.': // class
           if (nameEnd === null)
             nameEnd = stream.pos;
-          
+
           var attrName = attrMap[stream.peek()];
-          
+
           stream.next();
           stream.start = stream.pos;
           stream.eatWhile(reWord);
           result.push({
-            name: attrName, 
+            name: attrName,
             value: stream.current()
           });
           break;
         case '[': //begin attribute set
           if (nameEnd === null)
             nameEnd = stream.pos;
-          
+
           stream.start = stream.pos;
           if (!stream.skipToPair('[', ']')) {
             throw 'Invalid attribute set definition';
           }
-          
+
           result = result.concat(
             extractAttributes(stripped(stream.current()))
           );
@@ -13264,57 +13264,57 @@ define('parser/abbreviation',['require','exports','module','lodash','../assets/t
           stream.next();
       }
     }
-    
+
     if (!result.length)
       return null;
-    
+
     return {
       element: abbr.substring(0, nameEnd),
       attributes: optimizeAttributes(result)
     };
   }
-  
+
   /**
    * Optimize attribute set: remove duplicates and merge class attributes
    * @param attrs
    */
   function optimizeAttributes(attrs) {
-    // clone all attributes to make sure that original objects are 
+    // clone all attributes to make sure that original objects are
     // not modified
     attrs  = _.map(attrs, function(attr) {
       return _.clone(attr);
     });
-    
+
     var lookup = {};
 
     return _.filter(attrs, function(attr) {
       if (!(attr.name in lookup)) {
         return lookup[attr.name] = attr;
       }
-      
+
       var la = lookup[attr.name];
-      
+
       if (attr.name.toLowerCase() == 'class') {
         la.value += (la.value.length ? ' ' : '') + attr.value;
       } else {
         la.value = attr.value;
       }
-      
+
       return false;
     });
   }
-  
+
   /**
    * Extract text data from abbreviation: if <code>a{hello}</code> abbreviation
    * is passed, returns object <code>{element: 'a', text: 'hello'}</code>.
    * If nothing found, returns <code>null</code>
    * @param {String} abbr
-   * 
+   *
    */
   function extractText(abbr) {
     if (!~abbr.indexOf('{'))
       return null;
-    
+
     /** @type StringStream */
     var stream = stringStream.create(abbr);
     while (!stream.eol()) {
@@ -13322,7 +13322,7 @@ define('parser/abbreviation',['require','exports','module','lodash','../assets/t
         case '[':
         case '(':
           stream.skipToPair(stream.peek(), pairs[stream.peek()]); break;
-          
+
         case '{':
           stream.start = stream.pos;
           stream.skipToPair('{', '}');
@@ -13330,15 +13330,15 @@ define('parser/abbreviation',['require','exports','module','lodash','../assets/t
             element: abbr.substring(0, stream.start),
             text: stripped(stream.current())
           };
-          
+
         default:
           stream.next();
       }
     }
   }
-  
+
   /**
-   * “Un-rolls“ contents of current node: recursively replaces all repeating 
+   * “Un-rolls“ contents of current node: recursively replaces all repeating
    * children with their repeated clones
    * @param {AbbreviationNode} node
    * @returns {AbbreviationNode}
@@ -13346,7 +13346,7 @@ define('parser/abbreviation',['require','exports','module','lodash','../assets/t
   function unroll(node) {
     for (var i = node.children.length - 1, j, child, maxCount; i >= 0; i--) {
       child = node.children[i];
-      
+
       if (child.isRepeating()) {
         maxCount = j = child.repeatCount;
         child.repeatCount = 1;
@@ -13359,14 +13359,14 @@ define('parser/abbreviation',['require','exports','module','lodash','../assets/t
         }
       }
     }
-    
+
     // to keep proper 'counter' property, we need to walk
     // on children once again
     _.each(node.children, unroll);
-    
+
     return node;
   }
-  
+
   /**
    * Optimizes tree node: replaces empty nodes with their children
    * @param {AbbreviationNode} node
@@ -13382,16 +13382,16 @@ define('parser/abbreviation',['require','exports','module','lodash','../assets/t
         n.remove();
       }
     }
-    
+
     _.each(node.children, squash);
-    
+
     return node;
   }
-  
+
   function isAllowedChar(ch) {
     var charCode = ch.charCodeAt(0);
     var specialChars = '#.*:$-_!@|%';
-    
+
     return (charCode > 64 && charCode < 91)       // uppercase letter
         || (charCode > 96 && charCode < 123)  // lowercase letter
         || (charCode > 47 && charCode < 58)   // number
@@ -13421,32 +13421,32 @@ define('parser/abbreviation',['require','exports','module','lodash','../assets/t
     DEFAULT_ATTR_NAME: DEFAULT_ATTR_NAME,
 
     /**
-     * Parses abbreviation into tree with respect of groups, 
-     * text nodes and attributes. Each node of the tree is a single 
-     * abbreviation. Tree represents actual structure of the outputted 
+     * Parses abbreviation into tree with respect of groups,
+     * text nodes and attributes. Each node of the tree is a single
+     * abbreviation. Tree represents actual structure of the outputted
      * result
      * @memberOf abbreviationParser
      * @param {String} abbr Abbreviation to parse
      * @param {Object} options Additional options for parser and processors
-     * 
+     *
      * @return {AbbreviationNode}
      */
     parse: function(abbr, options) {
       options = options || {};
-      
+
       var tree = parseAbbreviation(abbr);
       var that = this;
-      
+
       if (options.contextNode) {
         // add info about context node –
-        // a parent XHTML node in editor inside which abbreviation is 
+        // a parent XHTML node in editor inside which abbreviation is
         // expanded
         tree._name = options.contextNode.name;
         var attrLookup = {};
         _.each(tree._attributes, function(attr) {
           attrLookup[attr.name] = attr;
         });
-        
+
         _.each(options.contextNode.attributes, function(attr) {
           if (attr.name in attrLookup) {
             attrLookup[attr.name].value = attr.value;
@@ -13457,7 +13457,7 @@ define('parser/abbreviation',['require','exports','module','lodash','../assets/t
           }
         });
       }
-      
+
       // apply preprocessors
       _.each(preprocessors, function(fn) {
         fn(tree, options, that);
@@ -13466,14 +13466,14 @@ define('parser/abbreviation',['require','exports','module','lodash','../assets/t
       if ('counter' in options) {
         tree.updateProperty('counter', options.counter);
       }
-      
+
       tree = squash(unroll(tree));
-      
+
       // apply postprocessors
       _.each(postprocessors, function(fn) {
         fn(tree, options, that);
       });
-      
+
       return tree;
     },
 
@@ -13499,7 +13499,7 @@ define('parser/abbreviation',['require','exports','module','lodash','../assets/t
 
       var p = profile.get(options.profile, options.syntax);
       tabStops.resetTabstopIndex();
-      
+
       var data = filters.extract(abbr);
       var outputTree = this.parse(data[0], options);
 
@@ -13508,9 +13508,9 @@ define('parser/abbreviation',['require','exports','module','lodash','../assets/t
 
       return outputTree.valueOf();
     },
-    
+
     AbbreviationNode: AbbreviationNode,
-    
+
     /**
      * Add new abbreviation preprocessor. <i>Preprocessor</i> is a function
      * that applies to a parsed abbreviation tree right after it get parsed.
@@ -13525,16 +13525,16 @@ define('parser/abbreviation',['require','exports','module','lodash','../assets/t
         preprocessors.push(fn);
       }
     },
-    
+
     /**
      * Removes registered preprocessor
      */
     removeFilter: function(fn) {
       _.without(preprocessors, fn);
     },
-    
+
     /**
-     * Adds new abbreviation postprocessor. <i>Postprocessor</i> is a 
+     * Adds new abbreviation postprocessor. <i>Postprocessor</i> is a
      * functinon that applies to <i>optimized</i> parsed abbreviation tree
      * right before it returns from <code>parse()</code> method
      * @param {Function} fn Postprocessor function. This function receives
@@ -13547,18 +13547,18 @@ define('parser/abbreviation',['require','exports','module','lodash','../assets/t
         postprocessors.push(fn);
       }
     },
-    
+
     /**
      * Removes registered postprocessor function
      */
     removePostprocessor: function(fn) {
       postprocessors = _.without(postprocessors, fn);
     },
-    
+
     /**
-     * Registers output postprocessor. <i>Output processor</i> is a 
-     * function that applies to output part (<code>start</code>, 
-     * <code>end</code> and <code>content</code>) when 
+     * Registers output postprocessor. <i>Output processor</i> is a
+     * function that applies to output part (<code>start</code>,
+     * <code>end</code> and <code>content</code>) when
      * <code>AbbreviationNode.toString()</code> method is called
      */
     addOutputProcessor: function(fn) {
@@ -13566,14 +13566,14 @@ define('parser/abbreviation',['require','exports','module','lodash','../assets/t
         outputProcessors.push(fn);
       }
     },
-    
+
     /**
      * Removes registered output processor
      */
     removeOutputProcessor: function(fn) {
       outputProcessors = _.without(outputProcessors, fn);
     },
-    
+
     /**
      * Check if passed symbol is valid symbol for abbreviation expression
      * @param {String} ch
@@ -13586,11 +13586,11 @@ define('parser/abbreviation',['require','exports','module','lodash','../assets/t
   };
 });
 /**
- * HTML matcher: takes string and searches for HTML tag pairs for given position 
- * 
- * Unlike “classic” matchers, it parses content from the specified 
+ * HTML matcher: takes string and searches for HTML tag pairs for given position
+ *
+ * Unlike “classic” matchers, it parses content from the specified
  * position, not from the start, so it may work even outside HTML documents
- * (for example, inside strings of programming languages like JavaScript, Python 
+ * (for example, inside strings of programming languages like JavaScript, Python
  * etc.)
  */
 if (typeof module === 'object' && typeof define !== 'function') {
@@ -13615,7 +13615,7 @@ define('assets/htmlMatcher',['require','exports','module','./range'],function(re
       type: 'open'
     };
   }
-  
+
   function closeTag(i, match) {
     return {
       name: match[1],
@@ -13624,7 +13624,7 @@ define('assets/htmlMatcher',['require','exports','module','./range'],function(re
       type: 'close'
     };
   }
-  
+
   function comment(i, match) {
     return {
       /** @type Range */
@@ -13632,7 +13632,7 @@ define('assets/htmlMatcher',['require','exports','module','./range'],function(re
       type: 'comment'
     };
   }
-  
+
   /**
    * Creates new tag matcher session
    * @param {String} text
@@ -13649,7 +13649,7 @@ define('assets/htmlMatcher',['require','exports','module','./range'],function(re
         var m = this.matches(i);
         return m && m.type == 'open' ? m : null;
       },
-      
+
       /**
        * Test if given position matches closing tag
        * @param {Number} i
@@ -13659,7 +13659,7 @@ define('assets/htmlMatcher',['require','exports','module','./range'],function(re
         var m = this.matches(i);
         return m && m.type == 'close' ? m : null;
       },
-      
+
       /**
        * Matches either opening or closing tag for given position
        * @param i
@@ -13667,7 +13667,7 @@ define('assets/htmlMatcher',['require','exports','module','./range'],function(re
        */
       matches: function(i) {
         var key = 'p' + i;
-        
+
         if (!(key in memo)) {
           memo[key] = false;
           if (text.charAt(i) == '<') {
@@ -13679,10 +13679,10 @@ define('assets/htmlMatcher',['require','exports','module','./range'],function(re
             }
           }
         }
-        
+
         return memo[key];
       },
-      
+
       /**
        * Returns original text
        * @returns {String}
@@ -13696,11 +13696,11 @@ define('assets/htmlMatcher',['require','exports','module','./range'],function(re
       }
     };
   }
-  
+
   function matches(text, pos, pattern) {
     return text.substring(pos, pos + pattern.length) == pattern;
   }
-  
+
   /**
    * Search for closing pair of opening tag
    * @param {Object} open Open tag instance
@@ -13709,7 +13709,7 @@ define('assets/htmlMatcher',['require','exports','module','./range'],function(re
   function findClosingPair(open, matcher) {
     var stack = [], tag = null;
     var text = matcher.text();
-    
+
     for (var pos = open.range.end, len = text.length; pos < len; pos++) {
       if (matches(text, pos, '<!--')) {
         // skip to end of comment
@@ -13720,7 +13720,7 @@ define('assets/htmlMatcher',['require','exports','module','./range'],function(re
           }
         }
       }
-      
+
       if ((tag = matcher.matches(pos))) {
         if (tag.type == 'open' && !tag.selfClose) {
           stack.push(tag.name);
@@ -13728,7 +13728,7 @@ define('assets/htmlMatcher',['require','exports','module','./range'],function(re
           if (!stack.length) { // found valid pair?
             return tag.name == open.name ? tag : null;
           }
-          
+
           // check if current closing tag matches previously opened one
           if (stack[stack.length - 1] == tag.name) {
             stack.pop();
@@ -13740,7 +13740,7 @@ define('assets/htmlMatcher',['require','exports','module','./range'],function(re
                 found = true;
               }
             }
-            
+
             if (!stack.length && !found) {
               return tag.name == open.name ? tag : null;
             }
@@ -13751,21 +13751,21 @@ define('assets/htmlMatcher',['require','exports','module','./range'],function(re
       }
     }
   }
-  
+
   return {
     /**
-     * Main function: search for tag pair in <code>text</code> for given 
+     * Main function: search for tag pair in <code>text</code> for given
      * position
      * @memberOf htmlMatcher
-     * @param {String} text 
+     * @param {String} text
      * @param {Number} pos
      * @returns {Object}
      */
     find: function(text, pos) {
-      var matcher = createMatcher(text); 
+      var matcher = createMatcher(text);
       var open = null, close = null;
       var j, jl;
-      
+
       for (var i = pos; i >= 0; i--) {
         if ((open = matcher.open(i))) {
           // found opening tag
@@ -13774,11 +13774,11 @@ define('assets/htmlMatcher',['require','exports','module','./range'],function(re
               // inside self-closing tag, found match
               break;
             }
-            
+
             // outside self-closing tag, continue
             continue;
           }
-          
+
           close = findClosingPair(open, matcher);
           if (close) {
             // found closing tag.
@@ -13790,7 +13790,7 @@ define('assets/htmlMatcher',['require','exports','module','./range'],function(re
             // we inside empty HTML tag like <br>
             break;
           }
-          
+
           open = null;
         } else if (matches(text, i, '-->')) {
           // skip back to comment start
@@ -13811,32 +13811,32 @@ define('assets/htmlMatcher',['require','exports','module','./range'],function(re
               break;
             }
           }
-          
+
           open = comment(i, j);
           break;
         }
       }
-      
+
       matcher.clean();
 
       if (open) {
         var outerRange = null;
         var innerRange = null;
-        
+
         if (close) {
           outerRange = range.create2(open.range.start, close.range.end);
           innerRange = range.create2(open.range.end, close.range.start);
         } else {
           outerRange = innerRange = range.create2(open.range.start, open.range.end);
         }
-        
+
         if (open.type == 'comment') {
           // adjust positions of inner range for comment
           var _c = outerRange.substring(text);
           innerRange.start += _c.length - _c.replace(/^<\!--\s*/, '').length;
           innerRange.end -= _c.length - _c.replace(/\s*-->$/, '').length;
         }
-        
+
         return {
           open: open,
           close: close,
@@ -13857,11 +13857,11 @@ define('assets/htmlMatcher',['require','exports','module','./range'],function(re
         };
       }
     },
-    
+
     /**
-     * The same as <code>find()</code> method, but restricts matched result 
+     * The same as <code>find()</code> method, but restricts matched result
      * to <code>tag</code> type
-     * @param {String} text 
+     * @param {String} text
      * @param {Number} pos
      * @returns {Object}
      */
@@ -13941,7 +13941,7 @@ define('vendor/klass',['require','exports','module','lodash'],function(require, 
   return {
     /**
      * The self-propagating extend function for classes.
-     * Took it from Backbone 
+     * Took it from Backbone
      * @param {Object} protoProps
      * @param {Object} classProps
      * @returns {Object}
@@ -13958,19 +13958,19 @@ define('vendor/klass',['require','exports','module','lodash'],function(require, 
 });
 /**
  * Abstract implementation of edit tree interface.
- * Edit tree is a named container of editable “name-value” child elements, 
+ * Edit tree is a named container of editable “name-value” child elements,
  * parsed from <code>source</code>. This container provides convenient methods
  * for editing/adding/removing child elements. All these update actions are
  * instantly reflected in the <code>source</code> code with respect of formatting.
  * <br><br>
- * For example, developer can create an edit tree from CSS rule and add or 
- * remove properties from it–all changes will be immediately reflected in the 
+ * For example, developer can create an edit tree from CSS rule and add or
+ * remove properties from it–all changes will be immediately reflected in the
  * original source.
  * <br><br>
  * All classes defined in this module should be extended the same way as in
- * Backbone framework: using <code>extend</code> method to create new class and 
+ * Backbone framework: using <code>extend</code> method to create new class and
  * <code>initialize</code> method to define custom class constructor.
- * 
+ *
  * @example
  * <pre><code>
  * var MyClass = require('editTree/base').EditElement.extend({
@@ -13978,8 +13978,8 @@ define('vendor/klass',['require','exports','module','lodash'],function(require, 
  *     // constructor code here
  *   }
  * });
- * 
- * var elem = new MyClass(); 
+ *
+ * var elem = new MyClass();
  * </code></pre>
  */
 if (typeof module === 'object' && typeof define !== 'function') {
@@ -13993,7 +13993,7 @@ define('editTree/base',['require','exports','module','lodash','../assets/range',
   var range = require('../assets/range');
   var utils = require('../utils/common');
   var klass = require('../vendor/klass');
-  
+
   /**
    * Named container of edited source
    * @type EditContainer
@@ -14003,17 +14003,17 @@ define('editTree/base',['require','exports','module','lodash','../assets/range',
   function EditContainer(source, options) {
     this.options = _.extend({offset: 0}, options);
     /**
-     * Source code of edited structure. All changes in the structure are 
+     * Source code of edited structure. All changes in the structure are
      * immediately reflected into this property
      */
     this.source = source;
-    
-    /** 
+
+    /**
      * List of all editable children
-     * @private 
+     * @private
      */
     this._children = [];
-    
+
     /**
      * Hash of all positions of container
      * @private
@@ -14021,16 +14021,16 @@ define('editTree/base',['require','exports','module','lodash','../assets/range',
     this._positions = {
       name: 0
     };
-    
+
     this.initialize.apply(this, arguments);
   }
-  
+
   /**
    * The self-propagating extend function for classes.
    * @type Function
    */
   EditContainer.extend = klass.extend;
-  
+
   EditContainer.prototype = {
     type: 'container',
     /**
@@ -14048,7 +14048,7 @@ define('editTree/base',['require','exports','module','lodash','../assets/range',
     _pos: function(num, isAbsolute) {
       return num + (isAbsolute ? this.options.offset : 0);
     },
-    
+
     /**
      * Replace substring of tag's source
      * @param {String} value
@@ -14060,17 +14060,17 @@ define('editTree/base',['require','exports','module','lodash','../assets/range',
       // create modification range
       var r = range.create(start, _.isUndefined(end) ? 0 : end - start);
       var delta = value.length - r.length();
-      
+
       var update = function(obj) {
         _.each(obj, function(v, k) {
           if (v >= r.end)
             obj[k] += delta;
         });
       };
-      
+
       // update affected positions of current container
       update(this._positions);
-      
+
       // update affected positions of children
       var recursiveUpdate = function(items) {
         _.each(items, function(item) {
@@ -14084,14 +14084,14 @@ define('editTree/base',['require','exports','module','lodash','../assets/range',
       recursiveUpdate(this.list());
       this.source = utils.replaceSubstring(this.source, value, r);
     },
-      
-      
+
+
     /**
-     * Adds new attribute 
+     * Adds new attribute
      * @param {String} name Property name
      * @param {String} value Property value
-     * @param {Number} pos Position at which to insert new property. By 
-     * default the property is inserted at the end of rule 
+     * @param {Number} pos Position at which to insert new property. By
+     * default the property is inserted at the end of rule
      * @returns {EditElement} Newly created element
      */
     add: function(name, value, pos) {
@@ -14100,7 +14100,7 @@ define('editTree/base',['require','exports','module','lodash','../assets/range',
       this._children.push(item);
       return item;
     },
-    
+
     /**
      * Returns attribute object
      * @param {String} name Attribute name or its index
@@ -14109,15 +14109,15 @@ define('editTree/base',['require','exports','module','lodash','../assets/range',
     get: function(name) {
       if (_.isNumber(name))
         return this.list()[name];
-      
+
       if (_.isString(name))
         return _.find(this.list(), function(prop) {
           return prop.name() === name;
         });
-      
+
       return name;
     },
-    
+
     /**
      * Returns all children by name or indexes
      * @param {Object} name Element name(s) or indexes (<code>String</code>,
@@ -14127,7 +14127,7 @@ define('editTree/base',['require','exports','module','lodash','../assets/range',
     getAll: function(name) {
       if (!_.isArray(name))
         name = [name];
-      
+
       // split names and indexes
       var names = [], indexes = [];
       _.each(name, function(item) {
@@ -14136,7 +14136,7 @@ define('editTree/base',['require','exports','module','lodash','../assets/range',
         else if (_.isNumber(item))
           indexes.push(item);
       });
-      
+
       return _.filter(this.list(), function(attribute, i) {
         return _.include(indexes, i) || _.include(names, attribute.name());
       });
@@ -14161,7 +14161,7 @@ define('editTree/base',['require','exports','module','lodash','../assets/range',
         this._children = _.without(this._children, element);
       }
     },
-    
+
     /**
      * Returns index of editble child in list
      * @param {Object} item
@@ -14170,7 +14170,7 @@ define('editTree/base',['require','exports','module','lodash','../assets/range',
     indexOf: function(item) {
       return _.indexOf(this.list(), this.get(item));
     },
-    
+
     /**
      * Returns or updates element value. If such element doesn't exists,
      * it will be created automatically and added at the end of child list.
@@ -14182,13 +14182,13 @@ define('editTree/base',['require','exports','module','lodash','../assets/range',
       var element = this.get(name);
       if (element)
         return element.value(value);
-      
+
       if (!_.isUndefined(value)) {
         // no such element — create it
         return this.add(name, value, pos);
       }
     },
-    
+
     /**
      * Returns all values of child elements found by <code>getAll()</code>
      * method
@@ -14201,10 +14201,10 @@ define('editTree/base',['require','exports','module','lodash','../assets/range',
         return element.value();
       });
     },
-    
+
     /**
      * Sets or gets container name
-     * @param {String} val New name. If not passed, current 
+     * @param {String} val New name. If not passed, current
      * name is returned
      * @return {String}
      */
@@ -14213,13 +14213,13 @@ define('editTree/base',['require','exports','module','lodash','../assets/range',
         this._updateSource(val, this._positions.name, this._positions.name + this._name.length);
         this._name = val;
       }
-      
+
       return this._name;
     },
-    
+
     /**
      * Returns name range object
-     * @param {Boolean} isAbsolute Return absolute range (with respect of 
+     * @param {Boolean} isAbsolute Return absolute range (with respect of
      * rule offset)
      * @returns {Range}
      */
@@ -14234,7 +14234,7 @@ define('editTree/base',['require','exports','module','lodash','../assets/range',
     range: function(isAbsolute) {
       return range.create(isAbsolute ? this.options.offset : 0, this.valueOf());
     },
-    
+
     /**
      * Returns element that belongs to specified position
      * @param {Number} pos
@@ -14246,9 +14246,9 @@ define('editTree/base',['require','exports','module','lodash','../assets/range',
         return elem.range(isAbsolute).inside(pos);
       });
     },
-    
+
     /**
-     * Returns source code of current container 
+     * Returns source code of current container
      * @returns {String}
      */
     toString: function() {
@@ -14259,7 +14259,7 @@ define('editTree/base',['require','exports','module','lodash','../assets/range',
       return this.source;
     }
   };
-  
+
   /**
    * @param {EditContainer} parent
    * @param {Object} nameToken
@@ -14268,24 +14268,24 @@ define('editTree/base',['require','exports','module','lodash','../assets/range',
   function EditElement(parent, nameToken, valueToken) {
     /** @type EditContainer */
     this.parent = parent;
-    
+
     this._name = nameToken.value;
     this._value = valueToken ? valueToken.value : '';
-    
+
     this._positions = {
       name: nameToken.start,
       value: valueToken ? valueToken.start : -1
     };
-    
+
     this.initialize.apply(this, arguments);
   }
-  
+
   /**
    * The self-propagating extend function for classes.
    * @type Function
    */
   EditElement.extend = klass.extend;
-  
+
   EditElement.prototype = {
     type: 'element',
 
@@ -14293,7 +14293,7 @@ define('editTree/base',['require','exports','module','lodash','../assets/range',
      * Child class constructor
      */
     initialize: function() {},
-    
+
     /**
      * Make position absolute
      * @private
@@ -14304,10 +14304,10 @@ define('editTree/base',['require','exports','module','lodash','../assets/range',
     _pos: function(num, isAbsolute) {
       return num + (isAbsolute ? this.parent.options.offset : 0);
     },
-      
+
     /**
      * Sets of gets element value
-     * @param {String} val New element value. If not passed, current 
+     * @param {String} val New element value. If not passed, current
      * value is returned
      * @returns {String}
      */
@@ -14316,13 +14316,13 @@ define('editTree/base',['require','exports','module','lodash','../assets/range',
         this.parent._updateSource(val, this.valueRange());
         this._value = val;
       }
-      
+
       return this._value;
     },
-    
+
     /**
      * Sets of gets element name
-     * @param {String} val New element name. If not passed, current 
+     * @param {String} val New element name. If not passed, current
      * name is returned
      * @returns {String}
      */
@@ -14331,10 +14331,10 @@ define('editTree/base',['require','exports','module','lodash','../assets/range',
         this.parent._updateSource(val, this.nameRange());
         this._name = val;
       }
-      
+
       return this._name;
     },
-    
+
     /**
      * Returns position of element name token
      * @param {Boolean} isAbsolute Return absolute position
@@ -14343,7 +14343,7 @@ define('editTree/base',['require','exports','module','lodash','../assets/range',
     namePosition: function(isAbsolute) {
       return this._pos(this._positions.name, isAbsolute);
     },
-    
+
     /**
      * Returns position of element value token
      * @param {Boolean} isAbsolute Return absolute position
@@ -14352,16 +14352,16 @@ define('editTree/base',['require','exports','module','lodash','../assets/range',
     valuePosition: function(isAbsolute) {
       return this._pos(this._positions.value, isAbsolute);
     },
-    
+
     /**
      * Returns element name
-     * @param {Boolean} isAbsolute Return absolute range 
+     * @param {Boolean} isAbsolute Return absolute range
      * @returns {Range}
      */
     range: function(isAbsolute) {
       return range.create(this.namePosition(isAbsolute), this.valueOf());
     },
-    
+
     /**
      * Returns full element range, including possible indentation
      * @param {Boolean} isAbsolute Return absolute range
@@ -14370,7 +14370,7 @@ define('editTree/base',['require','exports','module','lodash','../assets/range',
     fullRange: function(isAbsolute) {
       return this.range(isAbsolute);
     },
-    
+
     /**
      * Returns element name range
      * @param {Boolean} isAbsolute Return absolute range
@@ -14379,7 +14379,7 @@ define('editTree/base',['require','exports','module','lodash','../assets/range',
     nameRange: function(isAbsolute) {
       return range.create(this.namePosition(isAbsolute), this.name());
     },
-    
+
     /**
      * Returns element value range
      * @param {Boolean} isAbsolute Return absolute range
@@ -14388,7 +14388,7 @@ define('editTree/base',['require','exports','module','lodash','../assets/range',
     valueRange: function(isAbsolute) {
       return range.create(this.valuePosition(isAbsolute), this.value());
     },
-    
+
     /**
      * Returns current element string representation
      * @returns {String}
@@ -14396,16 +14396,16 @@ define('editTree/base',['require','exports','module','lodash','../assets/range',
     toString: function() {
       return this.valueOf();
     },
-    
+
     valueOf: function() {
       return this.name() + this.value();
     }
   };
-  
+
   return {
     EditContainer: EditContainer,
     EditElement: EditElement,
-    
+
     /**
      * Creates token that can be fed to <code>EditElement</code>
      * @param {Number} start
@@ -14419,7 +14419,7 @@ define('editTree/base',['require','exports','module','lodash','../assets/range',
         value: value || '',
         type: type
       };
-      
+
       obj.end = obj.start + obj.value.length;
       return obj;
     }
@@ -14550,7 +14550,7 @@ define('parser/xml',['require','exports','module','lodash','../assets/stringStre
       return style;
     };
   }
-  
+
   function doctype(depth) {
     return function(stream, state) {
       var ch;
@@ -14577,14 +14577,14 @@ define('parser/xml',['require','exports','module','lodash','../assets/stringStre
     for (var i = arguments.length - 1; i >= 0; i--)
       curState.cc.push(arguments[i]);
   }
-  
+
   function cont() {
     pass.apply(null, arguments);
     return true;
   }
 
   function pushContext(tagName, startOfLine) {
-    var noIndent = Kludges.doNotIndent.hasOwnProperty(tagName) 
+    var noIndent = Kludges.doNotIndent.hasOwnProperty(tagName)
       || (curState.context && curState.context.noIndent);
     curState.context = {
       prev : curState.context,
@@ -14594,7 +14594,7 @@ define('parser/xml',['require','exports','module','lodash','../assets/stringStre
       noIndent : noIndent
     };
   }
-  
+
   function popContext() {
     if (curState.context)
       curState.context = curState.context.prev;
@@ -14616,14 +14616,14 @@ define('parser/xml',['require','exports','module','lodash','../assets/stringStre
       } else {
         err = true;
       }
-      
+
       if (err)
         setStyle = "error";
       return cont(endclosetag(err));
     }
     return cont();
   }
-  
+
   function endtag(startOfLine) {
     return function(type) {
       if (type == "selfcloseTag"
@@ -14641,7 +14641,7 @@ define('parser/xml',['require','exports','module','lodash','../assets/stringStre
       return cont();
     };
   }
-  
+
   function endclosetag(err) {
     return function(type) {
       if (err)
@@ -14654,7 +14654,7 @@ define('parser/xml',['require','exports','module','lodash','../assets/stringStre
       return cont(arguments.callee);
     };
   }
-  
+
   function maybePopContext(nextTagName) {
     var parentTagName;
     while (true) {
@@ -14680,7 +14680,7 @@ define('parser/xml',['require','exports','module','lodash','../assets/stringStre
     setStyle = "error";
     return cont(attributes);
   }
-  
+
   function attribute(type) {
     if (type == "equals")
       return cont(attvalue, attributes);
@@ -14689,7 +14689,7 @@ define('parser/xml',['require','exports','module','lodash','../assets/stringStre
     return (type == "endTag" || type == "selfcloseTag") ? pass()
         : cont();
   }
-  
+
   function attvalue(type) {
     if (type == "string")
       return cont(attvaluemaybe);
@@ -14701,14 +14701,14 @@ define('parser/xml',['require','exports','module','lodash','../assets/stringStre
     return (type == "endTag" || type == "selfCloseTag") ? pass()
         : cont();
   }
-  
+
   function attvaluemaybe(type) {
     if (type == "string")
       return cont(attvaluemaybe);
     else
       return pass();
   }
-  
+
   function startState() {
     return {
       tokenize : inText,
@@ -14719,13 +14719,13 @@ define('parser/xml',['require','exports','module','lodash','../assets/stringStre
       context : null
     };
   }
-  
+
   function token(stream, state) {
     if (stream.sol()) {
       state.startOfLine = true;
       state.indented = 0;
     }
-    
+
     if (stream.eatSpace())
       return null;
 
@@ -14762,21 +14762,21 @@ define('parser/xml',['require','exports','module','lodash','../assets/stringStre
         });
         stream.start = stream.pos;
       }
-      
+
       return tokens;
-    }   
+    }
   };
 });
 
 /**
- * XML EditTree is a module that can parse an XML/HTML element into a tree with 
- * convenient methods for adding, modifying and removing attributes. These 
+ * XML EditTree is a module that can parse an XML/HTML element into a tree with
+ * convenient methods for adding, modifying and removing attributes. These
  * changes can be written back to string with respect of code formatting.
- * 
+ *
  * @memberOf __xmlEditTreeDefine
  * @constructor
  * @param {Function} require
- * @param {Underscore} _ 
+ * @param {Underscore} _
  */
 if (typeof module === 'object' && typeof define !== 'function') {
   var define = function (factory) {
@@ -14797,17 +14797,17 @@ define('editTree/xml',['require','exports','module','lodash','./base','../parser
     styleQuote: '"',
     offset: 0
   };
-  
+
   var startTag = /^<([\w\:\-]+)((?:\s+[\w\-:]+(?:\s*=\s*(?:(?:"[^"]*")|(?:'[^']*')|[^>\s]+))?)*)\s*(\/?)>/m;
-  
+
   var XMLEditContainer = editTree.EditContainer.extend({
     initialize: function(source, options) {
       _.defaults(this.options, defaultOptions);
       this._positions.name = 1;
-      
+
       var attrToken = null;
       var tokens = xmlParser.parse(source);
-      
+
       _.each(tokens, function(token) {
         token.value = range.create(token).substring(source);
         switch (token.type) {
@@ -14816,30 +14816,30 @@ define('editTree/xml',['require','exports','module','lodash','./base','../parser
               this._name = token.value.substring(1);
             }
             break;
-            
+
           case 'attribute':
             // add empty attribute
             if (attrToken) {
               this._children.push(new XMLEditElement(this, attrToken));
             }
-            
+
             attrToken = token;
             break;
-            
+
           case 'string':
             this._children.push(new XMLEditElement(this, attrToken, token));
             attrToken = null;
             break;
         }
       }, this);
-      
+
       if (attrToken) {
         this._children.push(new XMLEditElement(this, attrToken));
       }
-      
+
       this._saveStyle();
     },
-    
+
     /**
      * Remembers all styles of properties
      * @private
@@ -14847,34 +14847,34 @@ define('editTree/xml',['require','exports','module','lodash','./base','../parser
     _saveStyle: function() {
       var start = this.nameRange().end;
       var source = this.source;
-      
+
       _.each(this.list(), /** @param {EditElement} p */ function(p) {
         p.styleBefore = source.substring(start, p.namePosition());
-        
+
         if (p.valuePosition() !== -1) {
           p.styleSeparator = source.substring(p.namePosition() + p.name().length, p.valuePosition() - p.styleQuote.length);
         }
-        
+
         start = p.range().end;
       });
     },
-    
+
     /**
-     * Adds new attribute 
+     * Adds new attribute
      * @param {String} name Property name
      * @param {String} value Property value
-     * @param {Number} pos Position at which to insert new property. By 
-     * default the property is inserted at the end of rule 
+     * @param {Number} pos Position at which to insert new property. By
+     * default the property is inserted at the end of rule
      */
     add: function(name, value, pos) {
       var list = this.list();
       var start = this.nameRange().end;
       var styles = _.pick(this.options, 'styleBefore', 'styleSeparator', 'styleQuote');
-      
+
       if (_.isUndefined(pos))
         pos = list.length;
-      
-      
+
+
       /** @type XMLEditAttribute */
       var donor = list[pos];
       if (donor) {
@@ -14882,24 +14882,24 @@ define('editTree/xml',['require','exports','module','lodash','./base','../parser
       } else if ((donor = list[pos - 1])) {
         start = donor.range().end;
       }
-      
+
       if (donor) {
         styles = _.pick(donor, 'styleBefore', 'styleSeparator', 'styleQuote');
       }
-      
+
       value = styles.styleQuote + value + styles.styleQuote;
-      
-      var attribute = new XMLEditElement(this, 
+
+      var attribute = new XMLEditElement(this,
           editTree.createToken(start + styles.styleBefore.length, name),
-          editTree.createToken(start + styles.styleBefore.length + name.length 
+          editTree.createToken(start + styles.styleBefore.length + name.length
               + styles.styleSeparator.length, value)
           );
-      
+
       _.extend(attribute, styles);
-      
+
       // write new attribute into the source
       this._updateSource(attribute.styleBefore + attribute.toString(), start);
-      
+
       // insert new attribute
       this._children.splice(pos, 0, attribute);
       return attribute;
@@ -14945,12 +14945,12 @@ define('editTree/xml',['require','exports','module','lodash','./base','../parser
       }
     }
   });
-  
+
   var XMLEditElement = editTree.EditElement.extend({
     initialize: function(parent, nameToken, valueToken) {
       this.styleBefore = parent.options.styleBefore;
       this.styleSeparator = parent.options.styleSeparator;
-      
+
       var value = '', quote = parent.options.styleQuote;
       if (valueToken) {
         value = valueToken.value;
@@ -14960,18 +14960,18 @@ define('editTree/xml',['require','exports','module','lodash','./base','../parser
         } else {
           quote = '';
         }
-        
+
         if (quote && value.charAt(value.length - 1) == quote) {
           value = value.substring(0, value.length - 1);
         }
       }
-      
+
       this.styleQuote = quote;
-      
+
       this._value = value;
       this._positions.value = valueToken ? valueToken.start + quote.length : -1;
     },
-    
+
     /**
      * Returns full rule range, with indentation
      * @param {Boolean} isAbsolute Return absolute range (with respect of
@@ -14983,13 +14983,13 @@ define('editTree/xml',['require','exports','module','lodash','./base','../parser
       r.start -= this.styleBefore.length;
       return r;
     },
-    
+
     valueOf: function() {
       return this.name() + this.styleSeparator
         + this.styleQuote + this.value() + this.styleQuote;
     }
   });
-  
+
   return {
     /**
      * Parses HTML element into editable tree
@@ -15001,9 +15001,9 @@ define('editTree/xml',['require','exports','module','lodash','./base','../parser
     parse: function(source, options) {
       return new XMLEditContainer(source, options);
     },
-    
+
     /**
-     * Extract and parse HTML from specified position in <code>content</code> 
+     * Extract and parse HTML from specified position in <code>content</code>
      * @param {String} content CSS source code
      * @param {Number} pos Character position where to start source code extraction
      * @returns {XMLEditElement}
@@ -15013,14 +15013,14 @@ define('editTree/xml',['require','exports','module','lodash','./base','../parser
       if (!bounds || !bounds.inside(pos))
         // no matching HTML tag or caret outside tag bounds
         return null;
-      
+
       return this.parse(bounds.substring(content), {
         offset: bounds.start
       });
     },
-    
+
     /**
-     * Extracts nearest HTML tag range from <code>content</code>, starting at 
+     * Extracts nearest HTML tag range from <code>content</code>, starting at
      * <code>pos</code> position
      * @param {String} content
      * @param {Number} pos
@@ -15029,31 +15029,31 @@ define('editTree/xml',['require','exports','module','lodash','./base','../parser
      */
     extractTag: function(content, pos, isBackward) {
       var len = content.length, i;
-      
-      // max extraction length. I don't think there may be tags larger 
+
+      // max extraction length. I don't think there may be tags larger
       // than 2000 characters length
       var maxLen = Math.min(2000, len);
-      
+
       /** @type Range */
       var r = null;
-      
+
       var match = function(pos) {
         var m;
         if (content.charAt(pos) == '<' && (m = content.substr(pos, maxLen).match(startTag)))
           return range.create(pos, m[0]);
       };
-      
+
       // lookup backward, in case we are inside tag already
       for (i = pos; i >= 0; i--) {
         if ((r = match(i))) break;
       }
-      
+
       if (r && (r.inside(pos) || isBackward))
         return r;
-      
+
       if (!r && isBackward)
         return null;
-      
+
       // search forward
       for (i = pos; i < len; i++) {
         if ((r = match(i)))
@@ -15091,7 +15091,7 @@ define('utils/action',['require','exports','module','lodash','./common','../pars
       'html': 'text/html',
       'htm' : 'text/html'
     },
-    
+
     /**
      * Extracts abbreviations from text stream, starting from the end
      * @param {String} str
@@ -15104,7 +15104,7 @@ define('utils/action',['require','exports','module','lodash','./common','../pars
       var groupCount = 0;
       var braceCount = 0;
       var textCount = 0;
-      
+
       while (true) {
         curOffset--;
         if (curOffset < 0) {
@@ -15112,9 +15112,9 @@ define('utils/action',['require','exports','module','lodash','./common','../pars
           startIndex = 0;
           break;
         }
-        
+
         var ch = str.charAt(curOffset);
-        
+
         if (ch == ']') {
           braceCount++;
         } else if (ch == '[') {
@@ -15140,7 +15140,7 @@ define('utils/action',['require','exports','module','lodash','./common','../pars
           }
           groupCount--;
         } else {
-          if (braceCount || textCount) 
+          if (braceCount || textCount)
             // respect all characters inside attribute sets or text nodes
             continue;
           else if (!abbreviationParser.isAllowedChar(ch) || (ch == '>' && utils.endsWithTag(str.substring(0, curOffset + 1)))) {
@@ -15150,15 +15150,15 @@ define('utils/action',['require','exports','module','lodash','./common','../pars
           }
         }
       }
-      
-      if (startIndex != -1 && !textCount && !braceCount && !groupCount) 
-        // found something, remove some invalid symbols from the 
+
+      if (startIndex != -1 && !textCount && !braceCount && !groupCount)
+        // found something, remove some invalid symbols from the
         // beginning and return abbreviation
         return str.substring(startIndex).replace(/^[\*\+\>\^]+/, '');
       else
         return '';
     },
-    
+
     /**
      * Gets image size from image byte stream.
      * @author http://romeda.org/rePublish/
@@ -15173,50 +15173,50 @@ define('utils/action',['require','exports','module','lodash','./common','../pars
         nextByte = function() {
           return stream.charCodeAt(pos++);
         };
-    
+
       if (stream.substr(0, 8) === pngMagicNum) {
         // PNG. Easy peasy.
         pos = stream.indexOf('IHDR') + 4;
-      
+
         return {
           width:  (nextByte() << 24) | (nextByte() << 16) | (nextByte() <<  8) | nextByte(),
           height: (nextByte() << 24) | (nextByte() << 16) | (nextByte() <<  8) | nextByte()
         };
-      
+
       } else if (stream.substr(0, 4) === gifMagicNum) {
         pos = 6;
-      
+
         return {
           width:  nextByte() | (nextByte() << 8),
           height: nextByte() | (nextByte() << 8)
         };
-      
+
       } else if (stream.substr(0, 2) === jpgMagicNum) {
         pos = 2;
-      
+
         var l = stream.length;
         while (pos < l) {
           if (nextByte() != 0xFF) return;
-        
+
           var marker = nextByte();
           if (marker == 0xDA) break;
-        
+
           var size = (nextByte() << 8) | nextByte();
-        
+
           if (marker >= 0xC0 && marker <= 0xCF && !(marker & 0x4) && !(marker & 0x8)) {
             pos += 1;
             return {
               height: (nextByte() << 8) | nextByte(),
               width: (nextByte() << 8) | nextByte()
             };
-        
+
           } else {
             pos += size - 2;
           }
         }
       }
     },
-    
+
     /**
      * Captures context XHTML element from editor under current caret position.
      * This node can be used as a helper for abbreviation extraction
@@ -15240,7 +15240,7 @@ define('utils/action',['require','exports','module','lodash','./common','../pars
             attributes: [],
             match: tag
           };
-          
+
           // parse attributes
           var tagTree = xmlEditTree.parse(startTag.range.substring(content));
           if (tagTree) {
@@ -15251,18 +15251,18 @@ define('utils/action',['require','exports','module','lodash','./common','../pars
               };
             });
           }
-          
+
           return contextNode;
         }
       }
-      
+
       return null;
     },
-    
+
     /**
-     * Find expression bounds in current editor at caret position. 
-     * On each character a <code>fn</code> function will be called and must 
-     * return <code>true</code> if current character meets requirements, 
+     * Find expression bounds in current editor at caret position.
+     * On each character a <code>fn</code> function will be called and must
+     * return <code>true</code> if current character meets requirements,
      * <code>false</code> otherwise
      * @param {IEmmetEditor} editor
      * @param {Function} fn Function to test each character of expression
@@ -15273,18 +15273,18 @@ define('utils/action',['require','exports','module','lodash','./common','../pars
       var il = content.length;
       var exprStart = editor.getCaretPos() - 1;
       var exprEnd = exprStart + 1;
-        
+
       // start by searching left
       while (exprStart >= 0 && fn(content.charAt(exprStart), exprStart, content)) exprStart--;
-      
+
       // then search right
       while (exprEnd < il && fn(content.charAt(exprEnd), exprEnd, content)) exprEnd++;
-      
+
       if (exprEnd > exprStart) {
         return range([++exprStart, exprEnd]);
       }
     },
-    
+
     /**
      * @param {IEmmetEditor} editor
      * @param {Object} data
@@ -15297,25 +15297,25 @@ define('utils/action',['require','exports','module','lodash','./common','../pars
         editor.createSelection(data.caret, data.caret + sel.end - sel.start);
         return true;
       }
-      
+
       return false;
     },
-    
+
     /**
      * Common syntax detection method for editors that doesn’t provide any
-     * info about current syntax scope. 
+     * info about current syntax scope.
      * @param {IEmmetEditor} editor Current editor
-     * @param {String} hint Any syntax hint that editor can provide 
+     * @param {String} hint Any syntax hint that editor can provide
      * for syntax detection. Default is 'html'
-     * @returns {String} 
+     * @returns {String}
      */
     detectSyntax: function(editor, hint) {
       var syntax = hint || 'html';
-      
+
       if (!resources.hasSyntax(syntax)) {
         syntax = 'html';
       }
-      
+
       if (syntax == 'html' && (this.isStyle(editor) || this.isInlineCSS(editor))) {
         syntax = 'css';
       }
@@ -15323,10 +15323,10 @@ define('utils/action',['require','exports','module','lodash','./common','../pars
       if (syntax == 'styl') {
         syntax = 'stylus';
       }
-      
+
       return syntax;
     },
-    
+
     /**
      * Common method for detecting output profile
      * @param {IEmmetEditor} editor
@@ -15334,13 +15334,13 @@ define('utils/action',['require','exports','module','lodash','./common','../pars
      */
     detectProfile: function(editor) {
       var syntax = editor.getSyntax();
-      
+
       // get profile from syntax definition
       var profile = resources.findItem(syntax, 'profile');
       if (profile) {
         return profile;
       }
-      
+
       switch(syntax) {
         case 'xml':
         case 'xsl':
@@ -15362,7 +15362,7 @@ define('utils/action',['require','exports','module','lodash','./common','../pars
 
       return 'xhtml';
     },
-    
+
     /**
      * Tries to detect if current document is XHTML one.
      * @param {IEmmetEditor} editor
@@ -15371,7 +15371,7 @@ define('utils/action',['require','exports','module','lodash','./common','../pars
     isXHTML: function(editor) {
       return editor.getContent().search(/<!DOCTYPE[^>]+XHTML/i) != -1;
     },
-    
+
     /**
      * Check if current caret position is inside &lt;style&gt; tag
      * @param {IEmmetEditor} editor
@@ -15381,7 +15381,7 @@ define('utils/action',['require','exports','module','lodash','./common','../pars
       var content = String(editor.getContent());
       var caretPos = editor.getCaretPos();
       var tag = htmlMatcher.tag(content, caretPos);
-      return tag && tag.open.name.toLowerCase() == 'style' 
+      return tag && tag.open.name.toLowerCase() == 'style'
         && tag.innerRange.cmp(caretPos, 'lte', 'gte');
     },
 
@@ -15393,7 +15393,7 @@ define('utils/action',['require','exports','module','lodash','./common','../pars
     isSupportedCSS: function(syntax) {
       return syntax == 'css' || syntax == 'less' || syntax == 'scss';
     },
-    
+
     /**
      * Check if current caret position is inside "style" attribute of HTML
      * element
@@ -15406,10 +15406,10 @@ define('utils/action',['require','exports','module','lodash','./common','../pars
       var tree = xmlEditTree.parseFromPosition(content, caretPos, true);
       if (tree) {
         var attr = tree.itemFromPosition(caretPos, true);
-        return attr && attr.name().toLowerCase() == 'style' 
+        return attr && attr.name().toLowerCase() == 'style'
           && attr.valueRange(true).cmp(caretPos, 'lte', 'gte');
       }
-            
+
             return false;
     }
   };
@@ -15438,24 +15438,24 @@ define('utils/editor',['require','exports','module','lodash','./common','../asse
      */
     isInsideTag: function(html, caretPos) {
       var reTag = /^<\/?\w[\w\:\-]*.*?>/;
-      
+
       // search left to find opening brace
       var pos = caretPos;
       while (pos > -1) {
-        if (html.charAt(pos) == '<') 
+        if (html.charAt(pos) == '<')
           break;
         pos--;
       }
-      
+
       if (pos != -1) {
         var m = reTag.exec(html.substring(pos));
         if (m && caretPos > pos && caretPos < pos + m[0].length)
           return true;
       }
-      
+
       return false;
     },
-    
+
     /**
      * Sanitizes incoming editor data and provides default values for
      * output-specific info
@@ -15476,7 +15476,7 @@ define('utils/editor',['require','exports','module','lodash','./common','../asse
         content: String(editor.getContent())
       };
     },
-    
+
     /**
      * Unindent content, thus preparing text for tag wrapping
      * @param {IEmmetEditor} editor Editor instance
@@ -15486,7 +15486,7 @@ define('utils/editor',['require','exports','module','lodash','./common','../asse
     unindent: function(editor, text) {
       return utils.unindentString(text, this.getCurrentLinePadding(editor));
     },
-    
+
     /**
      * Returns padding of current editor's line
      * @param {IEmmetEditor} Editor instance
@@ -15499,7 +15499,7 @@ define('utils/editor',['require','exports','module','lodash','./common','../asse
     /**
      * Normalizes content according to given preferences, e.g.
      * replaces newlines and indentation with ones defined in
-     * `options`. If options are not provided or incomplete, 
+     * `options`. If options are not provided or incomplete,
      * values will be taken from current user environment
      * @param {String} text
      * @param {Object} options
@@ -15546,10 +15546,10 @@ define('action/base64',['require','exports','module','../plugin/file','../utils/
   var base64 = require('../utils/base64');
   var actionUtils = require('../utils/action');
   var editorUtils = require('../utils/editor');
-  
+
   /**
    * Test if <code>text</code> starts with <code>token</code> at <code>pos</code>
-   * position. If <code>pos</code> is omitted, search from beginning of text 
+   * position. If <code>pos</code> is omitted, search from beginning of text
    * @param {String} token Token to test
    * @param {String} text Where to search
    * @param {Number} pos Position where to start search
@@ -15560,10 +15560,10 @@ define('action/base64',['require','exports','module','../plugin/file','../utils/
     pos = pos || 0;
     return text.charAt(pos) == token.charAt(0) && text.substr(pos, token.length) == token;
   }
-  
+
   /**
    * Encodes image to base64
-   * 
+   *
    * @param {IEmmetEditor} editor
    * @param {String} imgPath Path to image
    * @param {Number} pos Caret position where image is located in the editor
@@ -15572,33 +15572,33 @@ define('action/base64',['require','exports','module','../plugin/file','../utils/
   function encodeToBase64(editor, imgPath, pos) {
     var editorFile = editor.getFilePath();
     var defaultMimeType = 'application/octet-stream';
-      
+
     if (editorFile === null) {
       throw "You should save your file before using this action";
     }
-    
+
     // locate real image path
     var realImgPath = file.locateFile(editorFile, imgPath);
     if (realImgPath === null) {
       throw "Can't find " + imgPath + ' file';
     }
-    
+
     file.read(realImgPath, function(err, content) {
       if (err) {
         throw 'Unable to read ' + realImgPath + ': ' + err;
       }
-      
+
       var b64 = base64.encode(String(content));
       if (!b64) {
         throw "Can't encode file content to base64";
       }
-      
+
       b64 = 'data:' + (actionUtils.mimeTypes[String(file.getExt(realImgPath))] || defaultMimeType) +
         ';base64,' + b64;
-        
+
       editor.replaceContent('$0' + b64, pos, pos + imgPath.length);
     });
-    
+
     return true;
   }
 
@@ -15613,12 +15613,12 @@ define('action/base64',['require','exports','module','../plugin/file','../utils/
     var filePath = String(editor.prompt('Enter path to file (absolute or relative)'));
     if (!filePath)
       return false;
-      
+
     var absPath = file.createPath(editor.getFilePath(), filePath);
     if (!absPath) {
       throw "Can't save file";
     }
-    
+
     file.save(absPath, base64.decode( data.replace(/^data\:.+?;.+?,/, '') ));
     editor.replaceContent('$0' + filePath, pos, pos + data.length);
     return true;
@@ -15636,7 +15636,7 @@ define('action/base64',['require','exports','module','../plugin/file','../utils/
       var data = String(editor.getSelection());
       var caretPos = editor.getCaretPos();
       var info = editorUtils.outputInfo(editor);
-        
+
       if (!data) {
         // no selection, try to find image bounds from current caret position
         var text = info.content, m;
@@ -15656,7 +15656,7 @@ define('action/base64',['require','exports','module','../plugin/file','../utils/
           }
         }
       }
-      
+
       if (data) {
         if (startsWith('data:', data)) {
           return decodeFromBase64(editor, data, caretPos);
@@ -15664,14 +15664,14 @@ define('action/base64',['require','exports','module','../plugin/file','../utils/
           return encodeToBase64(editor, data, caretPos);
         }
       }
-      
+
       return false;
     }
   };
 });
 
 /**
- * Move between next/prev edit points. 'Edit points' are places between tags 
+ * Move between next/prev edit points. 'Edit points' are places between tags
  * and quotes of empty attributes in html
  */
 if (typeof module === 'object' && typeof define !== 'function') {
@@ -15691,13 +15691,13 @@ define('action/editPoints',['require','exports','module'],function(require, expo
   function findNewEditPoint(editor, inc, offset) {
     inc = inc || 1;
     offset = offset || 0;
-    
+
     var curPoint = editor.getCaretPos() + offset;
     var content = String(editor.getContent());
     var maxLen = content.length;
     var nextPoint = -1;
     var reEmptyLine = /^\s+$/;
-    
+
     function getLine(ix) {
       var start = ix;
       while (start >= 0) {
@@ -15706,16 +15706,16 @@ define('action/editPoints',['require','exports','module'],function(require, expo
           break;
         start--;
       }
-      
+
       return content.substring(start, ix);
     }
-      
+
     while (curPoint <= maxLen && curPoint >= 0) {
       curPoint += inc;
       var curChar = content.charAt(curPoint);
       var nextChar = content.charAt(curPoint + 1);
       var prevChar = content.charAt(curPoint - 1);
-        
+
       switch (curChar) {
         case '"':
         case '\'':
@@ -15738,14 +15738,14 @@ define('action/editPoints',['require','exports','module'],function(require, expo
           }
           break;
       }
-      
+
       if (nextPoint != -1)
         break;
     }
-    
+
     return nextPoint;
   }
-  
+
   return {
     /**
      * Move to previous edit point
@@ -15757,16 +15757,16 @@ define('action/editPoints',['require','exports','module'],function(require, expo
     previousEditPointAction: function(editor, syntax, profile) {
       var curPos = editor.getCaretPos();
       var newPoint = findNewEditPoint(editor, -1);
-        
+
       if (newPoint == curPos)
         // we're still in the same point, try searching from the other place
         newPoint = findNewEditPoint(editor, -1, -2);
-      
+
       if (newPoint != -1) {
         editor.setCaretPos(newPoint);
         return true;
       }
-      
+
       return false;
     },
 
@@ -15783,7 +15783,7 @@ define('action/editPoints',['require','exports','module'],function(require, expo
         editor.setCaretPos(newPoint);
         return true;
       }
-      
+
       return false;
     }
   };
@@ -15811,7 +15811,7 @@ define('action/evaluateMath',['require','exports','module','../utils/action','..
     evaluateMathAction: function(editor) {
       var content = String(editor.getContent());
       var chars = '.+-*/\\';
-      
+
       /** @type Range */
       var sel = range(editor.getSelectionRange());
       if (!sel.length()) {
@@ -15819,13 +15819,13 @@ define('action/evaluateMath',['require','exports','module','../utils/action','..
           return utils.isNumeric(ch) || chars.indexOf(ch) != -1;
         });
       }
-      
+
       if (sel && sel.length()) {
         var expr = sel.substring(content);
-        
-        // replace integral division: 11\2 => Math.round(11/2) 
+
+        // replace integral division: 11\2 => Math.round(11/2)
         expr = expr.replace(/([\d\.\-]+)\\([\d\.\-]+)/g, 'Math.round($1/$2)');
-        
+
         try {
           var result = utils.prettifyNumber(new Function('return ' + expr)());
           editor.replaceContent(result, sel.start, sel.end);
@@ -15833,7 +15833,7 @@ define('action/evaluateMath',['require','exports','module','../utils/action','..
           return true;
         } catch (e) {}
       }
-      
+
       return false;
     }
   };
@@ -15841,7 +15841,7 @@ define('action/evaluateMath',['require','exports','module','../utils/action','..
 
 /**
  * Parsed resources (snippets, abbreviations, variables, etc.) for Emmet.
- * Contains convenient method to get access for snippets with respect of 
+ * Contains convenient method to get access for snippets with respect of
  * inheritance. Also provides ability to store data in different vocabularies
  * ('system' and 'user') for fast and safe resource update
  * @author Sergey Chikuyonok (serge.che@gmail.com)
@@ -15860,16 +15860,16 @@ define('assets/caniuse',['require','exports','module','lodash','./preferences','
   prefs.define('caniuse.enabled', true, 'Enable support of Can I Use database. When enabled,\
     CSS abbreviation resolver will look at Can I Use database first before detecting\
     CSS properties that should be resolved');
-  
+
   prefs.define('caniuse.vendors', 'all', 'A comma-separated list vendor identifiers\
     (as described in Can I Use database) that should be supported\
     when resolving vendor-prefixed properties. Set value to <code>all</code>\
     to support all available properties');
-  
+
   prefs.define('caniuse.era', 'e-2', 'Browser era, as defined in Can I Use database.\
     Examples: <code>e0</code> (current version), <code>e1</code> (near future)\
     <code>e-2</code> (2 versions back) and so on.');
-  
+
   var cssSections = {
     'border-image': ['border-image'],
     'css-boxshadow': ['box-shadow'],
@@ -15940,7 +15940,7 @@ define('assets/caniuse',['require','exports','module','lodash','./preferences','
   function parseCSS(data) {
     var out = {};
     var cssCategories = data.cats.CSS;
-    
+
     _.each(data.data, function(section, name) {
       if (name in cssSections) {
         _.each(cssSections[name], function(kw) {
@@ -15964,7 +15964,7 @@ define('assets/caniuse',['require','exports','module','lodash','./preferences','
       return parseInt(a.substr(1)) - parseInt(b.substr(1));
     });
   }
-  
+
   /**
    * Returs list of supported vendors, depending on user preferences
    * @return {Array}
@@ -16000,7 +16000,7 @@ define('assets/caniuse',['require','exports','module','lodash','./preferences','
     var path = require('path');
 
     db = fs.readFileSync(path.join(__dirname, '../caniuse.json'), {encoding: 'utf8'});
-    
+
   } catch(e) {}
 
   if (db) {
@@ -16055,7 +16055,7 @@ if (typeof module === 'object' && typeof define !== 'function') {
 
 define('parser/css',['require','exports','module'],function(require, exports, module) {
   var session = {tokens: null};
-  
+
   // walks around the source
   var walker = {
     init: function (source) {
@@ -16063,7 +16063,7 @@ define('parser/css',['require','exports','module'],function(require, exports, mo
       this.source = source;
       this.ch = '';
       this.chnum = -1;
-    
+
       // advance
       this.nextChar();
     },
@@ -16079,19 +16079,19 @@ define('parser/css',['require','exports','module'],function(require, exports, mo
   function isNameChar(c, cc) {
     cc = cc || c.charCodeAt(0);
     return (
-      (cc >= 97 && cc <= 122 /* a-z */) || 
-      (cc >= 65 && cc <= 90 /* A-Z */) || 
-      /* 
-      Experimental: include cyrillic ranges 
-      since some letters, similar to latin ones, can 
+      (cc >= 97 && cc <= 122 /* a-z */) ||
+      (cc >= 65 && cc <= 90 /* A-Z */) ||
+      /*
+      Experimental: include cyrillic ranges
+      since some letters, similar to latin ones, can
       accidentally appear in CSS tokens
       */
-      (cc >= 1024 && cc <= 1279) || 
+      (cc >= 1024 && cc <= 1279) ||
       c === '&' || /* selector placeholder (LESS, SCSS) */
-      c === '_' || 
+      c === '_' ||
       c === '<' || /* comparisons (LESS, SCSS) */
-      c === '>' || 
-      c === '=' || 
+      c === '>' ||
+      c === '=' ||
       c === '-'
     );
   }
@@ -16120,7 +16120,7 @@ define('parser/css',['require','exports','module'],function(require, exports, mo
       return ch in ops;
     };
   }());
-  
+
   // creates token objects and pushes them to a list
   function tokener(value, type) {
     session.tokens.push({
@@ -16138,7 +16138,7 @@ define('parser/css',['require','exports','module'],function(require, exports, mo
     var lines = part.split('\n');
     var ch = (lines[lines.length - 1] || '').length;
     var fullLine = source.split('\n')[lines.length - 1] || '';
-    
+
     var chunkSize = 100;
     var offset = Math.max(0, ch - chunkSize);
     var formattedLine = fullLine.substr(offset, chunkSize * 2) + '\n';
@@ -16165,9 +16165,9 @@ define('parser/css',['require','exports','module'],function(require, exports, mo
 
     throw errObj;
   }
-  
+
   // oops
-  function error(m) { 
+  function error(m) {
     var w = walker;
     var info = getPosInfo(walker);
     var tokens = session.tokens;
@@ -16190,14 +16190,14 @@ define('parser/css',['require','exports','module'],function(require, exports, mo
   function white() {
     var c = walker.ch,
       token = '';
-  
+
     while (c === " " || c === "\t") {
       token += c;
       c = walker.nextChar();
     }
-  
+
     tokener(token, 'white');
-  
+
   }
 
   function comment() {
@@ -16205,7 +16205,7 @@ define('parser/css',['require','exports','module'],function(require, exports, mo
       c = w.ch,
       token = c,
       cnext;
-   
+
     cnext = w.nextChar();
 
     if (cnext === '/') {
@@ -16226,7 +16226,7 @@ define('parser/css',['require','exports','module'],function(require, exports, mo
       // oops, not a comment, just a /
       return tokener(token, token);
     }
-    
+
     token += cnext;
     w.nextChar();
     tokener(token, 'comment');
@@ -16238,11 +16238,11 @@ define('parser/css',['require','exports','module'],function(require, exports, mo
       q = c,
       token = c,
       cnext;
-  
+
     c = w.nextChar();
-  
+
     while (c !== q) {
-      
+
       if (c === '\n') {
         cnext = w.nextChar();
         if (cnext === "\\") {
@@ -16258,23 +16258,23 @@ define('parser/css',['require','exports','module'],function(require, exports, mo
           token += c;
         }
       }
-    
+
       c = w.nextChar();
-    
+
     }
     token += c;
     w.nextChar();
     tokener(token, 'string');
   }
-  
+
   function brace() {
     var w = walker,
       c = w.ch,
       depth = 0,
       token = c;
-  
+
     c = w.nextChar();
-  
+
     while (c !== ')' && !depth) {
       if (c === '(') {
         depth++;
@@ -16283,11 +16283,11 @@ define('parser/css',['require','exports','module'],function(require, exports, mo
       } else if (c === '') {
         raiseError("Unterminated brace");
       }
-      
+
       token += c;
       c = w.nextChar();
     }
-    
+
     token += c;
     w.nextChar();
     tokener(token, 'brace');
@@ -16296,7 +16296,7 @@ define('parser/css',['require','exports','module'],function(require, exports, mo
   function identifier(pre) {
     var c = walker.ch;
     var token = pre ? pre + c : c;
-      
+
     c = walker.nextChar();
     var cc = c.charCodeAt(0);
     while (isNameChar(c, cc) || isDigit(c, cc)) {
@@ -16304,8 +16304,8 @@ define('parser/css',['require','exports','module'],function(require, exports, mo
       c = walker.nextChar();
       cc = c.charCodeAt(0);
     }
-  
-    tokener(token, 'identifier');    
+
+    tokener(token, 'identifier');
   }
 
   function num() {
@@ -16314,21 +16314,21 @@ define('parser/css',['require','exports','module'],function(require, exports, mo
       token = c,
       point = token === '.',
       nondigit;
-    
+
     c = w.nextChar();
     nondigit = !isDigit(c);
-  
+
     // .2px or .classname?
     if (point && nondigit) {
       // meh, NaN, could be a class name, so it's an operator for now
-      return tokener(token, '.');    
+      return tokener(token, '.');
     }
-    
+
     // -2px or -moz-something
     if (token === '-' && nondigit) {
       return identifier('-');
     }
-  
+
     while (c !== '' && (isDigit(c) || (!point && c === '.'))) { // not end of source && digit or first instance of .
       if (c === '.') {
         point = true;
@@ -16337,8 +16337,8 @@ define('parser/css',['require','exports','module'],function(require, exports, mo
       c = w.nextChar();
     }
 
-    tokener(token, 'number');    
-  
+    tokener(token, 'number');
+
   }
 
   function op() {
@@ -16346,14 +16346,14 @@ define('parser/css',['require','exports','module'],function(require, exports, mo
       c = w.ch,
       token = c,
       next = w.nextChar();
-      
+
     if (next === "=" && isOp(token, true)) {
       token += next;
       tokener(token, 'match');
       w.nextChar();
       return;
-    } 
-    
+    }
+
     tokener(token, token);
   }
 
@@ -16361,27 +16361,27 @@ define('parser/css',['require','exports','module'],function(require, exports, mo
   // call the appropriate handler based on the first character in a token suspect
   function tokenize() {
     var ch = walker.ch;
-  
+
     if (ch === " " || ch === "\t") {
       return white();
     }
 
     if (ch === '/') {
       return comment();
-    } 
+    }
 
     if (ch === '"' || ch === "'") {
       return str();
     }
-    
+
     if (ch === '(') {
       return brace();
     }
-  
+
     if (ch === '-' || ch === '.' || isDigit(ch)) { // tricky - char: minus (-1px) or dash (-moz-stuff)
       return num();
     }
-  
+
     if (isNameChar(ch)) {
       return identifier();
     }
@@ -16399,13 +16399,13 @@ define('parser/css',['require','exports','module'],function(require, exports, mo
       walker.nextChar();
       return;
     }
-    
+
     if (ch === '\n') {
       tokener(ch, 'line');
       walker.nextChar();
       return;
     }
-    
+
     raiseError("Unrecognized character '" + ch + "'");
   }
 
@@ -16432,10 +16432,10 @@ define('parser/css',['require','exports','module'],function(require, exports, mo
       session.tokens = null;
       return tokens;
     },
-    
+
     /**
      * Tokenizes CSS source. It's like `lex()` method,
-     * but also stores proper token indexes in source, 
+     * but also stores proper token indexes in source,
      * so it's a bit slower
      * @param {String} source
      * @returns {Array}
@@ -16459,7 +16459,7 @@ define('parser/css',['require','exports','module'],function(require, exports, mo
         end:   0
       };
     },
-    
+
     toSource: function(toks) {
       var i = 0, max = toks.length, src = '';
       for (; i < max; i++) {
@@ -16594,7 +16594,7 @@ define('utils/cssSections',['require','exports','module','lodash','./common','..
     },
 
     /**
-     * Returns deepest child of current section (or section itself) 
+     * Returns deepest child of current section (or section itself)
      * which includes given position.
      * @param  {Number} pos
      * @return {CSSSection}
@@ -16681,11 +16681,11 @@ define('utils/cssSections',['require','exports','module','lodash','./common','..
             if (matchedRanges.length) {
               stream.pos = _.last(matchedRanges).end;
               continue;
-            } 
+            }
           }
         }
       } catch(e) {}
-      
+
       return ranges.sort(function(a, b) {
         return a.start - b.start;
       });
@@ -16778,7 +16778,7 @@ define('utils/cssSections',['require','exports','module','lodash','./common','..
      * Extracts CSS selector from CSS document from
      * given position. The selector is located by moving backward
      * from given position which means that passed position
-     * must point to the end of selector 
+     * must point to the end of selector
      * @param  {String}  content CSS source
      * @param  {Number}  pos     Search position
      * @param  {Boolean} sanitize Sanitize CSS source before processing.
@@ -16835,7 +16835,7 @@ define('utils/cssSections',['require','exports','module','lodash','./common','..
       if (pos < 0) {
         pos = 0;
       }
-      
+
       var selector = content.substring(pos, endPos);
 
       // trim whitespace from matched selector
@@ -16882,7 +16882,7 @@ define('utils/cssSections',['require','exports','module','lodash','./common','..
         return ctxRule;
 
         // XXX why did I did this? Have to figure out
-        // 
+        //
         // we have a context rule but it may contain nested rules
         // rules = _.filter(rules, function(r) {
         //  return ctxRule.contains(r);
@@ -16905,7 +16905,7 @@ define('utils/cssSections',['require','exports','module','lodash','./common','..
     },
 
     /**
-     * Sanitizes given CSS content: replaces content that may 
+     * Sanitizes given CSS content: replaces content that may
      * interfere with parsing (comments, interpolations, etc.)
      * with spaces. Sanitized content MUST NOT be used for
      * editing or outputting, it just simplifies searching
@@ -17021,7 +17021,7 @@ define('assets/tokenIterator',['require','exports','module'],function(require, e
     this._position = 0;
     this.reset();
   }
-  
+
   TokenIterator.prototype = {
     next: function() {
       if (this.hasNext()) {
@@ -17031,10 +17031,10 @@ define('assets/tokenIterator',['require','exports','module'],function(require, e
       } else {
         this._i = this._il;
       }
-      
+
       return null;
     },
-    
+
     current: function() {
       return this.tokens[this._i];
     },
@@ -17042,38 +17042,38 @@ define('assets/tokenIterator',['require','exports','module'],function(require, e
     peek: function() {
       return this.tokens[this._i + i];
     },
-    
+
     position: function() {
       return this._position;
     },
-    
+
     hasNext: function() {
       return this._i < this._il - 1;
     },
-    
+
     reset: function() {
       this._i = 0;
       this._il = this.tokens.length;
     },
-    
+
     item: function() {
       return this.tokens[this._i];
     },
-    
+
     itemNext: function() {
       return this.tokens[this._i + 1];
     },
-    
+
     itemPrev: function() {
       return this.tokens[this._i - 1];
     },
-    
+
     nextUntil: function(type, callback) {
       var token;
-      var test = typeof type == 'string' 
-        ? function(t){return t.type == type;} 
+      var test = typeof type == 'string'
+        ? function(t){return t.type == type;}
         : type;
-      
+
       while ((token = this.next())) {
         if (callback)
           callback.call(this, token);
@@ -17082,7 +17082,7 @@ define('assets/tokenIterator',['require','exports','module'],function(require, e
       }
     }
   };
-  
+
   return {
     create: function(tokens) {
       return new TokenIterator(tokens);
@@ -17090,8 +17090,8 @@ define('assets/tokenIterator',['require','exports','module'],function(require, e
   };
 });
 /**
- * CSS EditTree is a module that can parse a CSS rule into a tree with 
- * convenient methods for adding, modifying and removing CSS properties. These 
+ * CSS EditTree is a module that can parse a CSS rule into a tree with
+ * convenient methods for adding, modifying and removing CSS properties. These
  * changes can be written back to string with respect of code formatting.
  */
 if (typeof module === 'object' && typeof define !== 'function') {
@@ -17115,18 +17115,18 @@ define('editTree/css',['require','exports','module','lodash','../utils/common','
     styleSeparator: ': ',
     offset: 0
   };
-  
+
   var reSpaceStart = /^\s+/;
   var reSpaceEnd = /\s+$/;
   var WHITESPACE_REMOVE_FROM_START = 1;
   var WHITESPACE_REMOVE_FROM_END   = 2;
-  
+
   /**
    * Modifies given range to remove whitespace from beginning
    * and/or from the end
    * @param  {Range} rng Range to modify
    * @param  {String} text  Text that range belongs to
-   * @param  {Number} mask  Mask indicating from which end 
+   * @param  {Number} mask  Mask indicating from which end
    * whitespace should be removed
    * @return {Range}
    */
@@ -17156,7 +17156,7 @@ define('editTree/css',['require','exports','module','lodash','../utils/common','
    * that can be used for next value consmption
    * @param  {TokenIterator} it
    * @param  {String} text
-   * @return {Object}    Object with `name` and `value` properties 
+   * @return {Object}    Object with `name` and `value` properties
    * ar ranges. Value range can be zero-length.
    */
   function consumeSingleProperty(it, text) {
@@ -17220,7 +17220,7 @@ define('editTree/css',['require','exports','module','lodash','../utils/common','
           it.next();
           break;
         } else if (token.type == ':' && lastNewline) {
-          // A special case: 
+          // A special case:
           // user is writing a value before existing
           // property, but didn’t inserted closing semi-colon.
           // In this case, limit value range to previous
@@ -17254,17 +17254,17 @@ define('editTree/css',['require','exports','module','lodash','../utils/common','
     var ch;
     var result = [];
     var sep = /[\s\u00a0,;]/;
-    
+
     var add = function() {
       stream.next();
       result.push(range(stream.start, stream.current()));
       stream.start = stream.pos;
     };
-    
+
     // skip whitespace
     stream.eatSpace();
     stream.start = stream.pos;
-    
+
     while ((ch = stream.next())) {
       if (ch == '"' || ch == "'") {
         stream.next();
@@ -17284,9 +17284,9 @@ define('editTree/css',['require','exports','module','lodash','../utils/common','
         }
       }
     }
-    
+
     add();
-    
+
     return _.chain(result)
       .filter(function(item) {
         return !!item.length();
@@ -17296,7 +17296,7 @@ define('editTree/css',['require','exports','module','lodash','../utils/common','
       })
       .value();
   }
-  
+
   /**
    * Parses CSS properties from given CSS source
    * and adds them to CSSEditContainsd node
@@ -17324,7 +17324,7 @@ define('editTree/css',['require','exports','module','lodash','../utils/common','
         ));
     }
   }
-  
+
   /**
    * @class
    * @extends EditContainer
@@ -17332,7 +17332,7 @@ define('editTree/css',['require','exports','module','lodash','../utils/common','
   var CSSEditContainer = editTree.EditContainer.extend({
     initialize: function(source, options) {
       _.extend(this.options, defaultOptions, options);
-      
+
       if (_.isArray(source)) {
         source = cssParser.toSource(source);
       }
@@ -17378,7 +17378,7 @@ define('editTree/css',['require','exports','module','lodash','../utils/common','
       consumeProperties(this, source.substring(sectionOffset, currentRule.end - 1), sectionOffset);
       this._saveStyle();
     },
-    
+
     /**
      * Remembers all styles of properties
      * @private
@@ -17386,7 +17386,7 @@ define('editTree/css',['require','exports','module','lodash','../utils/common','
     _saveStyle: function() {
       var start = this._positions.contentStart;
       var source = this.source;
-      
+
       _.each(this.list(), /** @param {CSSEditProperty} p */ function(p) {
         if (p.type == 'container') {
           return;
@@ -17404,13 +17404,13 @@ define('editTree/css',['require','exports','module','lodash','../utils/common','
         if (lines.length > 1) {
           p.styleBefore = '\n' + _.last(lines);
         }
-        
+
         p.styleSeparator = source.substring(p.nameRange().end, p.valuePosition());
-        
-        // graceful and naive comments removal 
+
+        // graceful and naive comments removal
         p.styleBefore = _.last(p.styleBefore.split('*/'));
         p.styleSeparator = p.styleSeparator.replace(/\/\*.*?\*\//g, '');
-        
+
         start = p.range().end;
       });
     },
@@ -17423,7 +17423,7 @@ define('editTree/css',['require','exports','module','lodash','../utils/common','
     namePosition: function(isAbsolute) {
       return this._pos(this._positions.name, isAbsolute);
     },
-    
+
     /**
      * Returns position of element value token
      * @param {Boolean} isAbsolute Return absolute position
@@ -17441,23 +17441,23 @@ define('editTree/css',['require','exports','module','lodash','../utils/common','
     valueRange: function(isAbsolute) {
       return range.create2(this.valuePosition(isAbsolute), this._pos(this.valueOf().length, isAbsolute) - 1);
     },
-    
+
     /**
-     * Adds new CSS property 
+     * Adds new CSS property
      * @param {String} name Property name
      * @param {String} value Property value
-     * @param {Number} pos Position at which to insert new property. By 
-     * default the property is inserted at the end of rule 
+     * @param {Number} pos Position at which to insert new property. By
+     * default the property is inserted at the end of rule
      * @returns {CSSEditProperty}
      */
     add: function(name, value, pos) {
       var list = this.list();
       var start = this._positions.contentStart;
       var styles = _.pick(this.options, 'styleBefore', 'styleSeparator');
-      
+
       if (_.isUndefined(pos))
         pos = list.length;
-      
+
       /** @type CSSEditProperty */
       var donor = list[pos];
       if (donor) {
@@ -17467,28 +17467,28 @@ define('editTree/css',['require','exports','module','lodash','../utils/common','
         donor.end(';');
         start = donor.range().end;
       }
-      
+
       if (donor) {
         styles = _.pick(donor, 'styleBefore', 'styleSeparator');
       }
-      
+
       var nameToken = editTree.createToken(start + styles.styleBefore.length, name);
       var valueToken = editTree.createToken(nameToken.end + styles.styleSeparator.length, value);
-      
+
       var property = new CSSEditElement(this, nameToken, valueToken,
           editTree.createToken(valueToken.end, ';'));
-      
+
       _.extend(property, styles);
-      
+
       // write new property into the source
       this._updateSource(property.styleBefore + property.toString(), start);
-      
+
       // insert new property
       this._children.splice(pos, 0, property);
       return property;
     }
   });
-  
+
   /**
    * @class
    * @type CSSEditElement
@@ -17498,11 +17498,11 @@ define('editTree/css',['require','exports','module','lodash','../utils/common','
     initialize: function(rule, name, value, end) {
       this.styleBefore = rule.options.styleBefore;
       this.styleSeparator = rule.options.styleSeparator;
-      
+
       this._end = end.value;
       this._positions.end = end.start;
     },
-    
+
     /**
      * Returns ranges of complex value parts
      * @returns {Array} Returns <code>null</code> if value is not complex
@@ -17515,15 +17515,15 @@ define('editTree/css',['require','exports','module','lodash','../utils/common','
           p.shift(offset);
         });
       }
-      
+
       return parts;
     },
 
     /**
-     * Sets of gets element value. 
-     * When setting value, this implementation will ensure that your have 
+     * Sets of gets element value.
+     * When setting value, this implementation will ensure that your have
      * proper name-value separator
-     * @param {String} val New element value. If not passed, current 
+     * @param {String} val New element value. If not passed, current
      * value is returned
      * @returns {String}
      */
@@ -17536,8 +17536,8 @@ define('editTree/css',['require','exports','module','lodash','../utils/common','
           return item !== self && !item.isIncomplete();
         });
 
-        this.styleSeparator = donor 
-          ? donor.styleSeparator 
+        this.styleSeparator = donor
+          ? donor.styleSeparator
           : this.parent.options.styleSeparator;
         this.parent._updateSource(this.styleSeparator, range(this.valueRange().start, 0));
       }
@@ -17562,10 +17562,10 @@ define('editTree/css',['require','exports','module','lodash','../utils/common','
     isIncomplete: function() {
       return this.nameRange().end === this.valueRange().start;
     },
-    
+
     /**
      * Sets of gets property end value (basically, it's a semicolon)
-     * @param {String} val New end value. If not passed, current 
+     * @param {String} val New end value. If not passed, current
      * value is returned
      */
     end: function(val) {
@@ -17573,10 +17573,10 @@ define('editTree/css',['require','exports','module','lodash','../utils/common','
         this.parent._updateSource(val, this._positions.end, this._positions.end + this._end.length);
         this._end = val;
       }
-      
+
       return this._end;
     },
-    
+
     /**
      * Returns full rule range, with indentation
      * @param {Boolean} isAbsolute Return absolute range (with respect of
@@ -17588,7 +17588,7 @@ define('editTree/css',['require','exports','module','lodash','../utils/common','
       r.start -= this.styleBefore.length;
       return r;
     },
-    
+
     /**
      * Returns item string representation
      * @returns {String}
@@ -17597,7 +17597,7 @@ define('editTree/css',['require','exports','module','lodash','../utils/common','
       return this.name() + this.styleSeparator + this.value() + this.end();
     }
   });
-  
+
   return {
     /**
      * Parses CSS rule into editable tree
@@ -17609,9 +17609,9 @@ define('editTree/css',['require','exports','module','lodash','../utils/common','
     parse: function(source, options) {
       return new CSSEditContainer(source, options);
     },
-    
+
     /**
-     * Extract and parse CSS rule from specified position in <code>content</code> 
+     * Extract and parse CSS rule from specified position in <code>content</code>
      * @param {String} content CSS source code
      * @param {Number} pos Character position where to start source code extraction
      * @returns {EditContainer}
@@ -17622,7 +17622,7 @@ define('editTree/css',['require','exports','module','lodash','../utils/common','
         // no matching CSS rule or caret outside rule bounds
         return null;
       }
-      
+
       return this.parse(bounds.substring(content), {
         offset: bounds.start
       });
@@ -17651,7 +17651,7 @@ define('editTree/css',['require','exports','module','lodash','../utils/common','
 
       return cssProp;
     },
-    
+
     /**
      * Removes vendor prefix from CSS property
      * @param {String} name CSS property
@@ -17660,7 +17660,7 @@ define('editTree/css',['require','exports','module','lodash','../utils/common','
     baseName: function(name) {
       return name.replace(/^\s*\-\w+\-/, '');
     },
-    
+
     /**
      * Finds parts of complex CSS value
      * @param {String} str
@@ -17670,27 +17670,27 @@ define('editTree/css',['require','exports','module','lodash','../utils/common','
   };
 });
 /**
- * Resolver for fast CSS typing. Handles abbreviations with the following 
+ * Resolver for fast CSS typing. Handles abbreviations with the following
  * notation:<br>
- * 
+ *
  * <code>(-vendor prefix)?property(value)*(!)?</code>
- * 
+ *
  * <br><br>
  * <b>Abbreviation handling</b><br>
- * 
+ *
  * By default, Emmet searches for matching snippet definition for provided abbreviation.
- * If snippet wasn't found, Emmet automatically generates element with 
+ * If snippet wasn't found, Emmet automatically generates element with
  * abbreviation's name. For example, <code>foo</code> abbreviation will generate
  * <code>&lt;foo&gt;&lt;/foo&gt;</code> output.
  * <br><br>
- * This module will capture all expanded properties and upgrade them with values, 
- * vendor prefixes and !important declarations. All unmatched abbreviations will 
- * be automatically transformed into <code>property-name: ${1}</code> snippets. 
- * 
+ * This module will capture all expanded properties and upgrade them with values,
+ * vendor prefixes and !important declarations. All unmatched abbreviations will
+ * be automatically transformed into <code>property-name: ${1}</code> snippets.
+ *
  * <b>Vendor prefixes<b><br>
- * 
+ *
  * If CSS-property is preceded with dash, resolver should output property with
- * all <i>known</i> vendor prefixes. For example, if <code>brad</code> 
+ * all <i>known</i> vendor prefixes. For example, if <code>brad</code>
  * abbreviation generates <code>border-radius: ${value};</code> snippet,
  * the <code>-brad</code> abbreviation should generate:
  * <pre><code>
@@ -17698,20 +17698,20 @@ define('editTree/css',['require','exports','module','lodash','../utils/common','
  * -moz-border-radius: ${value};
  * border-radius: ${value};
  * </code></pre>
- * Note that <i>o</i> and <i>ms</i> prefixes are omitted since Opera and IE 
+ * Note that <i>o</i> and <i>ms</i> prefixes are omitted since Opera and IE
  * supports unprefixed property.<br><br>
- * 
+ *
  * Users can also provide an explicit list of one-character prefixes for any
  * CSS property. For example, <code>-wm-float</code> will produce
- * 
+ *
  * <pre><code>
  * -webkit-float: ${1};
  * -moz-float: ${1};
  * float: ${1};
  * </code></pre>
- * 
+ *
  * Although this example looks pointless, users can use this feature to write
- * cutting-edge properties implemented by browser vendors recently.  
+ * cutting-edge properties implemented by browser vendors recently.
  */
 if (typeof module === 'object' && typeof define !== 'function') {
   var define = function (factory) {
@@ -17731,13 +17731,13 @@ define('resolver/css',['require','exports','module','lodash','../assets/preferen
   var prefixObj = {
     /** Real vendor prefix name */
     prefix: 'emmet',
-    
-    /** 
-     * Indicates this prefix is obsolete and should't be used when user 
+
+    /**
+     * Indicates this prefix is obsolete and should't be used when user
      * wants to generate all-prefixed properties
      */
     obsolete: false,
-    
+
     /**
      * Returns prefixed CSS property name
      * @param {String} name Unprefixed CSS property
@@ -17745,16 +17745,16 @@ define('resolver/css',['require','exports','module','lodash','../assets/preferen
     transformName: function(name) {
       return '-' + this.prefix + '-' + name;
     },
-    
+
     /**
-     * List of unprefixed CSS properties that supported by 
+     * List of unprefixed CSS properties that supported by
      * current prefix. This list is used to generate all-prefixed property
-     * @returns {Array} 
+     * @returns {Array}
      */
     properties: function() {
       return getProperties('css.' + this.prefix + 'Properties') || [];
     },
-    
+
     /**
      * Check if given property is supported by current prefix
      * @param name
@@ -17763,60 +17763,60 @@ define('resolver/css',['require','exports','module','lodash','../assets/preferen
       return _.include(this.properties(), name);
     }
   };
-  
-  
-  /** 
-   * List of registered one-character prefixes. Key is a one-character prefix, 
+
+
+  /**
+   * List of registered one-character prefixes. Key is a one-character prefix,
    * value is an <code>prefixObj</code> object
    */
   var vendorPrefixes = {};
-  
+
   var defaultValue = '${1};';
-  
+
   // XXX module preferences
   prefs.define('css.valueSeparator', ': ',
-      'Defines a symbol that should be placed between CSS property and ' 
+      'Defines a symbol that should be placed between CSS property and '
       + 'value when expanding CSS abbreviations.');
   prefs.define('css.propertyEnd', ';',
-      'Defines a symbol that should be placed at the end of CSS property  ' 
+      'Defines a symbol that should be placed at the end of CSS property  '
       + 'when expanding CSS abbreviations.');
-  
+
   prefs.define('stylus.valueSeparator', ' ',
-      'Defines a symbol that should be placed between CSS property and ' 
+      'Defines a symbol that should be placed between CSS property and '
       + 'value when expanding CSS abbreviations in Stylus dialect.');
   prefs.define('stylus.propertyEnd', '',
-      'Defines a symbol that should be placed at the end of CSS property  ' 
+      'Defines a symbol that should be placed at the end of CSS property  '
       + 'when expanding CSS abbreviations in Stylus dialect.');
-  
+
   prefs.define('sass.propertyEnd', '',
-      'Defines a symbol that should be placed at the end of CSS property  ' 
+      'Defines a symbol that should be placed at the end of CSS property  '
       + 'when expanding CSS abbreviations in SASS dialect.');
 
   prefs.define('css.syntaxes', 'css, less, sass, scss, stylus, styl',
       'List of syntaxes that should be treated as CSS dialects.');
-  
+
   prefs.define('css.autoInsertVendorPrefixes', true,
-      'Automatically generate vendor-prefixed copies of expanded CSS ' 
+      'Automatically generate vendor-prefixed copies of expanded CSS '
       + 'property. By default, Emmet will generate vendor-prefixed '
-      + 'properties only when you put dash before abbreviation ' 
-      + '(e.g. <code>-bxsh</code>). With this option enabled, you don’t ' 
-      + 'need dashes before abbreviations: Emmet will produce ' 
+      + 'properties only when you put dash before abbreviation '
+      + '(e.g. <code>-bxsh</code>). With this option enabled, you don’t '
+      + 'need dashes before abbreviations: Emmet will produce '
       + 'vendor-prefixed properties for you.');
-  
-  var descTemplate = _.template('A comma-separated list of CSS properties that may have ' 
+
+  var descTemplate = _.template('A comma-separated list of CSS properties that may have '
     + '<code><%= vendor %></code> vendor prefix. This list is used to generate '
     + 'a list of prefixed properties when expanding <code>-property</code> '
-    + 'abbreviations. Empty list means that all possible CSS values may ' 
+    + 'abbreviations. Empty list means that all possible CSS values may '
     + 'have <code><%= vendor %></code> prefix.');
-  
-  var descAddonTemplate = _.template('A comma-separated list of <em>additional</em> CSS properties ' 
-      + 'for <code>css.<%= vendor %>Preperties</code> preference. ' 
-      + 'You should use this list if you want to add or remove a few CSS ' 
+
+  var descAddonTemplate = _.template('A comma-separated list of <em>additional</em> CSS properties '
+      + 'for <code>css.<%= vendor %>Preperties</code> preference. '
+      + 'You should use this list if you want to add or remove a few CSS '
       + 'properties to original set. To add a new property, simply write its name, '
       + 'to remove it, precede property with hyphen.<br>'
       + 'For example, to add <em>foo</em> property and remove <em>border-radius</em> one, '
       + 'the preference value will look like this: <code>foo, -border-radius</code>.');
-  
+
   // properties list is created from cssFeatures.html file
   var props = {
     'webkit': 'animation, animation-delay, animation-direction, animation-duration, animation-fill-mode, animation-iteration-count, animation-name, animation-play-state, animation-timing-function, appearance, backface-visibility, background-clip, background-composite, background-origin, background-size, border-fit, border-horizontal-spacing, border-image, border-vertical-spacing, box-align, box-direction, box-flex, box-flex-group, box-lines, box-ordinal-group, box-orient, box-pack, box-reflect, box-shadow, color-correction, column-break-after, column-break-before, column-break-inside, column-count, column-gap, column-rule-color, column-rule-style, column-rule-width, column-span, column-width, dashboard-region, font-smoothing, highlight, hyphenate-character, hyphenate-limit-after, hyphenate-limit-before, hyphens, line-box-contain, line-break, line-clamp, locale, margin-before-collapse, margin-after-collapse, marquee-direction, marquee-increment, marquee-repetition, marquee-style, mask-attachment, mask-box-image, mask-box-image-outset, mask-box-image-repeat, mask-box-image-slice, mask-box-image-source, mask-box-image-width, mask-clip, mask-composite, mask-image, mask-origin, mask-position, mask-repeat, mask-size, nbsp-mode, perspective, perspective-origin, rtl-ordering, text-combine, text-decorations-in-effect, text-emphasis-color, text-emphasis-position, text-emphasis-style, text-fill-color, text-orientation, text-security, text-stroke-color, text-stroke-width, transform, transition, transform-origin, transform-style, transition-delay, transition-duration, transition-property, transition-timing-function, user-drag, user-modify, user-select, writing-mode, svg-shadow, box-sizing, border-radius',
@@ -17824,62 +17824,62 @@ define('resolver/css',['require','exports','module','lodash','../assets/preferen
     'ms': 'accelerator, backface-visibility, background-position-x, background-position-y, behavior, block-progression, box-align, box-direction, box-flex, box-line-progression, box-lines, box-ordinal-group, box-orient, box-pack, content-zoom-boundary, content-zoom-boundary-max, content-zoom-boundary-min, content-zoom-chaining, content-zoom-snap, content-zoom-snap-points, content-zoom-snap-type, content-zooming, filter, flow-from, flow-into, font-feature-settings, grid-column, grid-column-align, grid-column-span, grid-columns, grid-layer, grid-row, grid-row-align, grid-row-span, grid-rows, high-contrast-adjust, hyphenate-limit-chars, hyphenate-limit-lines, hyphenate-limit-zone, hyphens, ime-mode, interpolation-mode, layout-flow, layout-grid, layout-grid-char, layout-grid-line, layout-grid-mode, layout-grid-type, line-break, overflow-style, perspective, perspective-origin, perspective-origin-x, perspective-origin-y, scroll-boundary, scroll-boundary-bottom, scroll-boundary-left, scroll-boundary-right, scroll-boundary-top, scroll-chaining, scroll-rails, scroll-snap-points-x, scroll-snap-points-y, scroll-snap-type, scroll-snap-x, scroll-snap-y, scrollbar-arrow-color, scrollbar-base-color, scrollbar-darkshadow-color, scrollbar-face-color, scrollbar-highlight-color, scrollbar-shadow-color, scrollbar-track-color, text-align-last, text-autospace, text-justify, text-kashida-space, text-overflow, text-size-adjust, text-underline-position, touch-action, transform, transform-origin, transform-origin-x, transform-origin-y, transform-origin-z, transform-style, transition, transition-delay, transition-duration, transition-property, transition-timing-function, user-select, word-break, wrap-flow, wrap-margin, wrap-through, writing-mode',
     'o': 'dashboard-region, animation, animation-delay, animation-direction, animation-duration, animation-fill-mode, animation-iteration-count, animation-name, animation-play-state, animation-timing-function, border-image, link, link-source, object-fit, object-position, tab-size, table-baseline, transform, transform-origin, transition, transition-delay, transition-duration, transition-property, transition-timing-function, accesskey, input-format, input-required, marquee-dir, marquee-loop, marquee-speed, marquee-style'
   };
-  
+
   _.each(props, function(v, k) {
     prefs.define('css.' + k + 'Properties', v, descTemplate({vendor: k}));
     prefs.define('css.' + k + 'PropertiesAddon', '', descAddonTemplate({vendor: k}));
   });
-  
-  prefs.define('css.unitlessProperties', 'z-index, line-height, opacity, font-weight, zoom', 
+
+  prefs.define('css.unitlessProperties', 'z-index, line-height, opacity, font-weight, zoom',
       'The list of properties whose values ​​must not contain units.');
-  
+
   prefs.define('css.intUnit', 'px', 'Default unit for integer values');
   prefs.define('css.floatUnit', 'em', 'Default unit for float values');
-  
-  prefs.define('css.keywords', 'auto, inherit, all', 
+
+  prefs.define('css.keywords', 'auto, inherit, all',
       'A comma-separated list of valid keywords that can be used in CSS abbreviations.');
-  
-  prefs.define('css.keywordAliases', 'a:auto, i:inherit, s:solid, da:dashed, do:dotted, t:transparent', 
+
+  prefs.define('css.keywordAliases', 'a:auto, i:inherit, s:solid, da:dashed, do:dotted, t:transparent',
       'A comma-separated list of keyword aliases, used in CSS abbreviation. '
       + 'Each alias should be defined as <code>alias:keyword_name</code>.');
-  
-  prefs.define('css.unitAliases', 'e:em, p:%, x:ex, r:rem', 
+
+  prefs.define('css.unitAliases', 'e:em, p:%, x:ex, r:rem',
       'A comma-separated list of unit aliases, used in CSS abbreviation. '
       + 'Each alias should be defined as <code>alias:unit_value</code>.');
-  
-  prefs.define('css.color.short', true, 
+
+  prefs.define('css.color.short', true,
       'Should color values like <code>#ffffff</code> be shortened to '
       + '<code>#fff</code> after abbreviation with color was expanded.');
-  
-  prefs.define('css.color.case', 'keep', 
+
+  prefs.define('css.color.case', 'keep',
       'Letter case of color values generated by abbreviations with color '
       + '(like <code>c#0</code>). Possible values are <code>upper</code>, '
       + '<code>lower</code> and <code>keep</code>.');
-  
-  prefs.define('css.fuzzySearch', true, 
-      'Enable fuzzy search among CSS snippet names. When enabled, every ' 
+
+  prefs.define('css.fuzzySearch', true,
+      'Enable fuzzy search among CSS snippet names. When enabled, every '
       + '<em>unknown</em> snippet will be scored against available snippet '
       + 'names (not values or CSS properties!). The match with best score '
-      + 'will be used to resolve snippet value. For example, with this ' 
+      + 'will be used to resolve snippet value. For example, with this '
       + 'preference enabled, the following abbreviations are equal: '
       + '<code>ov:h</code> == <code>ov-h</code> == <code>o-h</code> == '
       + '<code>oh</code>');
-  
-  prefs.define('css.fuzzySearchMinScore', 0.3, 
-      'The minium score (from 0 to 1) that fuzzy-matched abbreviation should ' 
+
+  prefs.define('css.fuzzySearchMinScore', 0.3,
+      'The minium score (from 0 to 1) that fuzzy-matched abbreviation should '
       + 'achive. Lower values may produce many false-positive matches, '
       + 'higher values may reduce possible matches.');
-  
-  prefs.define('css.alignVendor', false, 
-      'If set to <code>true</code>, all generated vendor-prefixed properties ' 
+
+  prefs.define('css.alignVendor', false,
+      'If set to <code>true</code>, all generated vendor-prefixed properties '
       + 'will be aligned by real property name.');
-  
-  
+
+
   function isNumeric(ch) {
     var code = ch && ch.charCodeAt(0);
     return (ch && ch == '.' || (code > 47 && code < 58));
   }
-  
+
   /**
    * Check if provided snippet contains only one CSS property and value.
    * @param {String} snippet
@@ -17887,20 +17887,20 @@ define('resolver/css',['require','exports','module','lodash','../assets/preferen
    */
   function isSingleProperty(snippet) {
     snippet = utils.trim(snippet);
-    
+
     // check if it doesn't contain a comment and a newline
     if (/\/\*|\n|\r/.test(snippet)) {
       return false;
     }
-    
+
     // check if it's a valid snippet definition
     if (!/^[a-z0-9\-]+\s*\:/i.test(snippet)) {
       return false;
     }
-    
+
     return snippet.replace(/\$\{.+?\}/g, '').split(':').length == 2;
   }
-  
+
   /**
    * Normalizes abbreviated value to final CSS one
    * @param {String} value
@@ -17910,7 +17910,7 @@ define('resolver/css',['require','exports','module','lodash','../assets/preferen
     if (value.charAt(0) == '-' && !/^\-[\.\d]/.test(value)) {
       value = value.replace(/^\-+/, '');
     }
-    
+
     var ch = value.charAt(0);
     if (ch == '#') {
       return normalizeHexColor(value);
@@ -17922,7 +17922,7 @@ define('resolver/css',['require','exports','module','lodash','../assets/preferen
 
     return getKeyword(value);
   }
-  
+
   function normalizeHexColor(value) {
     var hex = value.replace(/^#+/, '') || '0';
     if (hex.toLowerCase() == 't') {
@@ -17934,7 +17934,7 @@ define('resolver/css',['require','exports','module','lodash','../assets/preferen
       opacity = '0' + str;
       return '';
     });
-    
+
     var repeat = utils.repeatString;
     var color = null;
     switch (hex.length) {
@@ -17960,7 +17960,7 @@ define('resolver/css',['require','exports','module','lodash','../assets/preferen
     if (opacity) {
       return toRgba(color, opacity);
     }
-    
+
     // color must be shortened?
     if (prefs.get('css.color.short')) {
       var p = color.split('');
@@ -17968,7 +17968,7 @@ define('resolver/css',['require','exports','module','lodash','../assets/preferen
         color = p[0] + p[2] + p[4];
       }
     }
-    
+
     // should transform case?
     switch (prefs.get('css.color.case')) {
       case 'upper':
@@ -17978,7 +17978,7 @@ define('resolver/css',['require','exports','module','lodash','../assets/preferen
         color = color.toLowerCase();
         break;
     }
-    
+
     return '#' + color;
   }
 
@@ -17995,34 +17995,34 @@ define('resolver/css',['require','exports','module','lodash','../assets/preferen
 
     return 'rgba(' + [r, g, b, opacity].join(', ') + ')';
   }
-  
+
   function getKeyword(name) {
     var aliases = prefs.getDict('css.keywordAliases');
     return name in aliases ? aliases[name] : name;
   }
-  
+
   function getUnit(name) {
     var aliases = prefs.getDict('css.unitAliases');
     return name in aliases ? aliases[name] : name;
   }
-  
+
   function isValidKeyword(keyword) {
     return _.include(prefs.getArray('css.keywords'), getKeyword(keyword));
   }
-  
+
   /**
-   * Check if passed CSS property support specified vendor prefix 
+   * Check if passed CSS property support specified vendor prefix
    * @param {String} property
    * @param {String} prefix
    */
   function hasPrefix(property, prefix) {
     var info = vendorPrefixes[prefix];
-    
+
     if (!info)
       info = _.find(vendorPrefixes, function(data) {
         return data.prefix == prefix;
       });
-    
+
     return info && info.supports(property);
   }
 
@@ -18055,7 +18055,7 @@ define('resolver/css',['require','exports','module','lodash','../assets/preferen
 
     return prefixes;
   }
-  
+
   /**
    * Search for a list of supported prefixes for CSS property. This list
    * is used to generate all-prefixed snippet
@@ -18065,7 +18065,7 @@ define('resolver/css',['require','exports','module','lodash','../assets/preferen
   function findInternalPrefixes(property, noAutofill) {
     var result = [];
     var prefixes = findVendorPrefixes(property);
-    
+
     if (prefixes) {
       var prefixMap = {};
       _.each(vendorPrefixes, function(obj, name) {
@@ -18076,7 +18076,7 @@ define('resolver/css',['require','exports','module','lodash','../assets/preferen
         return prefixMap[prefix];
       });
     }
-    
+
     if (!result.length && !noAutofill) {
       // add all non-obsolete prefixes
       _.each(vendorPrefixes, function(obj, prefix) {
@@ -18084,17 +18084,17 @@ define('resolver/css',['require','exports','module','lodash','../assets/preferen
           result.push(prefix);
       });
     }
-    
+
     return result;
   }
-  
+
   function addPrefix(name, obj) {
     if (_.isString(obj))
       obj = {prefix: obj};
-    
+
     vendorPrefixes[name] = _.extend({}, prefixObj, obj);
   }
-  
+
   function getSyntaxPreference(name, syntax) {
     if (syntax) {
       // hacky alias for Stylus dialect
@@ -18106,10 +18106,10 @@ define('resolver/css',['require','exports','module','lodash','../assets/preferen
       if (!_.isUndefined(val))
         return val;
     }
-    
+
     return prefs.get('css.' + name);
   }
-  
+
   /**
    * Format CSS property according to current syntax dialect
    * @param {String} property
@@ -18118,13 +18118,13 @@ define('resolver/css',['require','exports','module','lodash','../assets/preferen
    */
   function formatProperty(property, syntax) {
     var ix = property.indexOf(':');
-    property = property.substring(0, ix).replace(/\s+$/, '') 
+    property = property.substring(0, ix).replace(/\s+$/, '')
       + getSyntaxPreference('valueSeparator', syntax)
       + utils.trim(property.substring(ix + 1));
-    
+
     return property.replace(/\s*;\s*$/, getSyntaxPreference('propertyEnd', syntax));
   }
-  
+
   /**
    * Transforms snippet value if required. For example, this transformation
    * may add <i>!important</i> declaration to CSS property
@@ -18135,10 +18135,10 @@ define('resolver/css',['require','exports','module','lodash','../assets/preferen
   function transformSnippet(snippet, isImportant, syntax) {
     if (!_.isString(snippet))
       snippet = snippet.data;
-    
+
     if (!isSingleProperty(snippet))
       return snippet;
-    
+
     if (isImportant) {
       if (~snippet.indexOf(';')) {
         snippet = snippet.split(';').join(' !important;');
@@ -18146,10 +18146,10 @@ define('resolver/css',['require','exports','module','lodash','../assets/preferen
         snippet += ' !important';
       }
     }
-    
+
     return formatProperty(snippet, syntax);
   }
-  
+
   function getProperties(key) {
     var list = prefs.getArray(key);
     _.each(prefs.getArray(key + 'Addon'), function(prop) {
@@ -18158,11 +18158,11 @@ define('resolver/css',['require','exports','module','lodash','../assets/preferen
       } else {
         if (prop.charAt(0) == '+')
           prop = prop.substr(1);
-        
+
         list.push(prop);
       }
     });
-    
+
     return list;
   }
 
@@ -18193,8 +18193,8 @@ define('resolver/css',['require','exports','module','lodash','../assets/preferen
       return transformSnippet(snippetObj.name + ':' + lookup[prefix], isImportant, syntax);
     });
   }
-  
-  
+
+
   // TODO refactor, this looks awkward now
   addPrefix('w', {
     prefix: 'webkit'
@@ -18208,8 +18208,8 @@ define('resolver/css',['require','exports','module','lodash','../assets/preferen
   addPrefix('o', {
     prefix: 'o'
   });
-  
-  
+
+
   module = module || {};
   module.exports = {
     /**
@@ -18219,7 +18219,7 @@ define('resolver/css',['require','exports','module','lodash','../assets/preferen
      * @memberOf cssResolver
      */
     addPrefix: addPrefix,
-    
+
     /**
      * Check if passed CSS property supports specified vendor prefix
      * @param {String} property
@@ -18232,7 +18232,7 @@ define('resolver/css',['require','exports','module','lodash','../assets/preferen
       if (_.include(cssSyntaxes, syntax) && node.isElement()) {
         return this.expandToSnippet(node.abbreviation, syntax);
       }
-      
+
       return null;
     },
 
@@ -18244,11 +18244,11 @@ define('resolver/css',['require','exports','module','lodash','../assets/preferen
      * @returns
      */
     prefixed: function(property, prefix) {
-      return hasPrefix(property, prefix) 
-        ? '-' + prefix + '-' + property 
+      return hasPrefix(property, prefix)
+        ? '-' + prefix + '-' + property
         : property;
     },
-    
+
     /**
      * Returns list of all registered vendor prefixes
      * @returns {Array}
@@ -18258,7 +18258,7 @@ define('resolver/css',['require','exports','module','lodash','../assets/preferen
         return obj.prefix;
       });
     },
-    
+
     /**
      * Returns object describing vendor prefix
      * @param {String} name
@@ -18267,7 +18267,7 @@ define('resolver/css',['require','exports','module','lodash','../assets/preferen
     getPrefix: function(name) {
       return vendorPrefixes[name];
     },
-    
+
     /**
      * Removes prefix object
      * @param {String} name
@@ -18276,11 +18276,11 @@ define('resolver/css',['require','exports','module','lodash','../assets/preferen
       if (name in vendorPrefixes)
         delete vendorPrefixes[name];
     },
-    
+
     /**
      * Extract vendor prefixes from abbreviation
      * @param {String} abbr
-     * @returns {Object} Object containing array of prefixes and clean 
+     * @returns {Object} Object containing array of prefixes and clean
      * abbreviation name
      */
     extractPrefixes: function(abbr) {
@@ -18290,13 +18290,13 @@ define('resolver/css',['require','exports','module','lodash','../assets/preferen
           prefixes: null
         };
       }
-      
+
       // abbreviation may either contain sequence of one-character prefixes
       // or just dash, meaning that user wants to produce all possible
       // prefixed properties
       var i = 1, il = abbr.length, ch;
       var prefixes = [];
-      
+
       while (i < il) {
         ch = abbr.charAt(i);
         if (ch == '-') {
@@ -18304,7 +18304,7 @@ define('resolver/css',['require','exports','module','lodash','../assets/preferen
           i++;
           break;
         }
-        
+
         if (ch in vendorPrefixes) {
           prefixes.push(ch);
         } else {
@@ -18314,22 +18314,22 @@ define('resolver/css',['require','exports','module','lodash','../assets/preferen
           i = 1;
           break;
         }
-        
+
         i++;
       }
-      
+
       // reached end of abbreviation and no property name left
       if (i == il -1) {
         i = 1;
         prefixes.length = 1;
       }
-      
+
       return {
         property: abbr.substring(i),
         prefixes: prefixes.length ? prefixes : 'all'
       };
     },
-    
+
     /**
      * Search for value substring in abbreviation
      * @param {String} abbr
@@ -18337,7 +18337,7 @@ define('resolver/css',['require','exports','module','lodash','../assets/preferen
      */
     findValuesInAbbreviation: function(abbr, syntax) {
       syntax = syntax || 'css';
-      
+
       var i = 0, il = abbr.length, value = '', ch;
       while (i < il) {
         ch = abbr.charAt(i);
@@ -18345,10 +18345,10 @@ define('resolver/css',['require','exports','module','lodash','../assets/preferen
           value = abbr.substring(i);
           break;
         }
-        
+
         i++;
       }
-      
+
       // try to find keywords in abbreviation
       var property = abbr.substring(0, abbr.length - value.length);
       var keywords = [];
@@ -18359,20 +18359,20 @@ define('resolver/css',['require','exports','module','lodash','../assets/preferen
         if (!isValidKeyword(lastPart)) {
           break;
         }
-        
+
         keywords.unshift(lastPart);
         property = parts.join('-');
       }
 
       return keywords.join('-') + value;
     },
-    
+
     parseValues: function(str) {
       /** @type StringStream */
       var stream = stringStream.create(str);
       var values = [];
       var ch = null;
-      
+
       while ((ch = stream.next())) {
         if (ch == '$') {
           stream.match(/^[^\$]+/, true);
@@ -18381,29 +18381,29 @@ define('resolver/css',['require','exports','module','lodash','../assets/preferen
           stream.match(/^t|[0-9a-f]+(\.\d+)?/i, true);
           values.push(stream.current());
         } else if (ch == '-') {
-          if (isValidKeyword(_.last(values)) || 
+          if (isValidKeyword(_.last(values)) ||
               ( stream.start && isNumeric(str.charAt(stream.start - 1)) )
             ) {
             stream.start = stream.pos;
           }
-          
+
           stream.match(/^\-?[0-9]*(\.[0-9]+)?[a-z%\.]*/, true);
           values.push(stream.current());
         } else {
           stream.match(/^[0-9]*(\.[0-9]*)?[a-z%]*/, true);
           values.push(stream.current());
         }
-        
+
         stream.start = stream.pos;
       }
-      
+
       return _.map(_.compact(values), normalizeValue);
     },
-    
+
     /**
      * Extracts values from abbreviation
      * @param {String} abbr
-     * @returns {Object} Object containing array of values and clean 
+     * @returns {Object} Object containing array of values and clean
      * abbreviation name
      */
     extractValues: function(abbr) {
@@ -18415,13 +18415,13 @@ define('resolver/css',['require','exports','module','lodash','../assets/preferen
           values: null
         };
       }
-      
+
       return {
         property: abbr.substring(0, abbr.length - abbrValues.length).replace(/-$/, ''),
         values: this.parseValues(abbrValues)
       };
     },
-    
+
     /**
      * Normalizes value, defined in abbreviation.
      * @param {String} value
@@ -18434,14 +18434,14 @@ define('resolver/css',['require','exports','module','lodash','../assets/preferen
       return value.replace(/^(\-?[0-9\.]+)([a-z]*)$/, function(str, val, unit) {
         if (!unit && (val == '0' || _.include(unitlessProps, property)))
           return val;
-        
+
         if (!unit)
           return val.replace(/\.$/, '') + prefs.get(~val.indexOf('.') ? 'css.floatUnit' : 'css.intUnit');
-        
+
         return val + getUnit(unit);
       });
     },
-    
+
     /**
      * Expands abbreviation into a snippet
      * @param {String} abbr Abbreviation name to expand
@@ -18452,9 +18452,8 @@ define('resolver/css',['require','exports','module','lodash','../assets/preferen
      */
     expand: function(abbr, value, syntax) {
       syntax = syntax || 'css';
-      debugger
       var autoInsertPrefixes = prefs.get('css.autoInsertVendorPrefixes');
-      
+
       // check if snippet should be transformed to !important
       var isImportant = /^(.+)\!$/.test(abbr);
       if (isImportant) {
@@ -18466,7 +18465,7 @@ define('resolver/css',['require','exports','module','lodash','../assets/preferen
       if (snippet && !autoInsertPrefixes) {
         return transformSnippet(snippet, isImportant, syntax);
       }
-      
+
       // no abbreviated resource, parse abbreviation
       var prefixData = this.extractPrefixes(abbr);
       var valuesData = this.extractValues(prefixData.property);
@@ -18477,12 +18476,12 @@ define('resolver/css',['require','exports','module','lodash','../assets/preferen
       } else {
         abbrData.values = null;
       }
-      
+
       if (!snippet && prefs.get('css.fuzzySearch')) {
         // let’s try fuzzy search
         snippet = resources.fuzzyFindSnippet(syntax, abbrData.property, parseFloat(prefs.get('css.fuzzySearchMinScore')));
       }
-      
+
       if (!snippet) {
         if (!abbrData.property) {
           return null;
@@ -18491,11 +18490,11 @@ define('resolver/css',['require','exports','module','lodash','../assets/preferen
       } else if (!_.isString(snippet)) {
         snippet = snippet.data;
       }
-      
+
       if (!isSingleProperty(snippet)) {
         return snippet;
       }
-      
+
       var snippetObj = this.splitSnippet(snippet);
       var result = [];
       if (!value && abbrData.values) {
@@ -18503,14 +18502,14 @@ define('resolver/css',['require','exports','module','lodash','../assets/preferen
           return this.normalizeValue(val, snippetObj.name);
         }, this).join(' ') + ';';
       }
-      
+
       snippetObj.value = value || snippetObj.value;
 
-      var prefixes = abbrData.prefixes == 'all' || (!abbrData.prefixes && autoInsertPrefixes) 
+      var prefixes = abbrData.prefixes == 'all' || (!abbrData.prefixes && autoInsertPrefixes)
         ? findInternalPrefixes(snippetObj.name, autoInsertPrefixes && abbrData.prefixes != 'all')
         : abbrData.prefixes;
-        
-        
+
+
       var names = [], propName;
       _.each(prefixes, function(p) {
         if (p in vendorPrefixes) {
@@ -18520,25 +18519,25 @@ define('resolver/css',['require','exports','module','lodash','../assets/preferen
               isImportant, syntax));
         }
       });
-      
+
       // put the original property
       result.push(transformSnippet(snippetObj.name + ':' + snippetObj.value, isImportant, syntax));
       names.push(snippetObj.name);
 
       result = resolvePrefixedValues(snippetObj, isImportant, syntax).concat(result);
-      
+
       if (prefs.get('css.alignVendor')) {
         var pads = utils.getStringsPads(names);
         result = _.map(result, function(prop, i) {
           return pads[i] + prop;
         });
       }
-      
+
       return result;
     },
-    
+
     /**
-     * Same as <code>expand</code> method but transforms output into 
+     * Same as <code>expand</code> method but transforms output into
      * Emmet snippet
      * @param {String} abbr
      * @param {String} syntax
@@ -18553,14 +18552,14 @@ define('resolver/css',['require','exports','module','lodash','../assets/preferen
       if (_.isArray(snippet)) {
         return snippet.join('\n');
       }
-      
+
       if (!_.isString(snippet)) {
         return snippet.data;
       }
-      
+
       return snippet + '';
     },
-    
+
     /**
      * Split snippet into a CSS property-value pair
      * @param {String} snippet
@@ -18573,9 +18572,9 @@ define('resolver/css',['require','exports','module','lodash','../assets/preferen
           value: defaultValue
         };
       }
-      
+
       var pair = snippet.split(':');
-      
+
       return {
         name: utils.trim(pair.shift()),
         // replace ${0} tabstop to produce valid vendor-prefixed values
@@ -18583,7 +18582,7 @@ define('resolver/css',['require','exports','module','lodash','../assets/preferen
         value: utils.trim(pair.join(':')).replace(/^(\$\{0\}|\$0)(\s*;?)$/, '${1}$2')
       };
     },
-    
+
     getSyntaxPreference: getSyntaxPreference,
     transformSnippet: transformSnippet,
     vendorPrefixes: findVendorPrefixes
@@ -18615,7 +18614,7 @@ define('resolver/gradient/linear',['require','exports','module','lodash','../../
     'top right': 225,
     'right': 270,
     'bottom right': 315,
-    
+
     'to top': 0,
     'to top right': 45,
     'to right': 90,
@@ -18650,7 +18649,7 @@ define('resolver/gradient/linear',['require','exports','module','lodash','../../
         } else {
           this.addColorStop(cur);
         }
-        
+
         stream.next();
         stream.eatSpace();
         stream.start = stream.pos;
@@ -18658,9 +18657,9 @@ define('resolver/gradient/linear',['require','exports','module','lodash','../../
         stream.skipTo(')');
       }
     }
-    
+
     // add last token
-    this.addColorStop(stream.current());    
+    this.addColorStop(stream.current());
   }
 
   LinearGradient.prototype = {
@@ -18687,7 +18686,7 @@ define('resolver/gradient/linear',['require','exports','module','lodash','../../
      */
     parseColorStop: function(colorStop) {
       colorStop = normalizeSpace(colorStop);
-      
+
       // find color declaration
       // first, try complex color declaration, like rgb(0,0,0)
       var color = null;
@@ -18695,18 +18694,18 @@ define('resolver/gradient/linear',['require','exports','module','lodash','../../
         color = c;
         return '';
       });
-      
+
       if (!color) {
         // try simple declaration, like yellow, #fco, #ffffff, etc.
         var parts = colorStop.split(' ');
         color = parts[0];
         colorStop = parts[1] || '';
       }
-      
+
       var result = {
         color: color
       };
-      
+
       if (colorStop) {
         // there's position in color stop definition
         colorStop.replace(/^(\-?[\d\.]+)([a-z%]+)?$/, function(str, pos, unit) {
@@ -18716,13 +18715,13 @@ define('resolver/gradient/linear',['require','exports','module','lodash','../../
           } else if (!unit) {
             unit = '%';
           }
-          
+
           if (unit) {
             result.unit = unit;
           }
         });
       }
-      
+
       return result;
     },
 
@@ -18732,7 +18731,7 @@ define('resolver/gradient/linear',['require','exports','module','lodash','../../
       if (options.prefix) {
         fn = '-' + options.prefix + '-' + fn;
       }
-        
+
       // transform color-stops
       var parts = _.map(this.colorStops, function(cs) {
         var pos = cs.position ? ' ' + cs.position + (cs.unit || '') : '';
@@ -18749,35 +18748,35 @@ define('resolver/gradient/linear',['require','exports','module','lodash','../../
 
     stringifyOldWebkit: function() {
       var colorStops = _.map(this.colorStops, _.clone);
-      
+
       // normalize color-stops position
       _.each(colorStops, function(cs) {
         if (!('position' in cs)) // implied position
           return;
-        
+
         if (~cs.position.indexOf('.') || cs.unit == '%') {
           cs.position = parseFloat(cs.position) / (cs.unit == '%' ? 100 : 1);
         } else {
           throw "Can't convert color stop '" + (cs.position + (cs.unit || '')) + "'";
         }
       });
-      
+
       this._fillImpliedPositions(colorStops);
-      
+
       // transform color-stops into string representation
       colorStops = _.map(colorStops, function(cs, i) {
         if (!cs.position && !i) {
           return 'from(' + cs.color + ')';
         }
-        
+
         if (cs.position == 1 && i == colorStops.length - 1) {
           return 'to(' + cs.color + ')';
         }
-        
+
         return 'color-stop(' + (cs.position.toFixed(2).replace(/\.?0+$/, '')) + ', ' + cs.color + ')';
       });
-      
-      return '-webkit-gradient(linear, ' 
+
+      return '-webkit-gradient(linear, '
         + oldWebkitDirection((this.direction + 180) % 360)
         + ', '
         + colorStops.join(', ')
@@ -18790,24 +18789,24 @@ define('resolver/gradient/linear',['require','exports','module','lodash','../../
      */
     _fillImpliedPositions: function(colorStops) {
       var from = 0;
-      
+
       _.each(colorStops, function(cs, i) {
         // make sure that first and last positions are defined
         if (!i) {
           return cs.position = cs.position || 0;
         }
-        
+
         if (i == colorStops.length - 1 && !('position' in cs)) {
           cs.position = 1;
         }
-        
+
         if ('position' in cs) {
           var start = colorStops[from].position || 0;
           var step = (cs.position - start) / (i - from);
           _.each(colorStops.slice(from, i), function(cs2, j) {
             cs2.position = start + step * j;
           });
-          
+
           from = i;
         }
       });
@@ -18880,15 +18879,15 @@ define('resolver/gradient/linear',['require','exports','module','lodash','../../
    */
   function oldWebkitDirection(dir) {
     dir = stringifyDirection(dir, true);
-    
+
     if(reDeg.test(dir)) {
       throw "The direction is an angle that can’t be converted.";
     }
-    
+
     var v = function(pos) {
       return ~dir.indexOf(pos) ? '100%' : '0';
     };
-    
+
     return v('left') + ' ' + v('top') + ', ' + v('right') + ' ' + v('bottom');
   }
 
@@ -18925,7 +18924,7 @@ define('resolver/gradient/linear',['require','exports','module','lodash','../../
   };
 });
 /**
- * 'Expand Abbreviation' handler that parses gradient definition from under 
+ * 'Expand Abbreviation' handler that parses gradient definition from under
  * cursor and updates CSS rule with vendor-prefixed values.
  */
 if (typeof module === 'object' && typeof define !== 'function') {
@@ -18947,51 +18946,51 @@ define('resolver/cssGradient',['require','exports','module','lodash','../assets/
   var linearGradient = require('./gradient/linear');
 
   var cssSyntaxes = ['css', 'less', 'sass', 'scss', 'stylus', 'styl'];
-  
+
   // XXX define preferences
   prefs.define('css.gradient.prefixes', 'webkit, moz, o',
-      'A comma-separated list of vendor-prefixes for which values should ' 
+      'A comma-separated list of vendor-prefixes for which values should '
       + 'be generated.');
-  
+
   prefs.define('css.gradient.oldWebkit', false,
       'Generate gradient definition for old Webkit implementations');
-  
+
   prefs.define('css.gradient.omitDefaultDirection', true,
     'Do not output default direction definition in generated gradients.');
-  
+
   prefs.define('css.gradient.defaultProperty', 'background-image',
     'When gradient expanded outside CSS value context, it will produce '
       + 'properties with this name.');
-  
+
   prefs.define('css.gradient.fallback', false,
       'With this option enabled, CSS gradient generator will produce '
       + '<code>background-color</code> property with gradient first color '
       + 'as fallback for old browsers.');
 
   /**
-   * Resolves property name (abbreviation): searches for snippet definition in 
+   * Resolves property name (abbreviation): searches for snippet definition in
    * 'resources' and returns new name of matched property
    */
   function resolvePropertyName(name, syntax) {
     var snippet = resources.findSnippet(syntax, name);
-    
+
     if (!snippet && prefs.get('css.fuzzySearch')) {
       var minScore = parseFloat(prefs.get('css.fuzzySearchMinScore'));
       snippet = resources.fuzzyFindSnippet(syntax, name, minScore);
     }
-    
+
     if (snippet) {
       if (!_.isString(snippet)) {
         snippet = snippet.data;
       }
-      
+
       return cssResolver.splitSnippet(snippet).name;
     }
   }
 
   /**
    * Returns vendor prefixes for given gradient type
-   * @param {String} type Gradient type (currently, 'linear-gradient' 
+   * @param {String} type Gradient type (currently, 'linear-gradient'
    * is the only supported value)
    * @return {Array}
    */
@@ -19004,20 +19003,20 @@ define('resolver/cssGradient',['require','exports','module','lodash','../assets/
 
     return prefixes;
   }
-  
+
   function getPrefixedNames(type) {
     var prefixes = getGradientPrefixes(type);
-    var names = prefixes 
+    var names = prefixes
       ? _.map(prefixes, function(p) {
         return '-' + p + '-' + type;
-      }) 
+      })
       : [];
-    
+
     names.push(type);
-    
+
     return names;
   }
-  
+
   /**
    * Returns list of CSS properties with gradient
    * @param {Array} gradient List of gradient objects
@@ -19028,14 +19027,14 @@ define('resolver/cssGradient',['require','exports','module','lodash','../assets/
     var props = [];
     var propertyName = property.name();
     var omitDir = prefs.get('css.gradient.omitDefaultDirection');
-    
+
     if (prefs.get('css.gradient.fallback') && ~propertyName.toLowerCase().indexOf('background')) {
       props.push({
         name: 'background-color',
         value: '${1:' + gradients[0].gradient.colorStops[0].color + '}'
       });
     }
-    
+
     var value = property.value();
     _.each(getGradientPrefixes('linear-gradient'), function(prefix) {
       var name = cssResolver.prefixed(propertyName, prefix);
@@ -19044,14 +19043,14 @@ define('resolver/cssGradient',['require','exports','module','lodash','../assets/
           props.push({
             name: name,
             value: insertGradientsIntoCSSValue(gradients, value, {
-              prefix: prefix, 
+              prefix: prefix,
               oldWebkit: true,
               omitDefaultDirection: omitDir
             })
           });
         } catch(e) {}
       }
-      
+
       props.push({
         name: name,
         value: insertGradientsIntoCSSValue(gradients, value, {
@@ -19060,7 +19059,7 @@ define('resolver/cssGradient',['require','exports','module','lodash','../assets/
         })
       });
     });
-    
+
     return props.sort(function(a, b) {
       return b.name.length - a.name.length;
     });
@@ -19089,7 +19088,7 @@ define('resolver/cssGradient',['require','exports','module','lodash','../assets/
   }
 
   /**
-   * Returns list of properties with the same meaning 
+   * Returns list of properties with the same meaning
    * (e.g. vendor-prefixed + original name)
    * @param  {String} property CSS property name
    * @return {Array}
@@ -19105,7 +19104,7 @@ define('resolver/cssGradient',['require','exports','module','lodash','../assets/
     similarProps.push(property);
     return similarProps;
   }
-  
+
   /**
    * Pastes gradient definition into CSS rule with correct vendor-prefixes
    * @param {EditElement} property Matched CSS property
@@ -19115,12 +19114,12 @@ define('resolver/cssGradient',['require','exports','module','lodash','../assets/
     var rule = property.parent;
     var alignVendor = prefs.get('css.alignVendor');
     var omitDir = prefs.get('css.gradient.omitDefaultDirection');
-    
+
     // we may have aligned gradient definitions: find the smallest value
     // separator
     var sep = property.styleSeparator;
     var before = property.styleBefore;
-    
+
     // first, remove all properties within CSS rule with the same name and
     // gradient definition
     _.each(rule.getAll(similarPropertyNames(property)), function(item) {
@@ -19134,7 +19133,7 @@ define('resolver/cssGradient',['require','exports','module','lodash','../assets/
         rule.remove(item);
       }
     });
-    
+
     if (alignVendor) {
       // update prefix
       if (before != property.styleBefore) {
@@ -19142,41 +19141,41 @@ define('resolver/cssGradient',['require','exports','module','lodash','../assets/
         rule._updateSource(before, fullRange.start, fullRange.start + property.styleBefore.length);
         property.styleBefore = before;
       }
-      
+
       // update separator value
       if (sep != property.styleSeparator) {
         rule._updateSource(sep, property.nameRange().end, property.valueRange().start);
         property.styleSeparator = sep;
       }
     }
-    
+
     var value = property.value();
 
     // create list of properties to insert
     var propsToInsert = getPropertiesForGradient(gradients, property);
-    
+
     // align prefixed values
     if (alignVendor) {
       var values = _.pluck(propsToInsert, 'value');
       var names = _.pluck(propsToInsert, 'name');
       values.push(property.value());
       names.push(property.name());
-      
+
       var valuePads = utils.getStringsPads(_.map(values, function(v) {
         return v.substring(0, v.indexOf('('));
       }));
-      
+
       var namePads = utils.getStringsPads(names);
       property.name(_.last(namePads) + property.name());
-      
+
       _.each(propsToInsert, function(prop, i) {
         prop.name = namePads[i] + prop.name;
         prop.value = valuePads[i] + prop.value;
       });
-      
+
       property.value(_.last(valuePads) + property.value());
     }
-    
+
     // put vendor-prefixed definitions before current rule
     _.each(propsToInsert, function(prop) {
       rule.add(prop.name, prop.value, rule.indexOf(property));
@@ -19191,11 +19190,11 @@ define('resolver/cssGradient',['require','exports','module','lodash','../assets/
 
   /**
    * Validates caret position relatively to located gradients
-   * in CSS rule. In other words, it checks if it’s safe to 
+   * in CSS rule. In other words, it checks if it’s safe to
    * expand gradients for current caret position or not.
-   * 
+   *
    * See issue https://github.com/sergeche/emmet-sublime/issues/411
-   * 
+   *
    * @param  {Array} gradients List of parsed gradients
    * @param  {Number} caretPos  Current caret position
    * @param  {String} syntax    Current document syntax
@@ -19212,7 +19211,7 @@ define('resolver/cssGradient',['require','exports','module','lodash','../assets/
 
     // in case of preprocessors where properties are separated with
     // newlines, make sure there’s no gradient definition past
-    // current caret position. 
+    // current caret position.
     for (var i = parts.length - 1; i >= 0; i--) {
       if (parts[i].matchedPart.start + offset >= caretPos) {
         return false;
@@ -19221,7 +19220,7 @@ define('resolver/cssGradient',['require','exports','module','lodash','../assets/
 
     return true;
   }
-  
+
   module = module || {};
   return module.exports = {
     /**
@@ -19244,7 +19243,7 @@ define('resolver/cssGradient',['require','exports','module','lodash','../assets/
           }
         }
       });
-      
+
       return gradients.length ? gradients : null;
     },
 
@@ -19282,7 +19281,7 @@ define('resolver/cssGradient',['require','exports','module','lodash','../assets/
       if (!_.include(cssSyntaxes, info.syntax)) {
         return false;
       }
-      
+
       // let's see if we are expanding gradient definition
       var caret = editor.getCaretPos();
       var content = info.content;
@@ -19296,17 +19295,17 @@ define('resolver/cssGradient',['require','exports','module','lodash','../assets/
         var cssRule = cssProperty.parent;
         var ruleStart = cssRule.options.offset || 0;
         var ruleEnd = ruleStart + cssRule.toString().length;
-        
+
         // Handle special case:
-        // user wrote gradient definition between existing CSS 
+        // user wrote gradient definition between existing CSS
         // properties and did not finished it with semicolon.
-        // In this case, we have semicolon right after gradient 
+        // In this case, we have semicolon right after gradient
         // definition and re-parse rule again
         if (/[\n\r]/.test(cssProperty.value())) {
           // insert semicolon at the end of gradient definition
           var insertPos = cssProperty.valueRange(true).start + _.last(gradients.gradients).matchedPart.end;
           content = utils.replaceSubstring(content, ';', insertPos);
-          
+
           var _gradients = this.gradientsFromCSSProperty(content, caret);
           if (_gradients) {
             gradients = _gradients;
@@ -19314,43 +19313,43 @@ define('resolver/cssGradient',['require','exports','module','lodash','../assets/
             cssRule = cssProperty.parent;
           }
         }
-        
+
         // make sure current property has terminating semicolon
         cssProperty.end(';');
-        
+
         // resolve CSS property name
         var resolvedName = resolvePropertyName(cssProperty.name(), syntax);
         if (resolvedName) {
           cssProperty.name(resolvedName);
         }
-        
+
         pasteGradient(cssProperty, gradients.gradients);
         editor.replaceContent(cssRule.toString(), ruleStart, ruleEnd, true);
         return true;
       }
-      
+
       return this.expandGradientOutsideValue(editor, syntax);
     },
 
     /**
-     * Tries to expand gradient outside CSS value 
+     * Tries to expand gradient outside CSS value
      * @param {IEmmetEditor} editor
      * @param {String} syntax
      */
     expandGradientOutsideValue: function(editor, syntax) {
       var propertyName = prefs.get('css.gradient.defaultProperty');
       var omitDir = prefs.get('css.gradient.omitDefaultDirection');
-      
+
       if (!propertyName) {
         return false;
       }
-      
+
       // assuming that gradient definition is written on new line,
       // do a simplified parsing
       var content = String(editor.getContent());
       /** @type Range */
       var lineRange = range.create(editor.getCurrentLineRange());
-      
+
       // get line content and adjust range with padding
       var line = lineRange.substring(content)
         .replace(/^\s+/, function(pad) {
@@ -19374,10 +19373,10 @@ define('resolver/cssGradient',['require','exports','module','lodash','../assets/
             omitDefaultDirection: omitDir
           })
         });
-        
+
         var sep = cssResolver.getSyntaxPreference('valueSeparator', syntax);
         var end = cssResolver.getSyntaxPreference('propertyEnd', syntax);
-        
+
         if (prefs.get('css.alignVendor')) {
           var pads = utils.getStringsPads(_.map(props, function(prop) {
             return prop.value.substring(0, prop.value.indexOf('('));
@@ -19386,15 +19385,15 @@ define('resolver/cssGradient',['require','exports','module','lodash','../assets/
             prop.value = pads[i] + prop.value;
           });
         }
-        
+
         props = _.map(props, function(item) {
           return item.name + sep + item.value + end;
         });
-        
+
         editor.replaceContent(props.join('\n'), lineRange.start, lineRange.end);
         return true;
       }
-      
+
       return false;
     },
 
@@ -19408,10 +19407,10 @@ define('resolver/cssGradient',['require','exports','module','lodash','../assets/
       if (!gradients) {
         return false;
       }
-      
+
       var that = this;
       var value = property.value();
-      
+
       // reflect value for properties with the same name
       _.each(property.parent.getAll(similarPropertyNames(property)), function(prop) {
         if (prop === property) {
@@ -19436,19 +19435,19 @@ define('resolver/cssGradient',['require','exports','module','lodash','../assets/
           }));
         }
       });
-      
+
       return true;
     }
   };
 });
 /**
- * 'Expand abbreviation' editor action: extracts abbreviation from current caret 
- * position and replaces it with formatted output. 
+ * 'Expand abbreviation' editor action: extracts abbreviation from current caret
+ * position and replaces it with formatted output.
  * <br><br>
- * This behavior can be overridden with custom handlers which can perform 
+ * This behavior can be overridden with custom handlers which can perform
  * different actions when 'Expand Abbreviation' action is called.
  * For example, a CSS gradient handler that produces vendor-prefixed gradient
- * definitions registers its own expand abbreviation handler.  
+ * definitions registers its own expand abbreviation handler.
  */
 if (typeof module === 'object' && typeof define !== 'function') {
   var define = function (factory) {
@@ -19479,7 +19478,7 @@ define('action/expandAbbreviation',['require','exports','module','lodash','../as
       // abbreviation is selected by user
       return r.substring(content);
     }
-    
+
     // search for new abbreviation from current caret position
     var curLine = editor.getCurrentLineRange();
     return actionUtils.extractAbbreviation(content.substring(curLine.start, r.start));
@@ -19491,24 +19490,24 @@ define('action/expandAbbreviation',['require','exports','module','lodash','../as
   var handlers = handlerList.create();
 
   // XXX setup default expand handlers
-  
+
   /**
-   * Extracts abbreviation from current caret 
-   * position and replaces it with formatted output 
+   * Extracts abbreviation from current caret
+   * position and replaces it with formatted output
    * @param {IEmmetEditor} editor Editor instance
    * @param {String} syntax Syntax type (html, css, etc.)
    * @param {String} profile Output profile name (html, xml, xhtml)
-   * @return {Boolean} Returns <code>true</code> if abbreviation was expanded 
+   * @return {Boolean} Returns <code>true</code> if abbreviation was expanded
    * successfully
    */
   handlers.add(function(editor, syntax, profile) {
     var caretPos = editor.getSelectionRange().end;
     var abbr = findAbbreviation(editor);
-      
+
     if (abbr) {
       var content = parser.expand(abbr, {
-        syntax: syntax, 
-        profile: profile, 
+        syntax: syntax,
+        profile: profile,
         contextNode: actionUtils.captureContext(editor)
       });
 
@@ -19530,11 +19529,11 @@ define('action/expandAbbreviation',['require','exports','module','lodash','../as
         return true;
       }
     }
-    
+
     return false;
   }, {order: -1});
   handlers.add(_.bind(cssGradient.expandAbbreviationHandler, cssGradient));
-    
+
   return {
     /**
      * The actual “Expand Abbreviation“ action routine
@@ -19545,19 +19544,19 @@ define('action/expandAbbreviation',['require','exports','module','lodash','../as
      */
     expandAbbreviationAction: function(editor, syntax, profile) {
       var args = _.toArray(arguments);
-      
+
       // normalize incoming arguments
       var info = editorUtils.outputInfo(editor, syntax, profile);
       args[1] = info.syntax;
       args[2] = info.profile;
-      
+
       return handlers.exec(false, args);
     },
 
     /**
      * A special case of “Expand Abbreviation“ action, invoked by Tab key.
-     * In this case if abbreviation wasn’t expanded successfully or there’s a selecetion, 
-     * the current line/selection will be indented. 
+     * In this case if abbreviation wasn’t expanded successfully or there’s a selecetion,
+     * the current line/selection will be indented.
      * @param  {IEmmetEditor} editor  Editor instance
      * @param  {String} syntax  Current document syntax
      * @param  {String} profile Output profile name
@@ -19572,27 +19571,27 @@ define('action/expandAbbreviation',['require','exports','module','lodash','../as
       if (sel) {
         var selRange = range(editor.getSelectionRange());
         var content = utils.padString(sel, indent);
-        
+
         editor.replaceContent(indent + '${0}', editor.getCaretPos());
         var replaceRange = range(editor.getCaretPos(), selRange.length());
         editor.replaceContent(content, replaceRange.start, replaceRange.end, true);
         editor.createSelection(replaceRange.start, replaceRange.start + content.length);
         return true;
       }
-  
+
       // nothing selected, try to expand
       if (!this.expandAbbreviationAction(editor, syntax, profile)) {
         editor.replaceContent(indent, editor.getCaretPos());
       }
-      
+
       return true;
     },
 
-    
+
     _defaultHandler: function(editor, syntax, profile) {
       var caretPos = editor.getSelectionRange().end;
       var abbr = this.findAbbreviation(editor);
-        
+
       if (abbr) {
         var ctx = actionUtils.captureContext(editor);
         var content = parser.expand(abbr, syntax, profile, ctx);
@@ -19601,15 +19600,15 @@ define('action/expandAbbreviation',['require','exports','module','lodash','../as
           return true;
         }
       }
-      
+
       return false;
     },
 
     /**
-     * Adds custom expand abbreviation handler. The passed function should 
-     * return <code>true</code> if it was performed successfully, 
+     * Adds custom expand abbreviation handler. The passed function should
+     * return <code>true</code> if it was performed successfully,
      * <code>false</code> otherwise.
-     * 
+     *
      * Added handlers will be called when 'Expand Abbreviation' is called
      * in order they were added
      * @memberOf expandAbbreviation
@@ -19619,7 +19618,7 @@ define('action/expandAbbreviation',['require','exports','module','lodash','../as
     addHandler: function(fn, options) {
       handlers.add(fn, options);
     },
-    
+
     /**
      * Removes registered handler
      * @returns
@@ -19627,7 +19626,7 @@ define('action/expandAbbreviation',['require','exports','module','lodash','../as
     removeHandler: function(fn) {
       handlers.remove(fn);
     },
-    
+
     findAbbreviation: findAbbreviation
   };
 });
@@ -19654,7 +19653,7 @@ define('action/incrementDecrement',['require','exports','module','lodash','../ut
     if (~num.indexOf('.')) {
       return num.split('.')[0].length;
     }
-    
+
     return num.length;
   }
 
@@ -19693,7 +19692,7 @@ define('action/incrementDecrement',['require','exports','module','lodash','../ut
     incrementNumber: function(editor, step) {
       var hasSign = false;
       var hasDecimal = false;
-        
+
       var r = actionUtils.findExpressionBounds(editor, function(ch, pos, content) {
         if (utils.isNumeric(ch))
           return true;
@@ -19701,21 +19700,21 @@ define('action/incrementDecrement',['require','exports','module','lodash','../ut
           // make sure that next character is numeric too
           if (!utils.isNumeric(content.charAt(pos + 1)))
             return false;
-          
+
           return hasDecimal ? false : hasDecimal = true;
         }
         if (ch == '-')
           return hasSign ? false : hasSign = true;
-          
+
         return false;
       });
-        
+
       if (r && r.length()) {
         var strNum = r.substring(String(editor.getContent()));
         var num = parseFloat(strNum);
         if (!_.isNaN(num)) {
           num = utils.prettifyNumber(num + step);
-          
+
           // do we have zero-padded number?
           if (/^(\-?)0+[1-9]/.test(strNum)) {
             var minus = '';
@@ -19723,24 +19722,24 @@ define('action/incrementDecrement',['require','exports','module','lodash','../ut
               minus = '-';
               num = num.substring(1);
             }
-              
+
             var parts = num.split('.');
             parts[0] = utils.zeroPadString(parts[0], intLength(strNum));
             num = minus + parts.join('.');
           }
-          
+
           editor.replaceContent(num, r.start, r.end);
           editor.createSelection(r.start, r.start + num.length);
           return true;
         }
       }
-      
+
       return false;
     }
   };
 });
 /**
- * Actions to insert line breaks. Some simple editors (like browser's 
+ * Actions to insert line breaks. Some simple editors (like browser's
  * &lt;textarea&gt;, for example) do not provide such simple things
  */
 if (typeof module === 'object' && typeof define !== 'function') {
@@ -19759,18 +19758,18 @@ define('action/lineBreaks',['require','exports','module','lodash','../assets/pre
 
   // setup default preferences
   prefs.define('css.closeBraceIndentation', '\n',
-      'Indentation before closing brace of CSS rule. Some users prefere ' 
+      'Indentation before closing brace of CSS rule. Some users prefere '
       + 'indented closing brace of CSS rule for better readability. '
       + 'This preference’s value will be automatically inserted before '
       + 'closing brace when user adds newline in newly created CSS rule '
-      + '(e.g. when “Insert formatted linebreak” action will be performed ' 
-      + 'in CSS file). If you’re such user, you may want to write put a value ' 
+      + '(e.g. when “Insert formatted linebreak” action will be performed '
+      + 'in CSS file). If you’re such user, you may want to write put a value '
       + 'like <code>\\n\\t</code> in this preference.');
 
   return {
     /**
      * Inserts newline character with proper indentation. This action is used in
-     * editors that doesn't have indentation control (like textarea element) to 
+     * editors that doesn't have indentation control (like textarea element) to
      * provide proper indentation for inserted newlines
      * @param {IEmmetEditor} editor Editor instance
      */
@@ -19781,11 +19780,11 @@ define('action/lineBreaks',['require','exports','module','lodash','../assets/pre
         var caretPos = editor.getCaretPos();
         var len = content.length;
         var nl = '\n';
-          
+
         // check out next line padding
         var lineRange = editor.getCurrentLineRange();
         var nextPadding = '';
-          
+
         for (var i = lineRange.end + 1, ch; i < len; i++) {
           ch = content.charAt(i);
           if (ch == ' ' || ch == '\t')
@@ -19793,28 +19792,28 @@ define('action/lineBreaks',['require','exports','module','lodash','../assets/pre
           else
             break;
         }
-        
+
         if (nextPadding.length > curPadding.length) {
           editor.replaceContent(nl + nextPadding, caretPos, caretPos, true);
         } else {
           editor.replaceContent(nl, caretPos);
         }
       }
-      
+
       return true;
     },
 
     /**
      * Inserts newline character with proper indentation in specific positions only.
      * @param {IEmmetEditor} editor
-     * @return {Boolean} Returns <code>true</code> if line break was inserted 
+     * @return {Boolean} Returns <code>true</code> if line break was inserted
      */
     insertLineBreakOnlyAction: function(editor) {
       var info = editorUtils.outputInfo(editor);
       var caretPos = editor.getCaretPos();
       var nl = '\n';
       var pad = '\t';
-      
+
       if (_.include(['html', 'xml', 'xsl'], info.syntax)) {
         // let's see if we're breaking newly created tag
         var tag = htmlMatcher.tag(info.content, caretPos);
@@ -19827,7 +19826,7 @@ define('action/lineBreaks',['require','exports','module','lodash','../assets/pre
         var content = info.content;
         if (caretPos && content.charAt(caretPos - 1) == '{') {
           var append = prefs.get('css.closeBraceIndentation');
-          
+
           var hasCloseBrace = content.charAt(caretPos) == '}';
           if (!hasCloseBrace) {
             // do we really need special formatting here?
@@ -19839,7 +19838,7 @@ define('action/lineBreaks',['require','exports','module','lodash','../assets/pre
                 // ok, this is a new rule without closing brace
                 break;
               }
-              
+
               if (ch == '}') {
                 // not a new rule, just add indentation
                 append = '';
@@ -19848,18 +19847,18 @@ define('action/lineBreaks',['require','exports','module','lodash','../assets/pre
               }
             }
           }
-          
+
           if (!hasCloseBrace) {
             append += '}';
           }
-          
+
           // defining rule set
           var insValue = nl + pad + utils.getCaretPlaceholder() + append;
           editor.replaceContent(insValue, caretPos);
           return true;
         }
       }
-        
+
       return false;
     }
   };
@@ -19889,12 +19888,12 @@ define('action/balance',['require','exports','module','lodash','../assets/htmlMa
     var info = editorUtils.outputInfo(editor);
     var content = info.content;
     var sel = range(editor.getSelectionRange());
-    
+
     // validate previous match
     if (lastMatch && !lastMatch.range.equal(sel)) {
       lastMatch = null;
     }
-    
+
     if (lastMatch && sel.length()) {
       if (direction == 'in') {
         // user has previously selected tag and wants to move inward
@@ -19914,8 +19913,8 @@ define('action/balance',['require','exports','module','lodash','../assets/htmlMa
         }
       } else {
         if (
-          !lastMatch.innerRange.equal(lastMatch.outerRange) 
-          && lastMatch.range.equal(lastMatch.innerRange) 
+          !lastMatch.innerRange.equal(lastMatch.outerRange)
+          && lastMatch.range.equal(lastMatch.innerRange)
           && sel.equal(lastMatch.range)) {
           lastMatch.range = lastMatch.outerRange;
         } else {
@@ -19939,7 +19938,7 @@ define('action/balance',['require','exports','module','lodash','../assets/htmlMa
         return true;
       }
     }
-    
+
     lastMatch = null;
     return false;
   }
@@ -20094,22 +20093,22 @@ define('action/balance',['require','exports','module','lodash','../assets/htmlMa
         bestMatch = null;
       }
     } else {
-      bestMatch = ranges[bestMatchIx];  
+      bestMatch = ranges[bestMatchIx];
     }
 
     if (bestMatch) {
       editor.createSelection(bestMatch.start, bestMatch.end);
       return true;
     }
-    
+
     return false;
   }
-  
+
   return {
     /**
      * Find and select HTML tag pair
      * @param {IEmmetEditor} editor Editor instance
-     * @param {String} direction Direction of pair matching: 'in' or 'out'. 
+     * @param {String} direction Direction of pair matching: 'in' or 'out'.
      * Default is 'out'
      */
     balance: function(editor, direction) {
@@ -20118,7 +20117,7 @@ define('action/balance',['require','exports','module','lodash','../assets/htmlMa
       if (actionUtils.isSupportedCSS(info.syntax)) {
         return balanceCSS(editor, direction);
       }
-      
+
       return balanceHTML(editor, direction);
     },
 
@@ -20127,7 +20126,7 @@ define('action/balance',['require','exports','module','lodash','../assets/htmlMa
     },
 
     balanceOutwardAction: function(editor) {
-      return this.balance(editor, 'out'); 
+      return this.balance(editor, 'out');
     },
 
     /**
@@ -20137,11 +20136,11 @@ define('action/balance',['require','exports','module','lodash','../assets/htmlMa
     goToMatchingPairAction: function(editor) {
       var content = String(editor.getContent());
       var caretPos = editor.getCaretPos();
-      
-      if (content.charAt(caretPos) == '<') 
-        // looks like caret is outside of tag pair  
+
+      if (content.charAt(caretPos) == '<')
+        // looks like caret is outside of tag pair
         caretPos++;
-        
+
       var tag = htmlMatcher.tag(content, caretPos);
       if (tag && tag.close) { // exclude unary tags
         if (tag.open.range.inside(caretPos)) {
@@ -20149,10 +20148,10 @@ define('action/balance',['require','exports','module','lodash','../assets/htmlMa
         } else {
           editor.setCaretPos(tag.open.range.start);
         }
-        
+
         return true;
       }
-      
+
       return false;
     }
   };
@@ -20177,7 +20176,7 @@ define('action/mergeLines',['require','exports','module','../assets/htmlMatcher'
   return {
     mergeLinesAction: function(editor) {
       var info = editorUtils.outputInfo(editor);
-    
+
       var selection = range(editor.getSelectionRange());
       if (!selection.length()) {
         // find matching tag
@@ -20186,31 +20185,31 @@ define('action/mergeLines',['require','exports','module','../assets/htmlMatcher'
           selection = pair.outerRange;
         }
       }
-      
+
       if (selection.length()) {
         // got range, merge lines
         var text =  selection.substring(info.content);
         var lines = utils.splitByLines(text);
-        
+
         for (var i = 1; i < lines.length; i++) {
           lines[i] = lines[i].replace(/^\s+/, '');
         }
-        
+
         text = lines.join('').replace(/\s{2,}/, ' ');
         var textLen = text.length;
         text = utils.escapeText(text);
         editor.replaceContent(text, selection.start, selection.end);
         editor.createSelection(selection.start, selection.start + textLen);
-        
+
         return true;
       }
-      
+
       return false;
     }
   };
 });
 /**
- * Reflect CSS value: takes rule's value under caret and pastes it for the same 
+ * Reflect CSS value: takes rule's value under caret and pastes it for the same
  * rules with vendor prefixes
  */
 if (typeof module === 'object' && typeof define !== 'function') {
@@ -20237,24 +20236,24 @@ define('action/reflectCSSValue',['require','exports','module','lodash','../asset
    * @type HandlerList List of registered handlers
    */
   var handlers = handlerList.create();
-  
+
   function doCSSReflection(editor) {
     var outputInfo = editorUtils.outputInfo(editor);
     var caretPos = editor.getCaretPos();
-    
+
     var cssRule = cssEditTree.parseFromPosition(outputInfo.content, caretPos);
     if (!cssRule) return;
-    
+
     var property = cssRule.itemFromPosition(caretPos, true);
     // no property under cursor, nothing to reflect
     if (!property) return;
-    
+
     var oldRule = cssRule.source;
     var offset = cssRule.options.offset;
     var caretDelta = caretPos - offset - property.range().start;
-    
+
     handlers.exec(false, [property]);
-    
+
     if (oldRule !== cssRule.source) {
       return {
         data:  cssRule.source,
@@ -20264,7 +20263,7 @@ define('action/reflectCSSValue',['require','exports','module','lodash','../asset
       };
     }
   }
-  
+
   /**
    * Returns regexp that should match reflected CSS property names
    * @param {String} name Current CSS property name
@@ -20273,16 +20272,16 @@ define('action/reflectCSSValue',['require','exports','module','lodash','../asset
   function getReflectedCSSName(name) {
     name = cssEditTree.baseName(name);
     var vendorPrefix = '^(?:\\-\\w+\\-)?', m;
-    
+
     if ((name == 'opacity' || name == 'filter') && prefs.get('css.reflect.oldIEOpacity')) {
       return new RegExp(vendorPrefix + '(?:opacity|filter)$');
     } else if ((m = name.match(/^border-radius-(top|bottom)(left|right)/))) {
       // Mozilla-style border radius
       return new RegExp(vendorPrefix + '(?:' + name + '|border-' + m[1] + '-' + m[2] + '-radius)$');
-    } else if ((m = name.match(/^border-(top|bottom)-(left|right)-radius/))) { 
+    } else if ((m = name.match(/^border-(top|bottom)-(left|right)-radius/))) {
       return new RegExp(vendorPrefix + '(?:' + name + '|border-radius-' + m[1] + m[2] + ')$');
     }
-    
+
     return new RegExp(vendorPrefix + name + '$');
   }
 
@@ -20298,7 +20297,7 @@ define('action/reflectCSSValue',['require','exports','module','lodash','../asset
   function reflectValueParts(name, value) {
     // detects and updates vendor-specific properties in value,
     // e.g. -webkit-transition: -webkit-transform
-    
+
     var reVendor = /^\-(\w+)\-/;
     var propPrefix = reVendor.test(name) ? RegExp.$1.toLowerCase() : '';
     var parts = cssEditTree.findParts(value);
@@ -20321,50 +20320,50 @@ define('action/reflectCSSValue',['require','exports','module','lodash','../asset
 
     return value;
   }
-  
+
   /**
    * Reflects value from <code>donor</code> into <code>receiver</code>
    * @param {CSSProperty} donor Donor CSS property from which value should
    * be reflected
-   * @param {CSSProperty} receiver Property that should receive reflected 
+   * @param {CSSProperty} receiver Property that should receive reflected
    * value from donor
    */
   function reflectValue(donor, receiver) {
-    var value = getReflectedValue(donor.name(), donor.value(), 
+    var value = getReflectedValue(donor.name(), donor.value(),
         receiver.name(), receiver.value());
-    
+
     value = reflectValueParts(receiver.name(), value);
     receiver.value(value);
   }
-  
+
   /**
    * Returns value that should be reflected for <code>refName</code> CSS property
    * from <code>curName</code> property. This function is used for special cases,
    * when the same result must be achieved with different properties for different
    * browsers. For example: opаcity:0.5; → filter:alpha(opacity=50);<br><br>
-   * 
+   *
    * This function does value conversion between different CSS properties
-   * 
+   *
    * @param {String} curName Current CSS property name
    * @param {String} curValue Current CSS property value
-   * @param {String} refName Receiver CSS property's name 
+   * @param {String} refName Receiver CSS property's name
    * @param {String} refValue Receiver CSS property's value
    * @return {String} New value for receiver property
    */
   function getReflectedValue(curName, curValue, refName, refValue) {
     curName = cssEditTree.baseName(curName);
     refName = cssEditTree.baseName(refName);
-    
+
     if (curName == 'opacity' && refName == 'filter') {
       return refValue.replace(/opacity=[^)]*/i, 'opacity=' + Math.floor(parseFloat(curValue) * 100));
     } else if (curName == 'filter' && refName == 'opacity') {
       var m = curValue.match(/opacity=([^)]*)/i);
       return m ? utils.prettifyNumber(parseInt(m[1], 10) / 100) : refValue;
     }
-    
+
     return curValue;
   }
-  
+
   module = module || {};
   module.exports = {
     reflectCSSValueAction: function(editor) {
@@ -20387,7 +20386,7 @@ define('action/reflectCSSValue',['require','exports','module','lodash','../asset
     /**
      * Adds custom reflect handler. The passed function will receive matched
      * CSS property (as <code>CSSEditElement</code> object) and should
-     * return <code>true</code> if it was performed successfully (handled 
+     * return <code>true</code> if it was performed successfully (handled
      * reflection), <code>false</code> otherwise.
      * @param {Function} fn
      * @param {Object} options
@@ -20395,7 +20394,7 @@ define('action/reflectCSSValue',['require','exports','module','lodash','../asset
     addHandler: function(fn, options) {
       handlers.add(fn, options);
     },
-    
+
     /**
      * Removes registered handler
      * @returns
@@ -20428,7 +20427,7 @@ define('action/removeTag',['require','exports','module','../utils/common','../ut
   return {
     removeTagAction: function(editor) {
       var info = editorUtils.outputInfo(editor);
-      
+
       // search for tag
       var tag = htmlMatcher.tag(info.content, editor.getCaretPos());
       if (tag) {
@@ -20443,14 +20442,14 @@ define('action/removeTag',['require','exports','module','../utils/common','../ut
           var startLineBounds = utils.findNewlineBounds(info.content, tagContentRange.start);
           var startLinePad = utils.getLinePadding(startLineBounds.substring(info.content));
           var tagContent = tagContentRange.substring(info.content);
-          
+
           tagContent = utils.unindentString(tagContent, startLinePad);
           editor.replaceContent(utils.getCaretPlaceholder() + utils.escapeText(tagContent), tag.outerRange.start, tag.outerRange.end);
         }
-        
+
         return true;
       }
-      
+
       return false;
     }
   };
@@ -20488,24 +20487,24 @@ define('action/selectItem',['require','exports','module','lodash','../assets/ran
    */
   function findItem(editor, isBackward, extractFn, rangeFn) {
     var content = editorUtils.outputInfo(editor).content;
-    
+
     var contentLength = content.length;
     var itemRange, rng;
     /** @type Range */
     var prevRange = range(-1, 0);
     /** @type Range */
     var sel = range(editor.getSelectionRange());
-    
+
     var searchPos = sel.start, loop = 100000; // endless loop protection
     while (searchPos >= 0 && searchPos < contentLength && --loop > 0) {
       if ( (itemRange = extractFn(content, searchPos, isBackward)) ) {
         if (prevRange.equal(itemRange)) {
           break;
         }
-        
+
         prevRange = itemRange.clone();
         rng = rangeFn(itemRange.substring(content), itemRange.start, sel.clone());
-        
+
         if (rng) {
           editor.createSelection(rng.start, rng.end);
           return true;
@@ -20513,15 +20512,15 @@ define('action/selectItem',['require','exports','module','lodash','../assets/ran
           searchPos = isBackward ? itemRange.start : itemRange.end - 1;
         }
       }
-      
+
       searchPos += isBackward ? -1 : 1;
     }
-    
+
     return false;
   }
-  
+
   // XXX HTML section
-  
+
   /**
    * Find next HTML item
    * @param {IEmmetEditor} editor
@@ -20539,7 +20538,7 @@ define('action/selectItem',['require','exports','module','lodash','../assets/ran
       return getRangeForHTMLItem(tag, offset, selRange, false);
     });
   }
-  
+
   /**
    * Find previous HTML item
    * @param {IEmmetEditor} editor
@@ -20549,7 +20548,7 @@ define('action/selectItem',['require','exports','module','lodash','../assets/ran
       return getRangeForHTMLItem(tag, offset, selRange, true);
     });
   }
-  
+
   /**
    * Creates possible selection ranges for HTML tag
    * @param {String} source Original HTML source for tokens
@@ -20567,7 +20566,7 @@ define('action/selectItem',['require','exports','module','lodash','../assets/ran
           if (/^<[\w\:\-]/.test(tagName)) {
             // add tag name
             result.push(range({
-              start: tok.start + 1, 
+              start: tok.start + 1,
               end: tok.end
             }));
           }
@@ -20576,37 +20575,37 @@ define('action/selectItem',['require','exports','module','lodash','../assets/ran
           attrStart = tok.start;
           attrName = source.substring(tok.start, tok.end);
           break;
-          
+
         case 'string':
           // attribute value
           // push full attribute first
           result.push(range(attrStart, tok.end - attrStart));
-          
+
           attrValueRange = range(tok);
           attrValue = attrValueRange.substring(source);
-          
+
           // is this a quoted attribute?
           if (isQuote(attrValue.charAt(0)))
             attrValueRange.start++;
-          
+
           if (isQuote(attrValue.charAt(attrValue.length - 1)))
             attrValueRange.end--;
-          
+
           result.push(attrValueRange);
-          
+
           if (attrName == 'class') {
             result = result.concat(classNameRanges(attrValueRange.substring(source), attrValueRange.start));
           }
-          
+
           break;
       }
     });
-    
+
     // offset ranges
     _.each(result, function(r) {
       r.shift(offset);
     });
-    
+
     return _.chain(result)
       .filter(function(item) {        // remove empty
         return !!item.length();
@@ -20616,7 +20615,7 @@ define('action/selectItem',['require','exports','module','lodash','../assets/ran
       })
       .value();
   }
-  
+
   /**
    * Returns ranges of class names in "class" attribute value
    * @param {String} className
@@ -20627,11 +20626,11 @@ define('action/selectItem',['require','exports','module','lodash','../assets/ran
     var result = [];
     /** @type StringStream */
     var stream = stringStream.create(className);
-    
+
     // skip whitespace
     stream.eatSpace();
     stream.start = stream.pos;
-    
+
     var ch;
     while ((ch = stream.next())) {
       if (/[\s\u00a0]/.test(ch)) {
@@ -20640,11 +20639,11 @@ define('action/selectItem',['require','exports','module','lodash','../assets/ran
         stream.start = stream.pos;
       }
     }
-    
+
     result.push(range(stream.start + offset, stream.pos - stream.start));
     return result;
   }
-  
+
   /**
    * Returns best HTML tag range match for current selection
    * @param {String} tag Tag declaration
@@ -20654,30 +20653,30 @@ define('action/selectItem',['require','exports','module','lodash','../assets/ran
    */
   function getRangeForHTMLItem(tag, offset, selRange, isBackward) {
     var ranges = makePossibleRangesHTML(tag, xmlParser.parse(tag), offset);
-    
+
     if (isBackward)
       ranges.reverse();
-    
+
     // try to find selected range
     var curRange = _.find(ranges, function(r) {
       return r.equal(selRange);
     });
-    
+
     if (curRange) {
       var ix = _.indexOf(ranges, curRange);
       if (ix < ranges.length - 1)
         return ranges[ix + 1];
-      
+
       return null;
     }
-    
+
     // no selected range, find nearest one
     if (isBackward)
       // search backward
       return _.find(ranges, function(r) {
         return r.start < selRange.start;
       });
-    
+
     // search forward
     // to deal with overlapping ranges (like full attribute definition
     // and attribute value) let's find range under caret first
@@ -20685,17 +20684,17 @@ define('action/selectItem',['require','exports','module','lodash','../assets/ran
       var matchedRanges = _.filter(ranges, function(r) {
         return r.inside(selRange.end);
       });
-      
+
       if (matchedRanges.length > 1)
         return matchedRanges[1];
     }
-    
-    
+
+
     return _.find(ranges, function(r) {
       return r.end > selRange.end;
     });
   }
-  
+
   /**
    * Search for opening tag in content, starting at specified position
    * @param {String} html Where to search tag
@@ -20710,10 +20709,10 @@ define('action/selectItem',['require','exports','module','lodash','../assets/ran
         return tag;
       pos--;
     }
-    
+
     return null;
   }
-  
+
   /**
    * @param {String} html Where to search tag
    * @param {Number} pos Character index where to start searching
@@ -20726,7 +20725,7 @@ define('action/selectItem',['require','exports','module','lodash','../assets/ran
       return range(pos, m[0]);
     }
   }
-  
+
   function isQuote(ch) {
     return ch == '"' || ch == "'";
   }
@@ -20763,7 +20762,7 @@ define('action/selectItem',['require','exports','module','lodash','../assets/ran
       })
       .value();
   }
-  
+
   /**
    * Makes all possible selection ranges for specified CSS property
    * @param {CSSProperty} property
@@ -20773,7 +20772,7 @@ define('action/selectItem',['require','exports','module','lodash','../assets/ran
     // find all possible ranges, sorted by position and size
     var valueRange = property.valueRange(true);
     var result = [property.range(true), valueRange];
-    
+
     // locate parts of complex values.
     // some examples:
     // – 1px solid red: 3 parts
@@ -20784,7 +20783,7 @@ define('action/selectItem',['require','exports','module','lodash','../assets/ran
       // add absolute range
       var clone = r.clone();
       result.push(clone.shift(valueRange.start));
-      
+
       /** @type StringStream */
       var stream = stringStream.create(r.substring(value));
       if (stream.match(/^[\w\-]+\(/, true)) {
@@ -20796,7 +20795,7 @@ define('action/selectItem',['require','exports','module','lodash','../assets/ran
         stream.backUp(1);
         var fnBody = stream.current();
         result.push(range(clone.start + stream.start, fnBody));
-        
+
         // find parts
         _.each(cssEditTree.findParts(fnBody), function(part) {
           result.push(range(clone.start + stream.start + part.start, part.substring(fnBody)));
@@ -20806,7 +20805,7 @@ define('action/selectItem',['require','exports','module','lodash','../assets/ran
 
     return result;
   }
-  
+
   /**
    * Tries to find matched CSS property and nearest range for selection
    * @param {CSSRule} rule
@@ -20819,7 +20818,7 @@ define('action/selectItem',['require','exports','module','lodash','../assets/ran
     if (isBackward) {
       ranges.reverse();
     }
-    
+
     // return next to selected range, if possible
     var r = _.find(ranges, function(item) {
       return item.equal(selRange);
@@ -20852,17 +20851,17 @@ define('action/selectItem',['require','exports','module','lodash','../assets/ran
 
     return r;
   }
-  
+
   function findNextCSSItem(editor) {
     return findItem(editor, false, _.bind(cssSections.locateRule, cssSections), getRangeForNextItemInCSS);
   }
-  
+
   function findPrevCSSItem(editor) {
     return findItem(editor, true, _.bind(cssSections.locateRule, cssSections), getRangeForPrevItemInCSS);
   }
-  
+
   /**
-   * Returns range for item to be selected in CSS after current caret 
+   * Returns range for item to be selected in CSS after current caret
    * (selection) position
    * @param {String} rule CSS rule declaration
    * @param {Number} offset Rule's position index inside content
@@ -20876,9 +20875,9 @@ define('action/selectItem',['require','exports','module','lodash','../assets/ran
 
     return matchedRangeForCSSProperty(tree, selRange, false);
   }
-  
+
   /**
-   * Returns range for item to be selected in CSS before current caret 
+   * Returns range for item to be selected in CSS before current caret
    * (selection) position
    * @param {String} rule CSS rule declaration
    * @param {Number} offset Rule's position index inside content
@@ -20956,29 +20955,29 @@ define('action/splitJoinTag',['require','exports','module','../utils/common','..
     // empty closing slash is a nonsense for this action
     var slash = profile.selfClosing() || ' /';
     var content = tag.open.range.substring(tag.source).replace(/\s*>$/, slash + '>');
-    
+
     var caretPos = editor.getCaretPos();
-    
+
     // update caret position
     if (content.length + tag.outerRange.start < caretPos) {
       caretPos = content.length + tag.outerRange.start;
     }
-    
+
     content = utils.escapeText(content);
     editor.replaceContent(content, tag.outerRange.start, tag.outerRange.end);
     editor.setCaretPos(caretPos);
     return true;
   }
-  
+
   function splitTag(editor, profile, tag) {
     var caretPos = editor.getCaretPos();
-    
+
     // define tag content depending on profile
     var tagContent = (profile.tag_nl === true) ? '\n\t\n' : '';
     var content = tag.outerContent().replace(/\s*\/>$/, '>');
     caretPos = tag.outerRange.start + content.length;
     content += tagContent + '</' + tag.open.name + '>';
-    
+
     content = utils.escapeText(content);
     editor.replaceContent(content, tag.outerRange.start, tag.outerRange.end);
     editor.setCaretPos(caretPos);
@@ -20989,15 +20988,15 @@ define('action/splitJoinTag',['require','exports','module','../utils/common','..
     splitJoinTagAction: function(editor, profileName) {
       var info = editorUtils.outputInfo(editor, null, profileName);
       var curProfile = profile.get(info.profile);
-      
+
       // find tag at current position
       var tag = matcher.tag(info.content, editor.getCaretPos());
       if (tag) {
-        return tag.close 
-          ? joinTag(editor, curProfile, tag) 
+        return tag.close
+          ? joinTag(editor, curProfile, tag)
           : splitTag(editor, curProfile, tag);
       }
-      
+
       return false;
     }
   };
@@ -21032,7 +21031,7 @@ define('action/toggleComment',['require','exports','module','lodash','../assets/
     /** @type Range */
     var r = range(editor.getSelectionRange());
     var info = editorUtils.outputInfo(editor);
-      
+
     if (!r.length()) {
       // no selection, find matching tag
       var tag = htmlMatcher.tag(info.content, editor.getCaretPos());
@@ -21040,7 +21039,7 @@ define('action/toggleComment',['require','exports','module','lodash','../assets/
         r = tag.outerRange;
       }
     }
-    
+
     return genericCommentToggle(editor, '<!--', '-->', r);
   }
 
@@ -21053,28 +21052,28 @@ define('action/toggleComment',['require','exports','module','lodash','../assets/
     /** @type Range */
     var rng = range(editor.getSelectionRange());
     var info = editorUtils.outputInfo(editor);
-      
+
     if (!rng.length()) {
       // no selection, try to get current rule
       /** @type CSSRule */
       var rule = cssEditTree.parseFromPosition(info.content, editor.getCaretPos());
       if (rule) {
         var property = cssItemFromPosition(rule, editor.getCaretPos());
-        rng = property 
-          ? property.range(true) 
+        rng = property
+          ? property.range(true)
           : range(rule.nameRange(true).start, rule.source);
       }
     }
-    
+
     if (!rng.length()) {
       // still no selection, get current line
       rng = range(editor.getCurrentLineRange());
       utils.narrowToNonSpace(info.content, rng);
     }
-    
+
     return genericCommentToggle(editor, '/*', '*/', rng);
   }
-  
+
   /**
    * Returns CSS property from <code>rule</code> that matches passed position
    * @param {EditContainer} rule
@@ -21093,7 +21092,7 @@ define('action/toggleComment',['require','exports','module','lodash','../assets/
         // use current property
         return reSafeChar.test(rule.source.charAt(relPos));
       }
-      
+
       return item.range().inside(relPos);
     });
   }
@@ -21109,11 +21108,11 @@ define('action/toggleComment',['require','exports','module','lodash','../assets/
   function searchComment(text, from, startToken, endToken) {
     var commentStart = -1;
     var commentEnd = -1;
-    
+
     var hasMatch = function(str, start) {
       return text.substr(start, str.length) == str;
     };
-      
+
     // search for comment start
     while (from--) {
       if (hasMatch(startToken, from)) {
@@ -21121,7 +21120,7 @@ define('action/toggleComment',['require','exports','module','lodash','../assets/
         break;
       }
     }
-    
+
     if (commentStart != -1) {
       // search for comment end
       from = commentStart;
@@ -21133,9 +21132,9 @@ define('action/toggleComment',['require','exports','module','lodash','../assets/
         }
       }
     }
-    
-    return (commentStart != -1 && commentEnd != -1) 
-      ? range(commentStart, commentEnd - commentStart) 
+
+    return (commentStart != -1 && commentEnd != -1)
+      ? range(commentStart, commentEnd - commentStart)
       : null;
   }
 
@@ -21151,7 +21150,7 @@ define('action/toggleComment',['require','exports','module','lodash','../assets/
     var content = editorUtils.outputInfo(editor).content;
     var caretPos = editor.getCaretPos();
     var newContent = null;
-      
+
     /**
      * Remove comment markers from string
      * @param {Sting} str
@@ -21164,8 +21163,8 @@ define('action/toggleComment',['require','exports','module','lodash','../assets/
           return '';
         }).replace(new RegExp('\\s*' + utils.escapeForRegexp(commentEnd) + '$'), '');
     }
-    
-    // first, we need to make sure that this substring is not inside 
+
+    // first, we need to make sure that this substring is not inside
     // comment
     var commentRange = searchComment(content, caretPos, commentStart, commentEnd);
     if (commentRange && commentRange.overlap(range)) {
@@ -21179,7 +21178,7 @@ define('action/toggleComment',['require','exports','module','lodash','../assets/
         range.substring(content)
           .replace(new RegExp(utils.escapeForRegexp(commentStart) + '\\s*|\\s*' + utils.escapeForRegexp(commentEnd), 'g'), '') +
         ' ' + commentEnd;
-        
+
       // adjust caret position
       caretPos += commentStart.length + 1;
     }
@@ -21192,10 +21191,10 @@ define('action/toggleComment',['require','exports','module','lodash','../assets/
       editor.setCaretPos(caretPos);
       return true;
     }
-    
+
     return false;
   }
-  
+
   return {
     /**
      * Toggle comment on current editor's selection or HTML tag/CSS rule
@@ -21204,7 +21203,7 @@ define('action/toggleComment',['require','exports','module','lodash','../assets/
     toggleCommentAction: function(editor) {
       var info = editorUtils.outputInfo(editor);
       if (actionUtils.isSupportedCSS(info.syntax)) {
-        // in case our editor is good enough and can recognize syntax from 
+        // in case our editor is good enough and can recognize syntax from
         // current token, we have to make sure that cursor is not inside
         // 'style' attribute of html element
         var caretPos = editor.getCaretPos();
@@ -21213,12 +21212,12 @@ define('action/toggleComment',['require','exports','module','lodash','../assets/
           info.syntax = 'html';
         }
       }
-      
+
       var cssSyntaxes = prefs.getArray('css.syntaxes');
       if (_.include(cssSyntaxes, info.syntax)) {
         return toggleCSSComment(editor);
       }
-      
+
       return toggleHTMLComment(editor);
     }
   };
@@ -21248,7 +21247,7 @@ define('action/updateImageSize',['require','exports','module','lodash','../utils
    */
   function updateImageSizeHTML(editor) {
     var offset = editor.getCaretPos();
-    
+
     // find tag from current caret position
     var info = editorUtils.outputInfo(editor);
     var xmlElem = xmlEditTree.parseFromPosition(info.content, offset, true);
@@ -21258,7 +21257,7 @@ define('action/updateImageSize',['require','exports','module','lodash','../utils
           var compoundData = xmlElem.range(true);
           xmlElem.value('width', size.width);
           xmlElem.value('height', size.height, xmlElem.indexOf('width') + 1);
-          
+
           actionUtils.compoundUpdate(editor, _.extend(compoundData, {
             data: xmlElem.toString(),
             caret: offset
@@ -21267,14 +21266,14 @@ define('action/updateImageSize',['require','exports','module','lodash','../utils
       });
     }
   }
-  
+
   /**
    * Updates image size of CSS property
    * @param {IEmmetEditor} editor
    */
   function updateImageSizeCSS(editor) {
     var offset = editor.getCaretPos();
-    
+
     // find tag from current caret position
     var info = editorUtils.outputInfo(editor);
     var cssRule = cssEditTree.parseFromPosition(info.content, offset, true);
@@ -21287,7 +21286,7 @@ define('action/updateImageSize',['require','exports','module','lodash','../utils
             var compoundData = cssRule.range(true);
             cssRule.value('width', size.width + 'px');
             cssRule.value('height', size.height + 'px', cssRule.indexOf('width') + 1);
-            
+
             actionUtils.compoundUpdate(editor, _.extend(compoundData, {
               data: cssRule.toString(),
               caret: offset
@@ -21297,7 +21296,7 @@ define('action/updateImageSize',['require','exports','module','lodash','../utils
       }
     }
   }
-  
+
   /**
    * Returns image dimensions for source
    * @param {IEmmetEditor} editor
@@ -21311,23 +21310,23 @@ define('action/updateImageSize',['require','exports','module','lodash','../utils
         fileContent = base64.decode( src.replace(/^data\:.+?;.+?,/, '') );
         return callback(actionUtils.getImageSize(fileContent));
       }
-      
+
       var absPath = file.locateFile(editor.getFilePath(), src);
       if (absPath === null) {
         throw "Can't find " + src + ' file';
       }
-      
+
       file.read(absPath, function(err, content) {
         if (err) {
           throw 'Unable to read ' + absPath + ': ' + err;
         }
-        
+
         content = String(content);
         callback(actionUtils.getImageSize(content));
       });
     }
   }
-  
+
   return {
     updateImageSizeAction: function(editor) {
       // this action will definitely won’t work in SASS dialect,
@@ -21337,13 +21336,13 @@ define('action/updateImageSize',['require','exports','module','lodash','../utils
       } else {
         updateImageSizeHTML(editor);
       }
-      
+
       return true;
     }
   };
 });
 /**
- * Action that wraps content with abbreviation. For convenience, action is 
+ * Action that wraps content with abbreviation. For convenience, action is
  * defined as reusable module
  */
 if (typeof module === 'object' && typeof define !== 'function') {
@@ -21360,7 +21359,7 @@ define('action/wrapWithAbbreviation',['require','exports','module','lodash','../
   var editorUtils = require('../utils/editor');
   var actionUtils = require('../utils/action');
   var parser = require('../parser/abbreviation');
-  
+
   return {
     /**
      * Wraps content with abbreviation
@@ -21372,25 +21371,25 @@ define('action/wrapWithAbbreviation',['require','exports','module','lodash','../
     wrapWithAbbreviationAction: function(editor, abbr, syntax, profile) {
       var info = editorUtils.outputInfo(editor, syntax, profile);
       abbr = abbr || editor.prompt("Enter abbreviation");
-      
+
       if (!abbr) {
         return null;
       }
-      
+
       abbr = String(abbr);
-      
+
       var r = range(editor.getSelectionRange());
-      
+
       if (!r.length()) {
         // no selection, find tag pair
         var match = htmlMatcher.tag(info.content, r.start);
         if (!match) {  // nothing to wrap
           return false;
         }
-        
+
         r = utils.narrowToNonSpace(info.content, match.range);
       }
-      
+
       var newContent = utils.escapeText(r.substring(info.content));
       var result = parser.expand(abbr, {
         pastedContent: editorUtils.unindent(editor, newContent),
@@ -21398,12 +21397,12 @@ define('action/wrapWithAbbreviation',['require','exports','module','lodash','../
         profile: info.profile,
         contextNode: actionUtils.captureContext(editor)
       });
-      
+
       if (result) {
         editor.replaceContent(result, r.start, r.end);
         return true;
       }
-      
+
       return false;
     }
   };
@@ -21475,7 +21474,7 @@ define('action/updateTag',['require','exports','module','lodash','../editTree/xm
       }
     });
   }
-  
+
   return {
     /**
      * Matches HTML tag under caret and updates its definition
@@ -21528,7 +21527,7 @@ define('action/updateTag',['require','exports','module','lodash','../editTree/xm
       // for this action some characters in abbreviation has special
       // meaning. For example, `.-c2` means “remove `c2` class from
       // element” and `.+c3` means “append class `c3` to exising one.
-      // 
+      //
       // But `.+c3` abbreviation will actually produce two elements:
       // <div class=""> and <c3>. Thus, we have to walk on each element
       // of parsed tree and use their definitions to update current element
@@ -21593,7 +21592,7 @@ define('action/main',['require','exports','module','lodash','../utils/common','.
   function addAction(name, fn, options) {
     name = name.toLowerCase();
     options = options || {};
-    
+
     if (_.isString(options)) {
       options = {label: options};
     }
@@ -21601,21 +21600,21 @@ define('action/main',['require','exports','module','lodash','../utils/common','.
     if (!options.label) {
       options.label = humanizeActionName(name);
     }
-    
+
     actions[name] = {
       name: name,
       fn: fn,
       options: options
     };
   }
-  
+
   /**
    * “Humanizes” action name, makes it more readable for people
    * @param {String} name Action name (like 'expand_abbreviation')
    * @return Humanized name (like 'Expand Abbreviation')
    */
   function humanizeActionName(name) {
-    return utils.trim(name.charAt(0).toUpperCase() 
+    return utils.trim(name.charAt(0).toUpperCase()
       + name.substring(1).replace(/_[a-z]/g, function(str) {
         return ' ' + str.charAt(1).toUpperCase();
       }));
@@ -21657,20 +21656,20 @@ define('action/main',['require','exports','module','lodash','../utils/common','.
     var actionLabel = 'Numbers/' + prefix.charAt(0).toUpperCase() + prefix.substring(1) + ' number by ' + Math.abs(num);
     addAction(actionId, bind('incrementDecrement', actionMethod), actionLabel);
   });
-  
+
   return {
     /**
      * Registers new action
      * @param {String} name Action name
      * @param {Function} fn Action function
      * @param {Object} options Custom action options:<br>
-     * <b>label</b> : (<code>String</code>) – Human-readable action name. 
+     * <b>label</b> : (<code>String</code>) – Human-readable action name.
      * May contain '/' symbols as submenu separators<br>
      * <b>hidden</b> : (<code>Boolean</code>) – Indicates whether action
      * should be displayed in menu (<code>getMenu()</code> method)
      */
     add: addAction,
-    
+
     /**
      * Returns action object
      * @param {String} name Action name
@@ -21679,24 +21678,24 @@ define('action/main',['require','exports','module','lodash','../utils/common','.
     get: function(name) {
       return actions[name.toLowerCase()];
     },
-    
+
     /**
      * Runs Emmet action. For list of available actions and their
      * arguments see <i>actions</i> folder.
-     * @param {String} name Action name 
+     * @param {String} name Action name
      * @param {Array} args Additional arguments. It may be array of arguments
      * or inline arguments. The first argument should be <code>IEmmetEditor</code> instance
      * @returns {Boolean} Status of performed operation, <code>true</code>
      * means action was performed successfully.
      * @example
-     * require('action/main').run('expand_abbreviation', editor);  
-     * require('action/main').run('wrap_with_abbreviation', [editor, 'div']);  
+     * require('action/main').run('expand_abbreviation', editor);
+     * require('action/main').run('wrap_with_abbreviation', [editor, 'div']);
      */
     run: function(name, args) {
       if (!_.isArray(args)) {
         args = _.rest(arguments);
       }
-      
+
       var action = this.get(name);
       if (!action) {
         throw 'Action "' + name + '" is not defined';
@@ -21704,7 +21703,7 @@ define('action/main',['require','exports','module','lodash','../utils/common','.
 
       return action.fn.apply(action, args);
     },
-    
+
     /**
      * Returns all registered actions as object
      * @returns {Object}
@@ -21712,7 +21711,7 @@ define('action/main',['require','exports','module','lodash','../utils/common','.
     getAll: function() {
       return actions;
     },
-    
+
     /**
      * Returns all registered actions as array
      * @returns {Array}
@@ -21720,12 +21719,12 @@ define('action/main',['require','exports','module','lodash','../utils/common','.
     getList: function() {
       return _.values(this.getAll());
     },
-    
+
     /**
      * Returns actions list as structured menu. If action has <i>label</i>,
-     * it will be splitted by '/' symbol into submenus (for example: 
+     * it will be splitted by '/' symbol into submenus (for example:
      * CSS/Reflect Value) and grouped with other items
-     * @param {Array} skipActions List of action identifiers that should be 
+     * @param {Array} skipActions List of action identifiers that should be
      * skipped from menu
      * @returns {Array}
      */
@@ -21735,20 +21734,20 @@ define('action/main',['require','exports','module','lodash','../utils/common','.
       _.each(this.getList(), function(action) {
         if (action.options.hidden || _.include(skipActions, action.name))
           return;
-        
+
         var actionName = humanizeActionName(action.name);
         var ctx = result;
         if (action.options.label) {
           var parts = action.options.label.split('/');
           actionName = parts.pop();
-          
+
           // create submenus, if needed
           var menuName, submenu;
           while ((menuName = parts.shift())) {
             submenu = _.find(ctx, function(item) {
               return item.type == 'submenu' && item.name == menuName;
             });
-            
+
             if (!submenu) {
               submenu = {
                 name: menuName,
@@ -21757,18 +21756,18 @@ define('action/main',['require','exports','module','lodash','../utils/common','.
               };
               ctx.push(submenu);
             }
-            
+
             ctx = submenu.items;
           }
         }
-        
+
         ctx.push({
           type: 'action',
           name: action.name,
           label: actionName
         });
       });
-      
+
       return result;
     },
 
@@ -21788,7 +21787,7 @@ define('action/main',['require','exports','module','lodash','../utils/common','.
           return item = this.getActionNameForMenuTitle(title, val.items);
         }
       }, this);
-      
+
       return item || null;
     }
   };
@@ -21846,10 +21845,10 @@ define('emmet',['require','exports','module','lodash','./utils/common','./action
 
     return profile;
   }
-  
+
   return {
     /**
-     * Helper method that just executes passed function but with all 
+     * Helper method that just executes passed function but with all
      * important arguments like 'require' and '_'
      * @deprecated Use RequireJS modules to access Emmet modules
      * @param {Function} fn
@@ -21890,11 +21889,11 @@ define('emmet',['require','exports','module','lodash','./utils/common','./action
      * Loads Emmet extensions. Extensions are simple .js files that
      * uses Emmet modules and resources to create new actions, modify
      * existing ones etc.
-     * @param {Array} fileList List of absolute paths to files in extensions 
-     * folder. Back-end app should not filter this list (e.g. by extension) 
-     * but return it "as-is" so bootstrap can decide how to load contents 
+     * @param {Array} fileList List of absolute paths to files in extensions
+     * folder. Back-end app should not filter this list (e.g. by extension)
+     * but return it "as-is" so bootstrap can decide how to load contents
      * of each file.
-     * This method requires a <code>file</code> module of <code>IEmmetFile</code> 
+     * This method requires a <code>file</code> module of <code>IEmmetFile</code>
      * interface to be implemented.
      * @memberOf bootstrap
      */
@@ -21902,9 +21901,9 @@ define('emmet',['require','exports','module','lodash','./utils/common','./action
       var payload = {};
       var userSnippets = null;
       var that = this;
-      
+
       var reader = _.bind(file.readText || file.read, file);
-      
+
       var next = function() {
         if (fileList.length) {
           var f = fileList.shift();
@@ -21913,7 +21912,7 @@ define('emmet',['require','exports','module','lodash','./utils/common','./action
               logger.log('Unable to read "' + f + '" file: '+ err);
               return next();
             }
-                        
+
             switch (file.getExt(f)) {
               case 'js':
                 try {
@@ -21934,10 +21933,10 @@ define('emmet',['require','exports','module','lodash','./utils/common','./action
                 } else {
                   payload[fileName] = content;
                 }
-                
+
                 break;
             }
-            
+
             next();
           });
         } else {
@@ -21945,14 +21944,14 @@ define('emmet',['require','exports','module','lodash','./utils/common','./action
           if (userSnippets) {
             payload.snippets = utils.deepMerge(payload.snippets || {}, userSnippets);
           }
-          
+
           that.loadUserData(payload);
         }
       };
-      
+
       next();
     },
-    
+
     /**
      * Loads preferences from JSON object (or string representation of JSON)
      * @param {Object} data
@@ -21961,20 +21960,20 @@ define('emmet',['require','exports','module','lodash','./utils/common','./action
     loadPreferences: function(data) {
       preferences.load(utils.parseJSON(data));
     },
-    
+
     /**
      * Loads user snippets and abbreviations. It doesn’t replace current
-     * user resource vocabulary but merges it with passed one. If you need 
-     * to <i>replaces</i> user snippets you should call 
+     * user resource vocabulary but merges it with passed one. If you need
+     * to <i>replaces</i> user snippets you should call
      * <code>resetSnippets()</code> method first
      */
     loadSnippets: function(data) {
       data = utils.parseJSON(data);
-      
+
       var userData = resources.getVocabulary('user') || {};
       resources.setVocabulary(utils.deepMerge(userData, data), 'user');
     },
-    
+
     /**
      * Helper function that loads default snippets, defined in project’s
      * <i>snippets.json</i>
@@ -21991,17 +21990,17 @@ define('emmet',['require','exports','module','lodash','./utils/common','./action
     loadCIU: function(data) {
       ciu.load(utils.parseJSON(data));
     },
-    
+
     /**
      * Removes all user-defined snippets
      */
     resetSnippets: function() {
       resources.setVocabulary({}, 'user');
     },
-    
+
     /**
      * Helper function that loads all user data (snippets and preferences)
-     * defined as a single JSON object. This is useful for loading data 
+     * defined as a single JSON object. This is useful for loading data
      * stored in a common storage, for example <code>NSUserDefaults</code>
      * @param {Object} data
      */
@@ -22010,11 +22009,11 @@ define('emmet',['require','exports','module','lodash','./utils/common','./action
       if (data.snippets) {
         this.loadSnippets(data.snippets);
       }
-      
+
       if (data.preferences) {
         this.loadPreferences(data.preferences);
       }
-      
+
       if (data.profiles) {
         this.loadProfiles(data.profiles);
       }
@@ -22022,13 +22021,13 @@ define('emmet',['require','exports','module','lodash','./utils/common','./action
       if (data.caniuse) {
         this.loadCIU(data.caniuse);
       }
-      
+
       var profiles = data.syntaxProfiles || data.syntaxprofiles;
       if (profiles) {
         this.loadSyntaxProfiles(profiles);
       }
     },
-    
+
     /**
      * Resets all user-defined data: preferences, snippets etc.
      * @returns
@@ -22038,10 +22037,10 @@ define('emmet',['require','exports','module','lodash','./utils/common','./action
       preferences.reset();
       profile.reset();
     },
-    
+
     /**
-     * Load syntax-specific output profiles. These are essentially 
-     * an extension to syntax snippets 
+     * Load syntax-specific output profiles. These are essentially
+     * an extension to syntax snippets
      * @param {Object} profiles Dictionary of profiles
      */
     loadSyntaxProfiles: function(profiles) {
@@ -22053,10 +22052,10 @@ define('emmet',['require','exports','module','lodash','./utils/common','./action
         }
         snippets[syntax].profile = normalizeProfile(options);
       });
-      
+
       this.loadSnippets(snippets);
     },
-    
+
     /**
      * Load named profiles
      * @param {Object} profiles

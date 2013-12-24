@@ -20,7 +20,7 @@ describe "Emmet", ->
   afterEach ->
     editSession.destroy()
 
-  fdescribe "emmet:expand-abbreviation", ->
+  describe "emmet:expand-abbreviation", ->
     expansion = null
 
     describe "for normal HTML", ->
@@ -45,7 +45,7 @@ describe "Emmet", ->
         expect(editor.getText()).toBe expansion
 
     # headers seem to be a special case: http://git.io/7XeBKQ
-    fdescribe "for headers in HTML", ->
+    describe "for headers in HTML", ->
       beforeEach ->
         workspaceView.openSync(Path.join(__dirname, './fixtures/abbreviation/before/header-expand.html'))
         editor = workspaceView.getActiveView()
@@ -87,23 +87,23 @@ describe "Emmet", ->
         editor.trigger keydownEvent('tab', target: editor[0])
         expect(editor.getText()).toBe expansion
 
-  describe "emmet:match-pair", ->
+  describe "emmet:balance", ->
     beforeEach ->
-      workspaceView.openSync(Path.join(__dirname, './fixtures/match-pair/sample.html'))
+      workspaceView.openSync(Path.join(__dirname, './fixtures/balance/sample.html'))
       editor = workspaceView.getActiveView()
       editSession = workspaceView.getActivePaneItem()
 
-    describe "for match-pair-outward", ->
+    describe "for balance-outward", ->
       beforeEach ->
         editSession.setCursorBufferPosition([3, 23])
 
       it "matches pairs outwards via commands", ->
         expect(editor.getSelection().getBufferRange()).toEqual [[3, 23], [3, 23]]
-        editor.trigger "emmet:match-pair-outward"
+        editor.trigger "emmet:balance-outward"
         expect(editor.getSelection().getBufferRange()).toEqual [[3, 11], [3, 38]]
-        editor.trigger "emmet:match-pair-outward"
+        editor.trigger "emmet:balance-outward"
         expect(editor.getSelection().getBufferRange()).toEqual [[3, 8], [3, 42]]
-        editor.trigger "emmet:match-pair-outward"
+        editor.trigger "emmet:balance-outward"
         expect(editor.getSelection().getBufferRange()).toEqual [[1, 29], [4, 4]]
 
       it "matches pairs outwards via keybindings", ->
@@ -115,18 +115,18 @@ describe "Emmet", ->
         editor.trigger keydownEvent('d', ctrlKey: true, target: editor[0])
         expect(editor.getSelection().getBufferRange()).toEqual [[1, 29], [4, 4]]
 
-    describe "for match-pair-inward", ->
+    describe "for balance-inward", ->
       beforeEach ->
         editSession.setCursorBufferPosition([1, 4])
 
       it "matches pairs inwards via commands", ->
-        editor.trigger "emmet:match-pair-inward"
+        editor.trigger "emmet:balance-inward"
         expect(editor.getSelection().getBufferRange()).toEqual [[0, 15], [5, 0]]
-        editor.trigger "emmet:match-pair-inward"
+        editor.trigger "emmet:balance-inward"
         expect(editor.getSelection().getBufferRange()).toEqual [[1, 4], [4, 14]]
-        editor.trigger "emmet:match-pair-inward"
+        editor.trigger "emmet:balance-inward"
         expect(editor.getSelection().getBufferRange()).toEqual [[1, 29], [4, 4]]
-        editor.trigger "emmet:match-pair-inward"
+        editor.trigger "emmet:balance-inward"
         expect(editor.getSelection().getBufferRange()).toEqual [[2, 8], [2, 33]]
 
       it "matches pairs inwards via keybindings", ->

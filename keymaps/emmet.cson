@@ -1,7 +1,7 @@
 '.editor:not(.mini)':
   'cmd-E': 'emmet:expand-abbreviation'
-  'ctrl-d': 'emmet:match-pair-outward'
-  'alt-d': 'emmet:match-pair-inward'
+  'ctrl-d': 'emmet:balance-outward'
+  'alt-d': 'emmet:balance-inward'
   'ctrl-alt-j': 'emmet:matching-pair'
   'ctrl-alt-.': 'emmet:next-edit-point'
   'ctrl-alt-,': 'emmet:prev-edit-point'
@@ -20,7 +20,9 @@
   'cmd-R': 'emmet:reflect-css-value'
   'tab': 'emmet:expand-abbreviation-with-tab'
   'ctrl-I': 'emmet:update-image-size'
-  #'ctrl-D': 'emmet:encode-decode-data-url' decoding doesn't work--we need dialogs
-  #'ctrl+alt+enter': 'emmet:expand_as_you_type' doesn't work--we need dialogs
-  # 'shift+ctrl+g': 'emmet:wrap_as_you_type' doesn't work--we need dialogs
+  'ctrl-D': 'emmet:encode-decode-data-url'
+  # 'ctrl-U': 'emmet:update-tag'
   # 'shift+ctrl+a': 'emmet:wrap_with_abbreviation' doesn't work--we need dialogs
+  # insert_formatted_line_break # figure out wtf these do
+  # insert_formatted_line_break_only # figure out wtf these do
+  # mergelines # figure out wtf this does
