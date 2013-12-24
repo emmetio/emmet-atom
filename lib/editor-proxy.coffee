@@ -1,12 +1,13 @@
 {Point} = require 'atom'
-emmet = require '../vendor/emmet-core'
-utils = emmet.require("utils")
-tabStops = emmet.require("tabStops")
+emmet = require('../vendor/emmet-app').emmet
+utilsCommon = emmet.require('utils/common')
+tabStops = emmet.require('assets/tabStops')
+resources = emmet.require("assets/resources")
 
 module.exports =
   setupContext: (@editorView) ->
     @indentation = @editorView.editor.getTabText()
-    emmet.require("resources").setVariable("indentation", @indentation)
+    resources.setVariable("indentation", @indentation)
     @syntax = @getSyntax()
 
   # Fetches the character indexes of the selected text.
@@ -83,14 +84,15 @@ module.exports =
 
     # # indent new value
     unless noIndent
-      value = utils.padString(value, utils.getLinePaddingFromPosition(@getContent(), start))
+      value = utilsCommon.padString(value, utilsCommon.getLinePaddingFromPosition(@getContent(), start))
 
     # find new caret position
     tabstopData = tabStops.extract(value,
       escape: (ch) ->
         return ch
     )
-    value = tabstopData.text
+    # emmet uses hardcoded \t for indents, with no optional override
+    value = tabstopData.text.replace(/\t/g, @editorView.editor.getTabText())
     firstTabStop = tabstopData.tabstops[0]
 
     if firstTabStop
@@ -118,16 +120,10 @@ module.exports =
 
   # Returns the editor's syntax mode.
   getSyntax: ->
-    grammar = @editorView.editor.getGrammar().name
-    if /^CSS/.test(grammar)
+    grammar = @editorView.editor.getGrammar().name.toLowerCase()
+    if /\b(less|scss|sass|css|stylus)\b/.test(grammar)
       return "css"
-    else if /^SCSS/.test(grammar)
-      return "scss"
-    else if /^LESS/.test(grammar)
-      return "less"
-    else if /^XML|XSL/.test(grammar)
-      return "xml"
-    else if /^HTML/.test(grammar)
+    else if /\b(html|xml|haml|slim)\b/.test(grammar)
       return "html"
     else
       return null

@@ -1,9 +1,12 @@
 {$} = require 'atom'
 CSON = require 'season'
 path = require 'path'
-emmet = require '../vendor/emmet-core'
+emmet = require('../vendor/emmet-app').emmet
 editorProxy = require './editor-proxy'
-actions = emmet.require("actions")
+actions = emmet.require 'action/main'
+actionUtils = emmet.require 'utils/action'
+resources = emmet.require 'assets/resources'
+
 emmet.define('file', require('./file'));
 
 module.exports =
@@ -27,7 +30,7 @@ module.exports =
                 # right now we are setting up the proxy each time
                 editorProxy.setupContext(editorView)
                 syntax = editorProxy.getSyntax()
-                if emmet.require("resources").hasSyntax(syntax)
+                if syntax
                   emmetAction = @actionTranslation[action]
                   if emmetAction == "expand_abbreviation_with_tab" && !editorView.getSelection().isEmpty()
                     e.abortKeyBinding()
