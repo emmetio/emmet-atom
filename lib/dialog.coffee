@@ -6,7 +6,7 @@ class PromptView extends View
   @attach: -> new PromptView
 
   @content: ->
-    @div class: 'prompt overlay from-top mini', =>
+    @div class: 'emmet-prompt overlay from-top mini', =>
       @subview 'miniEditor', new EditorView(mini: true)
       @div class: 'message', outlet: 'message'
 

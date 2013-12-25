@@ -10,7 +10,7 @@ describe "Emmet", ->
     workspaceView = atom.workspaceView
 
     atom.packages.activatePackage("emmet")
-    atom.packages.activatePackage("snippets") # intentionally disrupt tab expansion
+    atom.packages.activatePackage("snippets") # to intentionally disrupt tab expansion
     atom.packages.activatePackage('language-css', sync: true)
     atom.packages.activatePackage('language-html', sync: true)
 
@@ -575,7 +575,7 @@ describe "Emmet", ->
   describe "emmet:encode-decode-data-url", ->
     encoded = null
     beforeEach ->
-      workspaceView.open(Path.join(__dirname, './fixtures/encode-decode-data-url/before/encode-decode-data-url.css'))
+      workspaceView.openSync(Path.join(__dirname, './fixtures/encode-decode-data-url/before/encode-decode-data-url.css'))
       editor = workspaceView.getActiveView()
       editSession = workspaceView.getActivePaneItem()
 
@@ -596,7 +596,7 @@ describe "Emmet", ->
 
     describe "for HTML", ->
       beforeEach ->
-        workspaceView.open(Path.join(__dirname, './fixtures/update-image-size/before/update-image-size.html'))
+        workspaceView.openSync(Path.join(__dirname, './fixtures/update-image-size/before/update-image-size.html'))
         editor = workspaceView.getActiveView()
         editSession = workspaceView.getActivePaneItem()
         editSession.setCursorBufferPosition([0, 15])
@@ -613,7 +613,7 @@ describe "Emmet", ->
 
     describe "for CSS", ->
       beforeEach ->
-        workspaceView.open(Path.join(__dirname, './fixtures/update-image-size/before/update-image-size.css'))
+        workspaceView.openSync(Path.join(__dirname, './fixtures/update-image-size/before/update-image-size.css'))
         editor = workspaceView.getActiveView()
         editSession = workspaceView.getActivePaneItem()
         editSession.setCursorBufferPosition([0, 15])
@@ -626,4 +626,34 @@ describe "Emmet", ->
 
       it "updates the image via keybindings", ->
         editor.trigger keydownEvent('i', shiftKey: true, ctrlKey: true, target: editor[0])
+        expect(editor.getText()).toBe updated
+
+  describe "emmet:update-tag", ->
+    updated = null
+    prompt = null
+
+    describe "for HTML", ->
+      beforeEach ->
+        workspaceView.openSync(Path.join(__dirname, './fixtures/update-tag/before/update-tag.html'))
+        editor = workspaceView.getActiveView()
+        editSession = workspaceView.getActivePaneItem()
+        editSession.setCursorBufferPosition([0, 11])
+
+        updated = Fs.readFileSync(Path.join(__dirname, './fixtures/update-tag/after/update-tag.html'), "utf8")
+
+      it "updates the tag via commands", ->
+        editor.trigger "emmet:update-tag"
+        prompt = atom.workspaceView.find(".emmet-prompt").view()
+
+        prompt.miniEditor.insertText(".+c2[title=Hello]")
+        prompt.trigger 'core:confirm'
+
+        expect(editor.getText()).toBe updated
+
+      it "updates the tag via keybindings", ->
+        editor.trigger keydownEvent('u', shiftKey: true, ctrlKey: true, target: editor[0])
+
+        prompt.miniEditor.insertText(".+c2[title=Hello]")
+        prompt.trigger 'core:confirm'
+
         expect(editor.getText()).toBe updated

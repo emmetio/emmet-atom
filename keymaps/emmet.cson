@@ -21,7 +21,7 @@
   'tab': 'emmet:expand-abbreviation-with-tab'
   'ctrl-I': 'emmet:update-image-size'
   'ctrl-D': 'emmet:encode-decode-data-url'
-  # 'ctrl-U': 'emmet:update-tag'
+  'ctrl-U': 'emmet:update-tag'
   # 'shift+ctrl+a': 'emmet:wrap_with_abbreviation' doesn't work--we need dialogs
   # insert_formatted_line_break # figure out wtf these do
   # insert_formatted_line_break_only # figure out wtf these do
