@@ -15610,7 +15610,7 @@ define('action/base64',['require','exports','module','../plugin/file','../utils/
    */
   function decodeFromBase64(editor, data, pos) {
     // ask user to enter path to file
-    var filePath = String(editor.prompt('Enter path to file (absolute or relative)'));
+    var filePath = String(editor.prompt('Enter path to file (absolute or relative)', this));
     if (!filePath)
       return false;
 
@@ -21370,7 +21370,7 @@ define('action/wrapWithAbbreviation',['require','exports','module','lodash','../
      */
     wrapWithAbbreviationAction: function(editor, abbr, syntax, profile) {
       var info = editorUtils.outputInfo(editor, syntax, profile);
-      abbr = abbr || editor.prompt("Enter abbreviation");
+      abbr = abbr || editor.prompt("Enter abbreviation", this);
 
       if (!abbr) {
         return null;
@@ -21483,7 +21483,7 @@ define('action/updateTag',['require','exports','module','lodash','../editTree/xm
      * @param {String} abbr Abbreviation to update with
      */
     updateTagAction: function(editor, abbr) {
-      abbr = abbr || editor.prompt("Enter abbreviation");
+      abbr = abbr || editor.prompt("Enter abbreviation", this);
 
       if (!abbr) {
         return false;

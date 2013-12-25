@@ -1,8 +1,10 @@
 {Point} = require 'atom'
+
 emmet = require('../vendor/emmet-app').emmet
 utilsCommon = emmet.require('utils/common')
 tabStops = emmet.require('assets/tabStops')
 resources = emmet.require("assets/resources")
+Dialog = require './dialog'
 
 module.exports =
   setupContext: (@editorView) ->
@@ -143,5 +145,25 @@ module.exports =
     # is there a better way to get this?
     return @editorView.editor.buffer.file.path
 
-  prompt: (message) ->
-    # does nothing. currently breaks decoding base64 URLs
+  setSavedText: (text) ->
+    @savedText = text
+
+  getSavedText: ->
+    @savedText
+
+  # all of this caller hackery is because emmet expects a synchronous, blocking
+  # prompt dialog, as is the case with window.prompt. N.B. that emmet-app has
+  # been modified to pass 'callerContext' to all prompt calls
+  prompt: (message, callerContext, text=null, caller=null, callerArgs=null) ->
+    if text != null
+      callerArgs[0].setSavedText(text)
+      caller.apply(callerContext, callerArgs)
+    else if @getSavedText()?
+      copy = @getSavedText()
+      @setSavedText(null)
+      copy
+    else
+      caller = arguments.callee.caller
+      callerArgs = caller.arguments
+      new Dialog message, @prompt, {caller, callerArgs, callerContext}
+      return "" # bluff emmet's expecttaion of prompt for now
