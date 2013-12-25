@@ -241,21 +241,19 @@ describe "Emmet", ->
       onceRemoved = Fs.readFileSync(Path.join(__dirname, './fixtures/remove-tag/after/remove-tag-once.html'), "utf8")
       twiceRemoved = Fs.readFileSync(Path.join(__dirname, './fixtures/remove-tag/after/remove-tag-twice.html'), "utf8")
 
-    describe "for remove-tag", ->
-      beforeEach ->
-        editSession.setCursorBufferPosition([1, 10])
+      editSession.setCursorBufferPosition([1, 10])
 
-      it "calls remove-tag via commands", ->
-        editor.trigger "emmet:remove-tag"
-        expect(editor.getText()).toBe onceRemoved
-        editor.trigger "emmet:remove-tag"
-        expect(editor.getText()).toBe twiceRemoved
+    it "calls remove-tag via commands", ->
+      editor.trigger "emmet:remove-tag"
+      expect(editor.getText()).toBe onceRemoved
+      editor.trigger "emmet:remove-tag"
+      expect(editor.getText()).toBe twiceRemoved
 
-      it "calls remove-tag via keybindings", ->
-       editor.trigger keydownEvent('k', shiftKey: true, metaKey: true, target: editor[0])
-       expect(editor.getText()).toBe onceRemoved
-       editor.trigger keydownEvent('k', shiftKey: true, metaKey: true, target: editor[0])
-       expect(editor.getText()).toBe twiceRemoved
+    it "calls remove-tag via keybindings", ->
+     editor.trigger keydownEvent('\'', metaKey: true, target: editor[0])
+     expect(editor.getText()).toBe onceRemoved
+     editor.trigger keydownEvent('\'', metaKey: true, target: editor[0])
+     expect(editor.getText()).toBe twiceRemoved
 
   describe "emmet:evaluate-math-expression", ->
     beforeEach ->
@@ -654,6 +652,37 @@ describe "Emmet", ->
         editor.trigger keydownEvent('u', shiftKey: true, ctrlKey: true, target: editor[0])
 
         prompt.miniEditor.insertText(".+c2[title=Hello]")
+        prompt.trigger 'core:confirm'
+
+        expect(editor.getText()).toBe updated
+
+  describe "emmet:wrap-with-abbreviation", ->
+    updated = null
+    prompt = null
+
+    describe "for HTML", ->
+      beforeEach ->
+        workspaceView.openSync(Path.join(__dirname, './fixtures/wrap-with-abbreviation/before/wrap-with-abbreviation.html'))
+        editor = workspaceView.getActiveView()
+        editSession = workspaceView.getActivePaneItem()
+        editSession.setCursorBufferPosition([1, 4])
+
+        updated = Fs.readFileSync(Path.join(__dirname, './fixtures/wrap-with-abbreviation/after/wrap-with-abbreviation.html'), "utf8")
+
+      it "wraps an abbreviation via commands", ->
+        editor.trigger "emmet:wrap-with-abbreviation"
+        prompt = atom.workspaceView.find(".emmet-prompt").view()
+
+        prompt.miniEditor.setText(".wrapper>h1{Title}+.content")
+        prompt.trigger 'core:confirm'
+
+        expect(editor.getText()).toBe updated
+
+      it "wraps an abbreviation via keybindings", ->
+        editor.trigger keydownEvent('a', shiftKey: true, metaKey: true, target: editor[0])
+        prompt = atom.workspaceView.find(".emmet-prompt").view()
+
+        prompt.miniEditor.setText(".wrapper>h1{Title}+.content")
         prompt.trigger 'core:confirm'
 
         expect(editor.getText()).toBe updated
