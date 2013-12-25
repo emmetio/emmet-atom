@@ -5,7 +5,7 @@
   'ctrl-alt-j': 'emmet:matching-pair'
   'ctrl-alt-.': 'emmet:next-edit-point'
   'ctrl-alt-,': 'emmet:prev-edit-point'
-  # 'command+/': 'emmet:toggle_comment' already exists in Atom
+  # 'command+/': 'emmet:toggle_comment' # already exists in Atom
   'cmd-J': 'emmet:split-join-tag'
   'cmd-K': 'emmet:remove-tag'
   'cmd-Y': 'emmet:evaluate-math-expression'

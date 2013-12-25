@@ -1,13 +1,15 @@
-{$} = require 'atom'
 CSON = require 'season'
+fs = require 'fs'
 path = require 'path'
+
 emmet = require('../vendor/emmet-app').emmet
-editorProxy = require './editor-proxy'
 actions = emmet.require 'action/main'
-actionUtils = emmet.require 'utils/action'
 resources = emmet.require 'assets/resources'
+caniuse = emmet.require 'assets/caniuse'
 
 emmet.define('file', require('./file'));
+
+editorProxy = require './editor-proxy'
 
 module.exports =
   editorSubscription: null
@@ -20,6 +22,8 @@ module.exports =
           # Atom likes -, but Emmet expects _
           emmet_action = action.split(":")[1].replace(/\-/g, "_")
           @actionTranslation[action] = emmet_action
+
+    @setupSnippets()
 
     @editorViewSubscription = atom.workspaceView.eachEditorView (editorView) =>
       if editorView.attached and not editorView.mini
@@ -43,3 +47,12 @@ module.exports =
   deactivate: ->
     @editorViewSubscription?.off()
     @editorViewSubscription = null
+
+
+  # we must set these up here, so that the Node environment is loaded, and snippets work
+  setupSnippets: ->
+    defaultSnippets = fs.readFileSync(path.join(__dirname, '../vendor/snippets.json'), {encoding: 'utf8'});
+    resources.setVocabulary(JSON.parse(defaultSnippets), 'system');
+
+    db = fs.readFileSync(path.join(__dirname, '../vendor/caniuse.json'), {encoding: 'utf8'});
+    caniuse.load(db)
