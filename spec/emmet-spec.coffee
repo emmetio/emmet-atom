@@ -657,3 +657,23 @@ describe "Emmet", ->
         prompt.trigger 'core:confirm'
 
         expect(editor.getText()).toBe updated
+
+  describe "emmet:merge-lines", ->
+    updated = null
+
+    describe "for HTML", ->
+      beforeEach ->
+        workspaceView.openSync(Path.join(__dirname, './fixtures/merge-lines/before/merge-lines.html'))
+        editor = workspaceView.getActiveView()
+        editSession = workspaceView.getActivePaneItem()
+        editSession.setCursorBufferPosition([3, 5])
+
+        updated = Fs.readFileSync(Path.join(__dirname, './fixtures/merge-lines/after/merge-lines.html'), "utf8")
+
+      it "performs merge lines via commands", ->
+        editor.trigger "emmet:merge-lines"
+        expect(editor.getText()).toBe updated
+
+      it "performs merge lines via keybindings", ->
+        editor.trigger keydownEvent('M', shiftKey: true, metaKey: true, target: editor[0])
+        expect(editor.getText()).toBe updated
