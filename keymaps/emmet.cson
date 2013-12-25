@@ -24,5 +24,3 @@
   'ctrl-U': 'emmet:update-tag'
   'cmd-M': 'emmet:merge-lines'
   'cmd-A': 'emmet:wrap-with-abbreviation'
-  # insert_formatted_line_break # figure out wtf these do
-  # insert_formatted_line_break_only # figure out wtf these do
