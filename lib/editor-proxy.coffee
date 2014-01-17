@@ -102,10 +102,12 @@ module.exports =
         end: value.length + start
 
     range = @editorView.getEditor().getSelection().getBufferRange()
-    range.start = Point.fromObject(@editorView.getEditor().getBuffer().positionForCharacterIndex(start))
-    range.end = Point.fromObject(@editorView.getEditor().getBuffer().positionForCharacterIndex(end))
+    changeRange = [
+      Point.fromObject(@editorView.getEditor().getBuffer().positionForCharacterIndex(start))
+      Point.fromObject(@editorView.getEditor().getBuffer().positionForCharacterIndex(end))
+    ]
 
-    @editorView.getEditor().getBuffer().change(range, value)
+    @editorView.getEditor().getBuffer().change(changeRange, value)
 
     range.start = Point.fromObject(@editorView.getEditor().getBuffer().positionForCharacterIndex(firstTabStop.start))
     range.end = Point.fromObject(@editorView.getEditor().getBuffer().positionForCharacterIndex(firstTabStop.end))
