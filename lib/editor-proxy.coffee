@@ -35,7 +35,7 @@ module.exports =
   # Returns an {Object} with `start` and `end` properties
   getCurrentLineRange: ->
     row = @editorView.getEditor().getCursor().getBufferRow()
-    lineLength = @editorView.lineLengthForBufferRow(row)
+    lineLength = @editorView.getEditor().lineLengthForBufferRow(row)
     index = @editorView.getEditor().getBuffer().characterIndexForPosition({row: row, column: 0})
     return {
       start: index,
