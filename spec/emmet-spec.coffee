@@ -3,7 +3,7 @@ Path = require 'path'
 Fs = require 'fs'
 
 describe "Emmet", ->
-  [buffer, editor, editSession, workspaceView] = []
+  [buffer, editor, editorView, editSession, workspaceView] = []
 
   beforeEach ->
     atom.workspaceView = new WorkspaceView
@@ -26,71 +26,75 @@ describe "Emmet", ->
     describe "for normal HTML", ->
       beforeEach ->
         workspaceView.openSync(Path.join(__dirname, './fixtures/abbreviation/before/html-abbrv.html'))
-        editor = workspaceView.getActiveView()
+        editorView = workspaceView.getActiveView()
+        editor = editorView.getEditor()
         editSession = workspaceView.getActivePaneItem()
         editSession.moveCursorToEndOfLine()
 
         expansion = Fs.readFileSync(Path.join(__dirname, './fixtures/abbreviation/after/html-abbrv.html'), "utf8")
 
       it "expands HTML abbreviations via commands", ->
-        editor.trigger "emmet:expand-abbreviation"
-        expect(editor.getText()).toBe expansion
+        editorView.trigger "emmet:expand-abbreviation"
+        expect(editorView.getText()).toBe expansion
 
       it "expands HTML abbreviations via keybindings", ->
-        editor.trigger keydownEvent('e', shiftKey: true, metaKey: true, target: editor[0])
+        editorView.trigger keydownEvent('e', shiftKey: true, metaKey: true, target: editor[0])
         expect(editor.getText()).toBe expansion
 
       it "expands HTML abbreviations via Tab", ->
-        editor.trigger keydownEvent('tab', target: editor[0])
+        editorView.trigger keydownEvent('tab', target: editor[0])
         expect(editor.getText()).toBe expansion
 
     # headers seem to be a special case: http://git.io/7XeBKQ
     describe "for headers in HTML", ->
       beforeEach ->
         workspaceView.openSync(Path.join(__dirname, './fixtures/abbreviation/before/header-expand.html'))
-        editor = workspaceView.getActiveView()
+        editorView = workspaceView.getActiveView()
+        editor = editorView.getEditor()
         editSession = workspaceView.getActivePaneItem()
         editSession.moveCursorToEndOfLine()
 
         expansion = Fs.readFileSync(Path.join(__dirname, './fixtures/abbreviation/after/header-expand.html'), "utf8")
 
       it "expands HTML abbreviations via commands", ->
-        editor.trigger "emmet:expand-abbreviation"
-        expect(editor.getText()).toBe expansion
+        editorView.trigger "emmet:expand-abbreviation"
+        expect(editorView.getText()).toBe expansion
 
       it "expands HTML abbreviations via keybindings", ->
-        editor.trigger keydownEvent('e', shiftKey: true, metaKey: true, target: editor[0])
-        expect(editor.getText()).toBe expansion
+        editorView.trigger keydownEvent('e', shiftKey: true, metaKey: true, target: editor[0])
+        expect(editorView.getText()).toBe expansion
 
       it "expands HTML abbreviations via Tab", ->
-        editor.trigger keydownEvent('tab', target: editor[0])
-        expect(editor.getText()).toBe expansion
+        editorView.trigger keydownEvent('tab', target: editor[0])
+        expect(editorView.getText()).toBe expansion
 
     describe "for CSS", ->
       beforeEach ->
         workspaceView.openSync(Path.join(__dirname, './fixtures/abbreviation/before/css-abbrv.css'))
-        editor = workspaceView.getActiveView()
+        editorView = workspaceView.getActiveView()
+        editor = editorView.getEditor()
         editSession = workspaceView.getActivePaneItem()
         editSession.moveCursorToEndOfLine()
 
         expansion = Fs.readFileSync(Path.join(__dirname, './fixtures/abbreviation/after/css-abbrv.css'), "utf8")
 
       it "expands CSS abbreviations via commands", ->
-        editor.trigger "emmet:expand-abbreviation"
+        editorView.trigger "emmet:expand-abbreviation"
         expect(editor.getText()).toBe expansion
 
       it "expands CSS abbreviations via keybindings", ->
-        editor.trigger keydownEvent('e', shiftKey: true, metaKey: true, target: editor[0])
+        editorView.trigger keydownEvent('e', shiftKey: true, metaKey: true, target: editor[0])
         expect(editor.getText()).toBe expansion
 
       it "expands CSS abbreviations via tab", ->
-        editor.trigger keydownEvent('tab', target: editor[0])
+        editorView.trigger keydownEvent('tab', target: editor[0])
         expect(editor.getText()).toBe expansion
 
   describe "emmet:balance", ->
     beforeEach ->
       workspaceView.openSync(Path.join(__dirname, './fixtures/balance/sample.html'))
-      editor = workspaceView.getActiveView()
+      editorView = workspaceView.getActiveView()
+      editor = editorView.getEditor()
       editSession = workspaceView.getActivePaneItem()
 
     describe "for balance-outward", ->
@@ -99,20 +103,20 @@ describe "Emmet", ->
 
       it "matches pairs outwards via commands", ->
         expect(editor.getSelection().getBufferRange()).toEqual [[3, 23], [3, 23]]
-        editor.trigger "emmet:balance-outward"
+        editorView.trigger "emmet:balance-outward"
         expect(editor.getSelection().getBufferRange()).toEqual [[3, 11], [3, 38]]
-        editor.trigger "emmet:balance-outward"
+        editorView.trigger "emmet:balance-outward"
         expect(editor.getSelection().getBufferRange()).toEqual [[3, 8], [3, 42]]
-        editor.trigger "emmet:balance-outward"
+        editorView.trigger "emmet:balance-outward"
         expect(editor.getSelection().getBufferRange()).toEqual [[1, 29], [4, 4]]
 
       it "matches pairs outwards via keybindings", ->
         expect(editor.getSelection().getBufferRange()).toEqual [[3, 23], [3, 23]]
-        editor.trigger keydownEvent('d', ctrlKey: true, target: editor[0])
+        editorView.trigger keydownEvent('d', ctrlKey: true, target: editor[0])
         expect(editor.getSelection().getBufferRange()).toEqual [[3, 11], [3, 38]]
-        editor.trigger keydownEvent('d', ctrlKey: true, target: editor[0])
+        editorView.trigger keydownEvent('d', ctrlKey: true, target: editor[0])
         expect(editor.getSelection().getBufferRange()).toEqual [[3, 8], [3, 42]]
-        editor.trigger keydownEvent('d', ctrlKey: true, target: editor[0])
+        editorView.trigger keydownEvent('d', ctrlKey: true, target: editor[0])
         expect(editor.getSelection().getBufferRange()).toEqual [[1, 29], [4, 4]]
 
     describe "for balance-inward", ->
@@ -120,48 +124,49 @@ describe "Emmet", ->
         editSession.setCursorBufferPosition([1, 4])
 
       it "matches pairs inwards via commands", ->
-        editor.trigger "emmet:balance-inward"
+        editorView.trigger "emmet:balance-inward"
         expect(editor.getSelection().getBufferRange()).toEqual [[0, 15], [5, 0]]
-        editor.trigger "emmet:balance-inward"
+        editorView.trigger "emmet:balance-inward"
         expect(editor.getSelection().getBufferRange()).toEqual [[1, 4], [4, 14]]
-        editor.trigger "emmet:balance-inward"
+        editorView.trigger "emmet:balance-inward"
         expect(editor.getSelection().getBufferRange()).toEqual [[1, 29], [4, 4]]
-        editor.trigger "emmet:balance-inward"
+        editorView.trigger "emmet:balance-inward"
         expect(editor.getSelection().getBufferRange()).toEqual [[2, 8], [2, 33]]
 
       it "matches pairs inwards via keybindings", ->
-        editor.trigger keydownEvent('d', altKey: true, target: editor[0])
+        editorView.trigger keydownEvent('d', altKey: true, target: editor[0])
         expect(editor.getSelection().getBufferRange()).toEqual [[0, 15], [5, 0]]
-        editor.trigger keydownEvent('d', altKey: true, target: editor[0])
+        editorView.trigger keydownEvent('d', altKey: true, target: editor[0])
         expect(editor.getSelection().getBufferRange()).toEqual [[1, 4], [4, 14]]
-        editor.trigger keydownEvent('d', altKey: true, target: editor[0])
+        editorView.trigger keydownEvent('d', altKey: true, target: editor[0])
         expect(editor.getSelection().getBufferRange()).toEqual [[1, 29], [4, 4]]
-        editor.trigger keydownEvent('d', altKey: true, target: editor[0])
+        editorView.trigger keydownEvent('d', altKey: true, target: editor[0])
         expect(editor.getSelection().getBufferRange()).toEqual [[2, 8], [2, 33]]
 
     describe "for go-to match-pair", ->
       it "goes to the match-pair via commands", ->
         editSession.setCursorBufferPosition([4, 10])
-        editor.trigger "emmet:matching-pair"
+        editorView.trigger "emmet:matching-pair"
         expect(editor.getCursor().getBufferPosition()).toEqual [1, 4]
 
         editSession.setCursorBufferPosition([5, 5])
-        editor.trigger "emmet:matching-pair"
+        editorView.trigger "emmet:matching-pair"
         expect(editor.getCursor().getBufferPosition()).toEqual [0, 0]
 
       it "goes to the match-pair via keybindings", ->
         editSession.setCursorBufferPosition([4, 10])
-        editor.trigger keydownEvent('j', ctrlKey: true, altKey: true, target: editor[0])
+        editorView.trigger keydownEvent('j', ctrlKey: true, altKey: true, target: editor[0])
         expect(editor.getCursor().getBufferPosition()).toEqual [1, 4]
 
         editSession.setCursorBufferPosition([5, 5])
-        editor.trigger keydownEvent('j', ctrlKey: true, altKey: true, target: editor[0])
+        editorView.trigger keydownEvent('j', ctrlKey: true, altKey: true, target: editor[0])
         expect(editor.getCursor().getBufferPosition()).toEqual [0, 0]
 
   describe "emmet:edit-point", ->
     beforeEach ->
       workspaceView.openSync(Path.join(__dirname, './fixtures/edit-points/edit-points.html'))
-      editor = workspaceView.getActiveView()
+      editorView = workspaceView.getActiveView()
+      editor = editorView.getEditor()
       editSession = workspaceView.getActivePaneItem()
 
     describe "for next-edit-point", ->
@@ -169,19 +174,19 @@ describe "Emmet", ->
         editSession.setCursorBufferPosition([0, 0])
 
       it "finds the next-edit-point via commands", ->
-        editor.trigger "emmet:next-edit-point"
+        editorView.trigger "emmet:next-edit-point"
         expect(editor.getCursor().getBufferPosition()).toEqual [1, 8]
-        editor.trigger "emmet:next-edit-point"
+        editorView.trigger "emmet:next-edit-point"
         expect(editor.getCursor().getBufferPosition()).toEqual [1, 17]
-        editor.trigger "emmet:next-edit-point"
+        editorView.trigger "emmet:next-edit-point"
         expect(editor.getCursor().getBufferPosition()).toEqual [1, 19]
 
       it "finds the next-edit-point via keybindings", ->
-        editor.trigger keydownEvent('.', ctrlKey: true, altKey:true, target: editor[0])
+        editorView.trigger keydownEvent('.', ctrlKey: true, altKey:true, target: editor[0])
         expect(editor.getCursor().getBufferPosition()).toEqual [1, 8]
-        editor.trigger keydownEvent('.', ctrlKey: true, altKey:true, target: editor[0])
+        editorView.trigger keydownEvent('.', ctrlKey: true, altKey:true, target: editor[0])
         expect(editor.getCursor().getBufferPosition()).toEqual [1, 17]
-        editor.trigger keydownEvent('.', ctrlKey: true, altKey:true, target: editor[0])
+        editorView.trigger keydownEvent('.', ctrlKey: true, altKey:true, target: editor[0])
         expect(editor.getCursor().getBufferPosition()).toEqual [1, 19]
 
     describe "for prev-edit-point", ->
@@ -189,25 +194,26 @@ describe "Emmet", ->
         editSession.setCursorBufferPosition([9, 15])
 
       it "finds the prev-edit-point via commands", ->
-        editor.trigger "emmet:prev-edit-point"
+        editorView.trigger "emmet:prev-edit-point"
         expect(editor.getCursor().getBufferPosition()).toEqual [2, 23]
-        editor.trigger "emmet:prev-edit-point"
+        editorView.trigger "emmet:prev-edit-point"
         expect(editor.getCursor().getBufferPosition()).toEqual [2, 19]
-        editor.trigger "emmet:prev-edit-point"
+        editorView.trigger "emmet:prev-edit-point"
         expect(editor.getCursor().getBufferPosition()).toEqual [2, 17]
 
       it "finds the prev-edit-point via keybindings", ->
-        editor.trigger keydownEvent(',', ctrlKey: true, altKey:true, target: editor[0])
+        editorView.trigger keydownEvent(',', ctrlKey: true, altKey:true, target: editor[0])
         expect(editor.getCursor().getBufferPosition()).toEqual [2, 23]
-        editor.trigger keydownEvent(',', ctrlKey: true, altKey:true, target: editor[0])
+        editorView.trigger keydownEvent(',', ctrlKey: true, altKey:true, target: editor[0])
         expect(editor.getCursor().getBufferPosition()).toEqual [2, 19]
-        editor.trigger keydownEvent(',', ctrlKey: true, altKey:true, target: editor[0])
+        editorView.trigger keydownEvent(',', ctrlKey: true, altKey:true, target: editor[0])
         expect(editor.getCursor().getBufferPosition()).toEqual [2, 17]
 
   describe "emmet:split-join-tag", ->
     beforeEach ->
       workspaceView.openSync(Path.join(__dirname, './fixtures/split-join-tag/split-join-tag.html'))
-      editor = workspaceView.getActiveView()
+      editorView = workspaceView.getActiveView()
+      editor = editorView.getEditor()
       editSession = workspaceView.getActivePaneItem()
 
     describe "for split-join-tag", ->
@@ -215,19 +221,19 @@ describe "Emmet", ->
         editSession.setCursorBufferPosition([1, 10])
 
       it "calls split-join-tag via commands", ->
-        editor.trigger "emmet:split-join-tag"
+        editorView.trigger "emmet:split-join-tag"
         expect(editor.lineForBufferRow(0)).toBe "<example />"
-        editor.trigger "emmet:split-join-tag"
+        editorView.trigger "emmet:split-join-tag"
         expect(editor.lineForBufferRow(0)).toBe "<example></example>"
-        editor.trigger "emmet:split-join-tag"
+        editorView.trigger "emmet:split-join-tag"
         expect(editor.lineForBufferRow(0)).toBe "<example />"
 
       it "calls split-join-tag via keybindings", ->
-       editor.trigger keydownEvent('j', shiftKey: true, metaKey: true, target: editor[0])
+       editorView.trigger keydownEvent('j', shiftKey: true, metaKey: true, target: editor[0])
        expect(editor.lineForBufferRow(0)).toBe "<example />"
-       editor.trigger keydownEvent('j', shiftKey: true, metaKey: true, target: editor[0])
+       editorView.trigger keydownEvent('j', shiftKey: true, metaKey: true, target: editor[0])
        expect(editor.lineForBufferRow(0)).toBe "<example></example>"
-       editor.trigger keydownEvent('j', shiftKey: true, metaKey: true, target: editor[0])
+       editorView.trigger keydownEvent('j', shiftKey: true, metaKey: true, target: editor[0])
        expect(editor.lineForBufferRow(0)).toBe "<example />"
 
   describe "emmet:remove-tag", ->
@@ -235,7 +241,8 @@ describe "Emmet", ->
 
     beforeEach ->
       workspaceView.openSync(Path.join(__dirname, './fixtures/remove-tag/before/remove-tag.html'))
-      editor = workspaceView.getActiveView()
+      editorView = workspaceView.getActiveView()
+      editor = editorView.getEditor()
       editSession = workspaceView.getActivePaneItem()
 
       onceRemoved = Fs.readFileSync(Path.join(__dirname, './fixtures/remove-tag/after/remove-tag-once.html'), "utf8")
@@ -244,46 +251,48 @@ describe "Emmet", ->
       editSession.setCursorBufferPosition([1, 10])
 
     it "calls remove-tag via commands", ->
-      editor.trigger "emmet:remove-tag"
+      editorView.trigger "emmet:remove-tag"
       expect(editor.getText()).toBe onceRemoved
-      editor.trigger "emmet:remove-tag"
+      editorView.trigger "emmet:remove-tag"
       expect(editor.getText()).toBe twiceRemoved
 
     it "calls remove-tag via keybindings", ->
-     editor.trigger keydownEvent('\'', metaKey: true, target: editor[0])
+     editorView.trigger keydownEvent('\'', metaKey: true, target: editor[0])
      expect(editor.getText()).toBe onceRemoved
-     editor.trigger keydownEvent('\'', metaKey: true, target: editor[0])
+     editorView.trigger keydownEvent('\'', metaKey: true, target: editor[0])
      expect(editor.getText()).toBe twiceRemoved
 
   describe "emmet:evaluate-math-expression", ->
     beforeEach ->
       workspaceView.openSync(Path.join(__dirname, './fixtures/evaluate-math-expression/evaluate-math-expression.html'))
-      editor = workspaceView.getActiveView()
+      editorView = workspaceView.getActiveView()
+      editor = editorView.getEditor()
       editSession = workspaceView.getActivePaneItem()
 
     describe "for evaluate-math-expression", ->
       it "calls evaluate-math-expression via commands", ->
         editSession.setCursorBufferPosition([0, 3])
-        editor.trigger "emmet:evaluate-math-expression"
+        editorView.trigger "emmet:evaluate-math-expression"
         editSession.setCursorBufferPosition([0, 7])
-        editor.trigger "emmet:evaluate-math-expression"
+        editorView.trigger "emmet:evaluate-math-expression"
         editSession.setCursorBufferPosition([0, 12])
-        editor.trigger "emmet:evaluate-math-expression"
+        editorView.trigger "emmet:evaluate-math-expression"
         expect(editor.getText()).toBe "12 3 90\n"
 
       it "calls evaluate-math-expression via keybindings", ->
        editSession.setCursorBufferPosition([0, 3])
-       editor.trigger keydownEvent('y', shiftKey: true, metaKey: true, target: editor[0])
+       editorView.trigger keydownEvent('y', shiftKey: true, metaKey: true, target: editor[0])
        editSession.setCursorBufferPosition([0, 7])
-       editor.trigger keydownEvent('y', shiftKey: true, metaKey: true, target: editor[0])
+       editorView.trigger keydownEvent('y', shiftKey: true, metaKey: true, target: editor[0])
        editSession.setCursorBufferPosition([0, 12])
-       editor.trigger keydownEvent('y', shiftKey: true, metaKey: true, target: editor[0])
+       editorView.trigger keydownEvent('y', shiftKey: true, metaKey: true, target: editor[0])
        expect(editor.getText()).toBe "12 3 90\n"
 
   describe "emmet increment/decrement numbers", ->
      beforeEach ->
        workspaceView.openSync(Path.join(__dirname, './fixtures/increment-decrement-numbers/increment-decrement-numbers.css'))
-       editor = workspaceView.getActiveView()
+       editorView = workspaceView.getActiveView()
+       editor = editorView.getEditor()
        editSession = workspaceView.getActivePaneItem()
 
      describe "for incrementing", ->
@@ -292,39 +301,39 @@ describe "Emmet", ->
           editSession.setCursorBufferPosition([1, 18])
 
          it "increments via commands", ->
-          editor.trigger "emmet:increment-number-by-01"
-          editor.trigger "emmet:increment-number-by-01"
+          editorView.trigger "emmet:increment-number-by-01"
+          editorView.trigger "emmet:increment-number-by-01"
           expect(editor.lineForBufferRow(1)).toMatch(/1\.9/)
-          editor.trigger "emmet:increment-number-by-01"
-          editor.trigger "emmet:increment-number-by-01"
+          editorView.trigger "emmet:increment-number-by-01"
+          editorView.trigger "emmet:increment-number-by-01"
           expect(editor.lineForBufferRow(1)).toMatch(/2\.1/)
 
          it "increments via keybindings", ->
-          editor.trigger "emmet:increment-number-by-01"
-          editor.trigger "emmet:increment-number-by-01"
-          editor.trigger keydownEvent('up', shiftKey: true, altKey: true, target: editor[0])
-          editor.trigger "emmet:increment-number-by-01"
-          editor.trigger "emmet:increment-number-by-01"
-          editor.trigger keydownEvent('up', shiftKey: true, altKey: true, target: editor[0])
+          editorView.trigger "emmet:increment-number-by-01"
+          editorView.trigger "emmet:increment-number-by-01"
+          editorView.trigger keydownEvent('up', shiftKey: true, altKey: true, target: editor[0])
+          editorView.trigger "emmet:increment-number-by-01"
+          editorView.trigger "emmet:increment-number-by-01"
+          editorView.trigger keydownEvent('up', shiftKey: true, altKey: true, target: editor[0])
 
       describe "increment by 1", ->
         beforeEach ->
           editSession.setCursorBufferPosition([2, 13])
 
         it "increments via commands", ->
-         editor.trigger "emmet:increment-number-by-1"
-         editor.trigger "emmet:increment-number-by-1"
+         editorView.trigger "emmet:increment-number-by-1"
+         editorView.trigger "emmet:increment-number-by-1"
          expect(editor.lineForBufferRow(2)).toMatch(/12/)
          for i in [0..12] by 1
-           editor.trigger "emmet:increment-number-by-1"
+           editorView.trigger "emmet:increment-number-by-1"
          expect(editor.lineForBufferRow(2)).toMatch(/25/)
 
         it "increments via keybindings", ->
-         editor.trigger keydownEvent('up', shiftKey: true, ctrlKey: true, target: editor[0])
-         editor.trigger keydownEvent('up', shiftKey: true, ctrlKey: true, target: editor[0])
+         editorView.trigger keydownEvent('up', shiftKey: true, ctrlKey: true, target: editor[0])
+         editorView.trigger keydownEvent('up', shiftKey: true, ctrlKey: true, target: editor[0])
          expect(editor.lineForBufferRow(2)).toMatch(/12/)
          for i in [0..12] by 1
-           editor.trigger keydownEvent('up', shiftKey: true, ctrlKey: true, target: editor[0])
+           editorView.trigger keydownEvent('up', shiftKey: true, ctrlKey: true, target: editor[0])
          expect(editor.lineForBufferRow(2)).toMatch(/25/)
 
       describe "increment by 10", ->
@@ -332,13 +341,13 @@ describe "Emmet", ->
           editSession.setCursorBufferPosition([3, 12])
 
         it "increments via commands", ->
-         editor.trigger "emmet:increment-number-by-10"
-         editor.trigger "emmet:increment-number-by-10"
+         editorView.trigger "emmet:increment-number-by-10"
+         editorView.trigger "emmet:increment-number-by-10"
          expect(editor.lineForBufferRow(3)).toMatch(/120/)
 
         it "increments via keybindings", ->
-         editor.trigger keydownEvent('up', altKey: true, ctrlKey: true, target: editor[0])
-         editor.trigger keydownEvent('up', altKey: true, ctrlKey: true, target: editor[0])
+         editorView.trigger keydownEvent('up', altKey: true, ctrlKey: true, target: editor[0])
+         editorView.trigger keydownEvent('up', altKey: true, ctrlKey: true, target: editor[0])
          expect(editor.lineForBufferRow(3)).toMatch(/120/)
 
      describe "for decrementing", ->
@@ -347,19 +356,19 @@ describe "Emmet", ->
           editSession.setCursorBufferPosition([1, 18])
 
          it "decrements via commands", ->
-          editor.trigger "emmet:decrement-number-by-01"
-          editor.trigger "emmet:decrement-number-by-01"
+          editorView.trigger "emmet:decrement-number-by-01"
+          editorView.trigger "emmet:decrement-number-by-01"
           expect(editor.lineForBufferRow(1)).toMatch(/1\.5/)
           for i in [0..20] by 1
-            editor.trigger "emmet:decrement-number-by-01"
+            editorView.trigger "emmet:decrement-number-by-01"
           expect(editor.lineForBufferRow(1)).toMatch(/\-0\.6/)
 
          it "decrements via keybindings", ->
-          editor.trigger keydownEvent('down', shiftKey: true, altKey: true, target: editor[0])
-          editor.trigger keydownEvent('down', shiftKey: true, altKey: true, target: editor[0])
+          editorView.trigger keydownEvent('down', shiftKey: true, altKey: true, target: editor[0])
+          editorView.trigger keydownEvent('down', shiftKey: true, altKey: true, target: editor[0])
           expect(editor.lineForBufferRow(1)).toMatch(/1\.5/)
           for i in [0..20] by 1
-            editor.trigger keydownEvent('down', shiftKey: true, altKey: true, target: editor[0])
+            editorView.trigger keydownEvent('down', shiftKey: true, altKey: true, target: editor[0])
           expect(editor.lineForBufferRow(1)).toMatch(/\-0\.6/)
 
       describe "decrement by 1", ->
@@ -367,19 +376,19 @@ describe "Emmet", ->
           editSession.setCursorBufferPosition([2, 13])
 
         it "decrements via commands", ->
-         editor.trigger "emmet:decrement-number-by-1"
-         editor.trigger "emmet:decrement-number-by-1"
+         editorView.trigger "emmet:decrement-number-by-1"
+         editorView.trigger "emmet:decrement-number-by-1"
          expect(editor.lineForBufferRow(2)).toMatch(/8/)
          for i in [0..12] by 1
-           editor.trigger "emmet:decrement-number-by-1"
+           editorView.trigger "emmet:decrement-number-by-1"
          expect(editor.lineForBufferRow(2)).toMatch(/\-5/)
 
         it "decrements via keybindings", ->
-         editor.trigger keydownEvent('down', shiftKey: true, ctrlKey: true, target: editor[0])
-         editor.trigger keydownEvent('down', shiftKey: true, ctrlKey: true, target: editor[0])
+         editorView.trigger keydownEvent('down', shiftKey: true, ctrlKey: true, target: editor[0])
+         editorView.trigger keydownEvent('down', shiftKey: true, ctrlKey: true, target: editor[0])
          expect(editor.lineForBufferRow(2)).toMatch(/8/)
          for i in [0..12] by 1
-          editor.trigger keydownEvent('down', shiftKey: true, ctrlKey: true, target: editor[0])
+          editorView.trigger keydownEvent('down', shiftKey: true, ctrlKey: true, target: editor[0])
          expect(editor.lineForBufferRow(2)).toMatch(/\-5/)
 
       describe "decrement by 10", ->
@@ -387,20 +396,21 @@ describe "Emmet", ->
           editSession.setCursorBufferPosition([3, 12])
 
         it "decrements via commands", ->
-         editor.trigger "emmet:decrement-number-by-10"
-         editor.trigger "emmet:decrement-number-by-10"
+         editorView.trigger "emmet:decrement-number-by-10"
+         editorView.trigger "emmet:decrement-number-by-10"
          expect(editor.lineForBufferRow(3)).toMatch(/80/)
 
         it "decrements via keybindings", ->
-         editor.trigger keydownEvent('down', altKey: true, ctrlKey: true, target: editor[0])
-         editor.trigger keydownEvent('down', altKey: true, ctrlKey: true, target: editor[0])
+         editorView.trigger keydownEvent('down', altKey: true, ctrlKey: true, target: editor[0])
+         editorView.trigger keydownEvent('down', altKey: true, ctrlKey: true, target: editor[0])
          expect(editor.lineForBufferRow(3)).toMatch(/80/)
 
   describe "emmet select items", ->
     describe "for HTML", ->
       beforeEach ->
         workspaceView.openSync(Path.join(__dirname, './fixtures/select-item/select-item.html'))
-        editor = workspaceView.getActiveView()
+        editorView = workspaceView.getActiveView()
+        editor = editorView.getEditor()
         editSession = workspaceView.getActivePaneItem()
 
       describe "selecting next item", ->
@@ -408,35 +418,35 @@ describe "Emmet", ->
           editSession.setCursorBufferPosition([0, 0])
 
         it "selects next items via commands", ->
-          editor.trigger "emmet:select-next-item"
+          editorView.trigger "emmet:select-next-item"
           expect(editor.getSelection().getBufferRange()).toEqual [[0, 1], [0, 8]]
-          editor.trigger "emmet:select-next-item"
+          editorView.trigger "emmet:select-next-item"
           expect(editor.getSelection().getBufferRange()).toEqual [[1, 5], [1, 6]]
-          editor.trigger "emmet:select-next-item"
+          editorView.trigger "emmet:select-next-item"
           expect(editor.getSelection().getBufferRange()).toEqual [[2, 5], [2, 8]]
-          editor.trigger "emmet:select-next-item"
+          editorView.trigger "emmet:select-next-item"
           expect(editor.getSelection().getBufferRange()).toEqual [[2, 9], [2, 28]]
-          editor.trigger "emmet:select-next-item"
+          editorView.trigger "emmet:select-next-item"
           expect(editor.getSelection().getBufferRange()).toEqual [[2, 16], [2, 27]]
-          editor.trigger "emmet:select-next-item"
+          editorView.trigger "emmet:select-next-item"
           expect(editor.getSelection().getBufferRange()).toEqual [[2, 16], [2, 20]]
-          editor.trigger "emmet:select-next-item"
+          editorView.trigger "emmet:select-next-item"
           expect(editor.getSelection().getBufferRange()).toEqual [[2, 21], [2, 27]]
 
         it "selects next items via keybindings", ->
-          editor.trigger keydownEvent('.', altKey: true, metaKey: true, target: editor[0])
+          editorView.trigger keydownEvent('.', altKey: true, metaKey: true, target: editor[0])
           expect(editor.getSelection().getBufferRange()).toEqual [[0, 1], [0, 8]]
-          editor.trigger keydownEvent('.', altKey: true, metaKey: true, target: editor[0])
+          editorView.trigger keydownEvent('.', altKey: true, metaKey: true, target: editor[0])
           expect(editor.getSelection().getBufferRange()).toEqual [[1, 5], [1, 6]]
-          editor.trigger keydownEvent('.', altKey: true, metaKey: true, target: editor[0])
+          editorView.trigger keydownEvent('.', altKey: true, metaKey: true, target: editor[0])
           expect(editor.getSelection().getBufferRange()).toEqual [[2, 5], [2, 8]]
-          editor.trigger keydownEvent('.', altKey: true, metaKey: true, target: editor[0])
+          editorView.trigger keydownEvent('.', altKey: true, metaKey: true, target: editor[0])
           expect(editor.getSelection().getBufferRange()).toEqual [[2, 9], [2, 28]]
-          editor.trigger keydownEvent('.', altKey: true, metaKey: true, target: editor[0])
+          editorView.trigger keydownEvent('.', altKey: true, metaKey: true, target: editor[0])
           expect(editor.getSelection().getBufferRange()).toEqual [[2, 16], [2, 27]]
-          editor.trigger keydownEvent('.', altKey: true, metaKey: true, target: editor[0])
+          editorView.trigger keydownEvent('.', altKey: true, metaKey: true, target: editor[0])
           expect(editor.getSelection().getBufferRange()).toEqual [[2, 16], [2, 20]]
-          editor.trigger keydownEvent('.', altKey: true, metaKey: true, target: editor[0])
+          editorView.trigger keydownEvent('.', altKey: true, metaKey: true, target: editor[0])
           expect(editor.getSelection().getBufferRange()).toEqual [[2, 21], [2, 27]]
 
       describe "selecting previous item", ->
@@ -444,37 +454,38 @@ describe "Emmet", ->
           editSession.setCursorBufferPosition([2, 21])
 
         it "selects previous items via commands", ->
-          editor.trigger "emmet:select-previous-item"
+          editorView.trigger "emmet:select-previous-item"
           expect(editor.getSelection().getBufferRange()).toEqual [[2, 16], [2, 20]]
-          editor.trigger "emmet:select-previous-item"
+          editorView.trigger "emmet:select-previous-item"
           expect(editor.getSelection().getBufferRange()).toEqual [[2, 16], [2, 27]]
-          editor.trigger "emmet:select-previous-item"
+          editorView.trigger "emmet:select-previous-item"
           expect(editor.getSelection().getBufferRange()).toEqual [[2, 9], [2, 28]]
-          editor.trigger "emmet:select-previous-item"
+          editorView.trigger "emmet:select-previous-item"
           expect(editor.getSelection().getBufferRange()).toEqual [[2, 5], [2, 8]]
-          editor.trigger "emmet:select-previous-item"
+          editorView.trigger "emmet:select-previous-item"
           expect(editor.getSelection().getBufferRange()).toEqual [[1, 5], [1, 6]]
-          editor.trigger "emmet:select-previous-item"
+          editorView.trigger "emmet:select-previous-item"
           expect(editor.getSelection().getBufferRange()).toEqual [[0, 1], [0, 8]]
 
         it "selects previous items via keybindings", ->
-          editor.trigger keydownEvent(',', altKey: true, metaKey: true, target: editor[0])
+          editorView.trigger keydownEvent(',', altKey: true, metaKey: true, target: editor[0])
           expect(editor.getSelection().getBufferRange()).toEqual [[2, 16], [2, 20]]
-          editor.trigger keydownEvent(',', altKey: true, metaKey: true, target: editor[0])
+          editorView.trigger keydownEvent(',', altKey: true, metaKey: true, target: editor[0])
           expect(editor.getSelection().getBufferRange()).toEqual [[2, 16], [2, 27]]
-          editor.trigger keydownEvent(',', altKey: true, metaKey: true, target: editor[0])
+          editorView.trigger keydownEvent(',', altKey: true, metaKey: true, target: editor[0])
           expect(editor.getSelection().getBufferRange()).toEqual [[2, 9], [2, 28]]
-          editor.trigger keydownEvent(',', altKey: true, metaKey: true, target: editor[0])
+          editorView.trigger keydownEvent(',', altKey: true, metaKey: true, target: editor[0])
           expect(editor.getSelection().getBufferRange()).toEqual [[2, 5], [2, 8]]
-          editor.trigger keydownEvent(',', altKey: true, metaKey: true, target: editor[0])
+          editorView.trigger keydownEvent(',', altKey: true, metaKey: true, target: editor[0])
           expect(editor.getSelection().getBufferRange()).toEqual [[1, 5], [1, 6]]
-          editor.trigger keydownEvent(',', altKey: true, metaKey: true, target: editor[0])
+          editorView.trigger keydownEvent(',', altKey: true, metaKey: true, target: editor[0])
           expect(editor.getSelection().getBufferRange()).toEqual [[0, 1], [0, 8]]
 
     describe "for CSS", ->
       beforeEach ->
         workspaceView.openSync(Path.join(__dirname, './fixtures/select-item/select-item.css'))
-        editor = workspaceView.getActiveView()
+        editorView = workspaceView.getActiveView()
+        editor = editorView.getEditor()
         editSession = workspaceView.getActivePaneItem()
 
       describe "selecting next item", ->
@@ -482,35 +493,35 @@ describe "Emmet", ->
           editSession.setCursorBufferPosition([0, 0])
 
         it "selects next items via commands", ->
-          editor.trigger "emmet:select-next-item"
+          editorView.trigger "emmet:select-next-item"
           expect(editor.getSelection().getBufferRange()).toEqual [[0, 0], [0, 4]]
-          editor.trigger "emmet:select-next-item"
+          editorView.trigger "emmet:select-next-item"
           expect(editor.getSelection().getBufferRange()).toEqual [[1, 4], [1, 28]]
-          editor.trigger "emmet:select-next-item"
+          editorView.trigger "emmet:select-next-item"
           expect(editor.getSelection().getBufferRange()).toEqual [[1, 12], [1, 27]]
-          editor.trigger "emmet:select-next-item"
+          editorView.trigger "emmet:select-next-item"
           expect(editor.getSelection().getBufferRange()).toEqual [[1, 12], [1, 15]]
-          editor.trigger "emmet:select-next-item"
+          editorView.trigger "emmet:select-next-item"
           expect(editor.getSelection().getBufferRange()).toEqual [[1, 16], [1, 21]]
-          editor.trigger "emmet:select-next-item"
+          editorView.trigger "emmet:select-next-item"
           expect(editor.getSelection().getBufferRange()).toEqual [[1, 22], [1, 27]]
-          editor.trigger "emmet:select-next-item"
+          editorView.trigger "emmet:select-next-item"
           expect(editor.getSelection().getBufferRange()).toEqual [[2, 4], [2, 46]]
 
         it "selects next items via keybindings", ->
-          editor.trigger keydownEvent('.', altKey: true, metaKey: true, target: editor[0])
+          editorView.trigger keydownEvent('.', altKey: true, metaKey: true, target: editor[0])
           expect(editor.getSelection().getBufferRange()).toEqual [[0, 0], [0, 4]]
-          editor.trigger keydownEvent('.', altKey: true, metaKey: true, target: editor[0])
+          editorView.trigger keydownEvent('.', altKey: true, metaKey: true, target: editor[0])
           expect(editor.getSelection().getBufferRange()).toEqual [[1, 4], [1, 28]]
-          editor.trigger keydownEvent('.', altKey: true, metaKey: true, target: editor[0])
+          editorView.trigger keydownEvent('.', altKey: true, metaKey: true, target: editor[0])
           expect(editor.getSelection().getBufferRange()).toEqual [[1, 12], [1, 27]]
-          editor.trigger keydownEvent('.', altKey: true, metaKey: true, target: editor[0])
+          editorView.trigger keydownEvent('.', altKey: true, metaKey: true, target: editor[0])
           expect(editor.getSelection().getBufferRange()).toEqual [[1, 12], [1, 15]]
-          editor.trigger keydownEvent('.', altKey: true, metaKey: true, target: editor[0])
+          editorView.trigger keydownEvent('.', altKey: true, metaKey: true, target: editor[0])
           expect(editor.getSelection().getBufferRange()).toEqual [[1, 16], [1, 21]]
-          editor.trigger keydownEvent('.', altKey: true, metaKey: true, target: editor[0])
+          editorView.trigger keydownEvent('.', altKey: true, metaKey: true, target: editor[0])
           expect(editor.getSelection().getBufferRange()).toEqual [[1, 22], [1, 27]]
-          editor.trigger keydownEvent('.', altKey: true, metaKey: true, target: editor[0])
+          editorView.trigger keydownEvent('.', altKey: true, metaKey: true, target: editor[0])
           expect(editor.getSelection().getBufferRange()).toEqual [[2, 4], [2, 46]]
 
       describe "selecting previous item", ->
@@ -518,31 +529,31 @@ describe "Emmet", ->
           editSession.setCursorBufferPosition([2, 4])
 
         it "selects previous items via commands", ->
-          editor.trigger "emmet:select-previous-item"
+          editorView.trigger "emmet:select-previous-item"
           expect(editor.getSelection().getBufferRange()).toEqual [[2, 4], [2, 46]]
-          editor.trigger "emmet:select-previous-item"
+          editorView.trigger "emmet:select-previous-item"
           expect(editor.getSelection().getBufferRange()).toEqual [[1, 22], [1, 27]]
-          editor.trigger "emmet:select-previous-item"
+          editorView.trigger "emmet:select-previous-item"
           expect(editor.getSelection().getBufferRange()).toEqual [[1, 16], [1, 21]]
-          editor.trigger "emmet:select-previous-item"
+          editorView.trigger "emmet:select-previous-item"
           expect(editor.getSelection().getBufferRange()).toEqual [[1, 12], [1, 15]]
-          editor.trigger "emmet:select-previous-item"
+          editorView.trigger "emmet:select-previous-item"
           expect(editor.getSelection().getBufferRange()).toEqual [[1, 12], [1, 27]]
-          editor.trigger "emmet:select-previous-item"
+          editorView.trigger "emmet:select-previous-item"
           expect(editor.getSelection().getBufferRange()).toEqual [[1, 4], [1, 28]]
 
         it "selects previous items via keybindings", ->
-          editor.trigger keydownEvent(',', altKey: true, metaKey: true, target: editor[0])
+          editorView.trigger keydownEvent(',', altKey: true, metaKey: true, target: editor[0])
           expect(editor.getSelection().getBufferRange()).toEqual [[2, 4], [2, 46]]
-          editor.trigger keydownEvent(',', altKey: true, metaKey: true, target: editor[0])
+          editorView.trigger keydownEvent(',', altKey: true, metaKey: true, target: editor[0])
           expect(editor.getSelection().getBufferRange()).toEqual [[1, 22], [1, 27]]
-          editor.trigger keydownEvent(',', altKey: true, metaKey: true, target: editor[0])
+          editorView.trigger keydownEvent(',', altKey: true, metaKey: true, target: editor[0])
           expect(editor.getSelection().getBufferRange()).toEqual [[1, 16], [1, 21]]
-          editor.trigger keydownEvent(',', altKey: true, metaKey: true, target: editor[0])
+          editorView.trigger keydownEvent(',', altKey: true, metaKey: true, target: editor[0])
           expect(editor.getSelection().getBufferRange()).toEqual [[1, 12], [1, 15]]
-          editor.trigger keydownEvent(',', altKey: true, metaKey: true, target: editor[0])
+          editorView.trigger keydownEvent(',', altKey: true, metaKey: true, target: editor[0])
           expect(editor.getSelection().getBufferRange()).toEqual [[1, 12], [1, 27]]
-          editor.trigger keydownEvent(',', altKey: true, metaKey: true, target: editor[0])
+          editorView.trigger keydownEvent(',', altKey: true, metaKey: true, target: editor[0])
           expect(editor.getSelection().getBufferRange()).toEqual [[1, 4], [1, 28]]
 
   describe "emmet:reflect-css-value", ->
@@ -550,80 +561,84 @@ describe "Emmet", ->
 
     beforeEach ->
       workspaceView.openSync(Path.join(__dirname, './fixtures/reflect-css-value/before/reflect-css-value.css'))
-      editor = workspaceView.getActiveView()
+      editorView = workspaceView.getActiveView()
+      editor = editorView.getEditor()
       editSession = workspaceView.getActivePaneItem()
 
       reflection = Fs.readFileSync(Path.join(__dirname, './fixtures/reflect-css-value/after/reflect-css-value.css'), "utf8")
 
     it "reflects CSS via commands", ->
       editor.setCursorBufferPosition([3, 32])
-      editor.trigger "emmet:reflect-css-value"
+      editorView.trigger "emmet:reflect-css-value"
       # editor.setCursorBufferPosition([9, 16])
-      # editor.trigger "emmet:reflect-css-value"
-      # expect(editor.getText()).toBe reflection
+      # editorView.trigger "emmet:reflect-css-value"
+      expect(editor.getText()).toBe reflection
 
     it "reflects CSS via keybindings", ->
       editor.setCursorBufferPosition([3, 32])
-      editor.trigger keydownEvent('r', shiftKey: true, metaKey: true, target: editor[0])
+      editorView.trigger keydownEvent('r', shiftKey: true, metaKey: true, target: editor[0])
       # editor.setCursorBufferPosition([9, 16])
-      # editor.trigger keydownEvent('r', shiftKey: true, metaKey: true, target: editor[0])
-      # expect(editor.getText()).toBe reflection
+      # editorView.trigger keydownEvent('r', shiftKey: true, metaKey: true, target: editor[0])
+      expect(editor.getText()).toBe reflection
 
-  describe "emmet:encode-decode-data-url", ->
-    encoded = null
-    beforeEach ->
-      workspaceView.openSync(Path.join(__dirname, './fixtures/encode-decode-data-url/before/encode-decode-data-url.css'))
-      editor = workspaceView.getActiveView()
-      editSession = workspaceView.getActivePaneItem()
+  # describe "emmet:encode-decode-data-url", ->
+  #   encoded = null
+  #   beforeEach ->
+  #     workspaceView.openSync(Path.join(__dirname, './fixtures/encode-decode-data-url/before/encode-decode-data-url.css'))
+  #     editorView = workspaceView.getActiveView()
+  #     editor = editorView.getEditor()
+  #     editSession = workspaceView.getActivePaneItem()
+  #
+  #     editSession.setCursorBufferPosition([1, 22])
+  #
+  #     encoded = Fs.readFileSync(Path.join(__dirname, './fixtures/encode-decode-data-url/after/encode-decode-data-url.css'), "utf8")
+  #
+  #   it "encodes and decodes URL via commands", ->
+  #     editorView.trigger "emmet:encode-decode-data-url"
+  #     expect(editor.getText()).toBe encoded
+  #
+  #   it "encodes and decodes CSS via keybindings", ->
+  #     editorView.trigger keydownEvent('d', shiftKey: true, ctrlKey: true, target: editor[0])
+  #     expect(editor.getText()).toBe encoded
 
-      editSession.setCursorBufferPosition([1, 22])
-
-      encoded = Fs.readFileSync(Path.join(__dirname, './fixtures/encode-decode-data-url/after/encode-decode-data-url.css'), "utf8")
-
-    it "encodes and decodes URL via commands", ->
-      editor.trigger "emmet:encode-decode-data-url"
-      expect(editor.getText()).toBe encoded
-
-    it "encodes and decodes CSS via keybindings", ->
-      editor.trigger keydownEvent('d', shiftKey: true, ctrlKey: true, target: editor[0])
-      expect(editor.getText()).toBe encoded
-
-  describe "emmet:update-image-size", ->
-    updated = null
-
-    describe "for HTML", ->
-      beforeEach ->
-        workspaceView.openSync(Path.join(__dirname, './fixtures/update-image-size/before/update-image-size.html'))
-        editor = workspaceView.getActiveView()
-        editSession = workspaceView.getActivePaneItem()
-        editSession.setCursorBufferPosition([0, 15])
-
-        updated = Fs.readFileSync(Path.join(__dirname, './fixtures/update-image-size/after/update-image-size.html'), "utf8")
-
-      it "updates the image via commands", ->
-        editor.trigger "emmet:update-image-size"
-        expect(editor.getText()).toBe updated
-
-      it "updates the image via keybindings", ->
-        editor.trigger keydownEvent('i', shiftKey: true, ctrlKey: true, target: editor[0])
-        expect(editor.getText()).toBe updated
-
-    describe "for CSS", ->
-      beforeEach ->
-        workspaceView.openSync(Path.join(__dirname, './fixtures/update-image-size/before/update-image-size.css'))
-        editor = workspaceView.getActiveView()
-        editSession = workspaceView.getActivePaneItem()
-        editSession.setCursorBufferPosition([0, 15])
-
-        updated = Fs.readFileSync(Path.join(__dirname, './fixtures/update-image-size/after/update-image-size.css'), "utf8")
-
-      it "updates the image via commands", ->
-        editor.trigger "emmet:update-image-size"
-        expect(editor.getText()).toBe updated
-
-      it "updates the image via keybindings", ->
-        editor.trigger keydownEvent('i', shiftKey: true, ctrlKey: true, target: editor[0])
-        expect(editor.getText()).toBe updated
+  # describe "emmet:update-image-size", ->
+  #   updated = null
+  #
+  #   describe "for HTML", ->
+  #     beforeEach ->
+  #       workspaceView.openSync(Path.join(__dirname, './fixtures/update-image-size/before/update-image-size.html'))
+  #       editorView = workspaceView.getActiveView()
+  #       editor = editorView.getEditor()
+  #       editSession = workspaceView.getActivePaneItem()
+  #       editSession.setCursorBufferPosition([0, 15])
+  #
+  #       updated = Fs.readFileSync(Path.join(__dirname, './fixtures/update-image-size/after/update-image-size.html'), "utf8")
+  #
+  #     it "updates the image via commands", ->
+  #       editorView.trigger "emmet:update-image-size"
+  #       expect(editor.getText()).toBe updated
+  #
+  #     it "updates the image via keybindings", ->
+  #       editorView.trigger keydownEvent('i', shiftKey: true, ctrlKey: true, target: editor[0])
+  #       expect(editor.getText()).toBe updated
+  #
+  #   describe "for CSS", ->
+  #     beforeEach ->
+  #       workspaceView.openSync(Path.join(__dirname, './fixtures/update-image-size/before/update-image-size.css'))
+  #       editorView = workspaceView.getActiveView()
+  #       editor = editorView.getEditor()
+  #       editSession = workspaceView.getActivePaneItem()
+  #       editSession.setCursorBufferPosition([0, 15])
+  #
+  #       updated = Fs.readFileSync(Path.join(__dirname, './fixtures/update-image-size/after/update-image-size.css'), "utf8")
+  #
+  #     it "updates the image via commands", ->
+  #       editorView.trigger "emmet:update-image-size"
+  #       expect(editor.getText()).toBe updated
+  #
+  #     it "updates the image via keybindings", ->
+  #       editorView.trigger keydownEvent('i', shiftKey: true, ctrlKey: true, target: editor[0])
+  #       expect(editor.getText()).toBe updated
 
   describe "emmet:update-tag", ->
     updated = null
@@ -632,14 +647,15 @@ describe "Emmet", ->
     describe "for HTML", ->
       beforeEach ->
         workspaceView.openSync(Path.join(__dirname, './fixtures/update-tag/before/update-tag.html'))
-        editor = workspaceView.getActiveView()
+        editorView = workspaceView.getActiveView()
+        editor = editorView.getEditor()
         editSession = workspaceView.getActivePaneItem()
         editSession.setCursorBufferPosition([0, 11])
 
         updated = Fs.readFileSync(Path.join(__dirname, './fixtures/update-tag/after/update-tag.html'), "utf8")
 
       it "updates the tag via commands", ->
-        editor.trigger "emmet:update-tag"
+        editorView.trigger "emmet:update-tag"
         prompt = atom.workspaceView.find(".emmet-prompt").view()
 
         prompt.miniEditor.insertText(".+c2[title=Hello]")
@@ -648,7 +664,7 @@ describe "Emmet", ->
         expect(editor.getText()).toBe updated
 
       it "updates the tag via keybindings", ->
-        editor.trigger keydownEvent('u', shiftKey: true, ctrlKey: true, target: editor[0])
+        editorView.trigger keydownEvent('u', shiftKey: true, ctrlKey: true, target: editor[0])
 
         prompt.miniEditor.insertText(".+c2[title=Hello]")
         prompt.trigger 'core:confirm'
@@ -662,14 +678,15 @@ describe "Emmet", ->
     describe "for HTML", ->
       beforeEach ->
         workspaceView.openSync(Path.join(__dirname, './fixtures/wrap-with-abbreviation/before/wrap-with-abbreviation.html'))
-        editor = workspaceView.getActiveView()
+        editorView = workspaceView.getActiveView()
+        editor = editorView.getEditor()
         editSession = workspaceView.getActivePaneItem()
         editSession.setCursorBufferPosition([1, 4])
 
         updated = Fs.readFileSync(Path.join(__dirname, './fixtures/wrap-with-abbreviation/after/wrap-with-abbreviation.html'), "utf8")
 
       it "wraps an abbreviation via commands", ->
-        editor.trigger "emmet:wrap-with-abbreviation"
+        editorView.trigger "emmet:wrap-with-abbreviation"
         prompt = atom.workspaceView.find(".emmet-prompt").view()
 
         prompt.miniEditor.setText(".wrapper>h1{Title}+.content")
@@ -678,7 +695,7 @@ describe "Emmet", ->
         expect(editor.getText()).toBe updated
 
       it "wraps an abbreviation via keybindings", ->
-        editor.trigger keydownEvent('a', shiftKey: true, metaKey: true, target: editor[0])
+        editorView.trigger keydownEvent('a', shiftKey: true, metaKey: true, target: editor[0])
         prompt = atom.workspaceView.find(".emmet-prompt").view()
 
         prompt.miniEditor.setText(".wrapper>h1{Title}+.content")
@@ -692,16 +709,17 @@ describe "Emmet", ->
     describe "for HTML", ->
       beforeEach ->
         workspaceView.openSync(Path.join(__dirname, './fixtures/merge-lines/before/merge-lines.html'))
-        editor = workspaceView.getActiveView()
+        editorView = workspaceView.getActiveView()
+        editor = editorView.getEditor()
         editSession = workspaceView.getActivePaneItem()
         editSession.setCursorBufferPosition([3, 5])
 
         updated = Fs.readFileSync(Path.join(__dirname, './fixtures/merge-lines/after/merge-lines.html'), "utf8")
 
       it "performs merge lines via commands", ->
-        editor.trigger "emmet:merge-lines"
+        editorView.trigger "emmet:merge-lines"
         expect(editor.getText()).toBe updated
 
       it "performs merge lines via keybindings", ->
-        editor.trigger keydownEvent('M', shiftKey: true, metaKey: true, target: editor[0])
+        editorView.trigger keydownEvent('M', shiftKey: true, metaKey: true, target: editor[0])
         expect(editor.getText()).toBe updated

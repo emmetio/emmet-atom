@@ -7,7 +7,7 @@
   'ctrl-alt-,': 'emmet:prev-edit-point'
   # 'command+/': 'emmet:toggle_comment' # already exists in Atom
   'cmd-J': 'emmet:split-join-tag'
-  'cmd-\'': 'emmet:remove-tag'
+  "cmd-'": 'emmet:remove-tag'
   'cmd-Y': 'emmet:evaluate-math-expression'
   'ctrl-shift-up': 'emmet:increment-number-by-1'
   'ctrl-shift-down': 'emmet:decrement-number-by-1'
@@ -19,8 +19,8 @@
   'alt-cmd-,': 'emmet:select-previous-item'
   'cmd-R': 'emmet:reflect-css-value'
   'tab': 'emmet:expand-abbreviation-with-tab'
-  'ctrl-I': 'emmet:update-image-size'
-  'ctrl-D': 'emmet:encode-decode-data-url'
+  # 'ctrl-I': 'emmet:update-image-size' # doesn't seem to work in beta v1.1
+  # 'ctrl-D': 'emmet:encode-decode-data-url' # doesn't seem to work in beta v1.1
   'ctrl-U': 'emmet:update-tag'
   'cmd-M': 'emmet:merge-lines'
   'cmd-A': 'emmet:wrap-with-abbreviation'
