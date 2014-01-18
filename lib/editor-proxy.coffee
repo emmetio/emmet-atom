@@ -8,18 +8,18 @@ Dialog = require './dialog'
 
 module.exports =
   setupContext: (@editorView) ->
-    @indentation = @editorView.editor.getTabText()
-    resources.setVariable("indentation", @indentation)
+    @indentation = @editorView.getEditor().getTabText()
+    emmet.require("resources").setVariable("indentation", @indentation)
     @syntax = @getSyntax()
 
   # Fetches the character indexes of the selected text.
   #
   # Returns an {Object} with `start` and `end` properties.
   getSelectionRange: ->
-    range = @editorView.getSelection().getBufferRange()
+    range = @editorView.getEditor().getSelection().getBufferRange()
     return {
-      start: @editorView.editor.getBuffer().characterIndexForPosition(range.start),
-      end: @editorView.editor.getBuffer().characterIndexForPosition(range.end)
+      start: @editorView.getEditor().getBuffer().characterIndexForPosition(range.start),
+      end: @editorView.getEditor().getBuffer().characterIndexForPosition(range.end)
     }
 
   # Creates a selection from the `start` to `end` character indexes.
@@ -29,17 +29,17 @@ module.exports =
   # start - A {Number} representing the starting character index
   # end - A {Number} representing the ending character index
   createSelection: (start, end) ->
-    @editorView.getSelection().setBufferRange
-      start: @editorView.editor.getBuffer().positionForCharacterIndex(start)
-      end: @editorView.editor.getBuffer().positionForCharacterIndex(end)
+    @editorView.getEditor().getSelection().setBufferRange
+      start: @editorView.getEditor().getBuffer().positionForCharacterIndex(start)
+      end: @editorView.getEditor().getBuffer().positionForCharacterIndex(end)
 
   # Fetches the current line's start and end indexes.
   #
   # Returns an {Object} with `start` and `end` properties
   getCurrentLineRange: ->
-    row = @editorView.getCursor().getBufferRow()
-    lineLength = @editorView.lineLengthForBufferRow(row)
-    index = @editorView.editor.getBuffer().characterIndexForPosition({row: row, column: 0})
+    row = @editorView.getEditor().getCursor().getBufferRow()
+    lineLength = @editorView.getEditor().lineLengthForBufferRow(row)
+    index = @editorView.getEditor().getBuffer().characterIndexForPosition({row: row, column: 0})
     return {
       start: index,
       end: index + lineLength
@@ -47,20 +47,20 @@ module.exports =
 
   # Returns the current caret position.
   getCaretPos: ->
-    row = @editorView.getCursor().getBufferRow()
-    column = @editorView.getCursor().getBufferColumn()
-    return @editorView.editor.getBuffer().characterIndexForPosition( {row: row, column: column} )
+    row = @editorView.getEditor().getCursor().getBufferRow()
+    column = @editorView.getEditor().getCursor().getBufferColumn()
+    return @editorView.getEditor().getBuffer().characterIndexForPosition( {row: row, column: column} )
 
   # Sets the current caret position.
   setCaretPos: (index) ->
-    pos = @editorView.editor.getBuffer().positionForCharacterIndex(index)
-    @editorView.editor.getSelection().clear()
-    @editorView.setCursorBufferPosition pos
+    pos = @editorView.getEditor().getBuffer().positionForCharacterIndex(index)
+    @editorView.getEditor().getSelection().clear()
+    @editorView.getEditor().setCursorBufferPosition pos
 
   # Returns the current line.
   getCurrentLine: ->
-    row = @editorView.getCursor().getBufferRow()
-    return @editorView.editor.lineForBufferRow(row)
+    row = @editorView.getEditor().getCursor().getBufferRow()
+    return @editorView.getEditor().lineForBufferRow(row)
 
   # Replace the editor's content (or part of it, if using `start` to
   # `end` index).
@@ -105,24 +105,26 @@ module.exports =
         start: value.length + start
         end: value.length + start
 
-    range = @editorView.getSelection().getBufferRange()
-    range.start = Point.fromObject(@editorView.editor.getBuffer().positionForCharacterIndex(start))
-    range.end = Point.fromObject(@editorView.editor.getBuffer().positionForCharacterIndex(end))
+    range = @editorView.getEditor().getSelection().getBufferRange()
+    changeRange = [
+      Point.fromObject(@editorView.getEditor().getBuffer().positionForCharacterIndex(start))
+      Point.fromObject(@editorView.getEditor().getBuffer().positionForCharacterIndex(end))
+    ]
 
-    @editorView.editor.getBuffer().change(range, value)
+    @editorView.getEditor().getBuffer().change(changeRange, value)
 
-    range.start = Point.fromObject(@editorView.editor.getBuffer().positionForCharacterIndex(firstTabStop.start))
-    range.end = Point.fromObject(@editorView.editor.getBuffer().positionForCharacterIndex(firstTabStop.end))
+    range.start = Point.fromObject(@editorView.getEditor().getBuffer().positionForCharacterIndex(firstTabStop.start))
+    range.end = Point.fromObject(@editorView.getEditor().getBuffer().positionForCharacterIndex(firstTabStop.end))
 
-    @editorView.getSelection().setBufferRange(range)
+    @editorView.getEditor().getSelection().setBufferRange(range)
 
   # Returns the editor content.
   getContent: ->
-    return @editorView.getText()
+    return @editorView.getEditor().getText()
 
   # Returns the editor's syntax mode.
   getSyntax: ->
-    grammar = @editorView.editor.getGrammar().name.toLowerCase()
+    grammar = @editorView.getEditor().getGrammar().name.toLowerCase()
     if /\b(less|scss|sass|css|stylus)\b/.test(grammar)
       return "css"
     else if /\b(html|xml|haml|slim)\b/.test(grammar)
@@ -134,16 +136,16 @@ module.exports =
   #
   # See emmet.setupProfile for more information.
   getProfileName: ->
-    return @editorView.editor.getGrammar().name
+    return @editorView.getEditor().getGrammar().name
 
   # Returns the currently selected text.
   getSelection: ->
-    return @editorView.editor.getSelectedText()
+    return @editorView.getEditor().getSelectedText()
 
   # Returns the current editor's file path
   getFilePath: ->
     # is there a better way to get this?
-    return @editorView.editor.buffer.file.path
+    return @editorView.getEditor().buffer.file.path
 
   setSavedText: (text) ->
     @savedText = text

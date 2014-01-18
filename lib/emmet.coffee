@@ -36,7 +36,7 @@ module.exports =
                 syntax = editorProxy.getSyntax()
                 if syntax
                   emmetAction = @actionTranslation[action]
-                  if emmetAction == "expand_abbreviation_with_tab" && !editorView.getSelection().isEmpty()
+                  if emmetAction == "expand_abbreviation_with_tab" && !editorView.getEditor().getSelection().isEmpty()
                     e.abortKeyBinding()
                     return
                   else
