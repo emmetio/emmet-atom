@@ -9,7 +9,7 @@ Dialog = require './dialog'
 module.exports =
   setupContext: (@editorView) ->
     @indentation = @editorView.getEditor().getTabText()
-    emmet.require("resources").setVariable("indentation", @indentation)
+    resources.setVariable("indentation", @indentation)
     @syntax = @getSyntax()
 
   # Fetches the character indexes of the selected text.
