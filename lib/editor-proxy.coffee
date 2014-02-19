@@ -8,7 +8,8 @@ Dialog = require './dialog'
 
 module.exports =
   setupContext: (@editorView) ->
-    @indentation = @editorView.getEditor().getTabText()
+    @editor = @editorView.getEditor()
+    @indentation = @editor.getTabText()
     resources.setVariable("indentation", @indentation)
     @syntax = @getSyntax()
 
@@ -16,10 +17,10 @@ module.exports =
   #
   # Returns an {Object} with `start` and `end` properties.
   getSelectionRange: ->
-    range = @editorView.getEditor().getSelection().getBufferRange()
+    range = @editor.getSelection().getBufferRange()
     return {
-      start: @editorView.getEditor().getBuffer().characterIndexForPosition(range.start),
-      end: @editorView.getEditor().getBuffer().characterIndexForPosition(range.end)
+      start: @editor.getBuffer().characterIndexForPosition(range.start),
+      end: @editor.getBuffer().characterIndexForPosition(range.end)
     }
 
   # Creates a selection from the `start` to `end` character indexes.
@@ -29,17 +30,17 @@ module.exports =
   # start - A {Number} representing the starting character index
   # end - A {Number} representing the ending character index
   createSelection: (start, end) ->
-    @editorView.getEditor().getSelection().setBufferRange
-      start: @editorView.getEditor().getBuffer().positionForCharacterIndex(start)
-      end: @editorView.getEditor().getBuffer().positionForCharacterIndex(end)
+    @editor.getSelection().setBufferRange
+      start: @editor.getBuffer().positionForCharacterIndex(start)
+      end: @editor.getBuffer().positionForCharacterIndex(end)
 
   # Fetches the current line's start and end indexes.
   #
   # Returns an {Object} with `start` and `end` properties
   getCurrentLineRange: ->
-    row = @editorView.getEditor().getCursor().getBufferRow()
-    lineLength = @editorView.getEditor().lineLengthForBufferRow(row)
-    index = @editorView.getEditor().getBuffer().characterIndexForPosition({row: row, column: 0})
+    row = @editor.getCursor().getBufferRow()
+    lineLength = @editor.lineLengthForBufferRow(row)
+    index = @editor.getBuffer().characterIndexForPosition({row: row, column: 0})
     return {
       start: index,
       end: index + lineLength
@@ -47,20 +48,20 @@ module.exports =
 
   # Returns the current caret position.
   getCaretPos: ->
-    row = @editorView.getEditor().getCursor().getBufferRow()
-    column = @editorView.getEditor().getCursor().getBufferColumn()
-    return @editorView.getEditor().getBuffer().characterIndexForPosition( {row: row, column: column} )
+    row = @editor.getCursor().getBufferRow()
+    column = @editor.getCursor().getBufferColumn()
+    return @editor.getBuffer().characterIndexForPosition( {row: row, column: column} )
 
   # Sets the current caret position.
   setCaretPos: (index) ->
-    pos = @editorView.getEditor().getBuffer().positionForCharacterIndex(index)
-    @editorView.getEditor().getSelection().clear()
-    @editorView.getEditor().setCursorBufferPosition pos
+    pos = @editor.getBuffer().positionForCharacterIndex(index)
+    @editor.getSelection().clear()
+    @editor.setCursorBufferPosition pos
 
   # Returns the current line.
   getCurrentLine: ->
-    row = @editorView.getEditor().getCursor().getBufferRow()
-    return @editorView.getEditor().lineForBufferRow(row)
+    row = @editor.getCursor().getBufferRow()
+    return @editor.lineForBufferRow(row)
 
   # Replace the editor's content (or part of it, if using `start` to
   # `end` index).
@@ -97,6 +98,7 @@ module.exports =
     value = tabstopData.text.replace(/\t/g, @editorView.editor.getTabText())
     firstTabStop = tabstopData.tabstops[0]
 
+    debugger
     if firstTabStop
       firstTabStop.start += start
       firstTabStop.end += start
@@ -105,26 +107,28 @@ module.exports =
         start: value.length + start
         end: value.length + start
 
-    range = @editorView.getEditor().getSelection().getBufferRange()
+    range = @editor.getSelection().getBufferRange()
     changeRange = [
-      Point.fromObject(@editorView.getEditor().getBuffer().positionForCharacterIndex(start))
-      Point.fromObject(@editorView.getEditor().getBuffer().positionForCharacterIndex(end))
+      Point.fromObject(@editor.getBuffer().positionForCharacterIndex(start))
+      Point.fromObject(@editor.getBuffer().positionForCharacterIndex(end))
     ]
 
-    @editorView.getEditor().getBuffer().change(changeRange, value)
+    @editor.getBuffer().change(changeRange, value)
 
-    range.start = Point.fromObject(@editorView.getEditor().getBuffer().positionForCharacterIndex(firstTabStop.start))
-    range.end = Point.fromObject(@editorView.getEditor().getBuffer().positionForCharacterIndex(firstTabStop.end))
+    range.start = Point.fromObject(@editor.getBuffer().positionForCharacterIndex(firstTabStop.start))
+    range.end = Point.fromObject(@editor.getBuffer().positionForCharacterIndex(firstTabStop.end))
 
-    @editorView.getEditor().getSelection().setBufferRange(range)
+    # passes the cursor along when tabbing normally
+    unless value == @editor.getTabText()
+      @editor.getSelection().setBufferRange(range)
 
   # Returns the editor content.
   getContent: ->
-    return @editorView.getEditor().getText()
+    return @editor.getText()
 
   # Returns the editor's syntax mode.
   getSyntax: ->
-    grammar = @editorView.getEditor().getGrammar().name.toLowerCase()
+    grammar = @editor.getGrammar().name.toLowerCase()
     if /\b(less|scss|sass|css|stylus)\b/.test(grammar)
       return "css"
     else if /\b(html|xml|haml|slim)\b/.test(grammar)
@@ -136,16 +140,16 @@ module.exports =
   #
   # See emmet.setupProfile for more information.
   getProfileName: ->
-    return @editorView.getEditor().getGrammar().name
+    return @editor.getGrammar().name
 
   # Returns the currently selected text.
   getSelection: ->
-    return @editorView.getEditor().getSelectedText()
+    return @editor.getSelectedText()
 
   # Returns the current editor's file path
   getFilePath: ->
     # is there a better way to get this?
-    return @editorView.getEditor().buffer.file.path
+    return @editor.buffer.file.path
 
   setSavedText: (text) ->
     @savedText = text
