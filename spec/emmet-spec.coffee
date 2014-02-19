@@ -20,6 +20,19 @@ describe "Emmet", ->
   afterEach ->
     editSession.destroy()
 
+  describe "tabbing", ->
+    beforeEach ->
+      workspaceView.openSync(Path.join(__dirname, './fixtures/tabbing.html'))
+      editorView = workspaceView.getActiveView()
+      editor = editorView.getEditor()
+      editSession = workspaceView.getActivePaneItem()
+      editor.setCursorScreenPosition([1, 4])
+
+    it "moves the cursor along", ->
+      editorView.trigger keydownEvent('tab', target: editorView[0])
+      cursorPos = editor.getCursorScreenPosition()
+      expect(cursorPos.column).toBe 6
+
   describe "emmet:expand-abbreviation", ->
     expansion = null
 
