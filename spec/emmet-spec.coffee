@@ -58,6 +58,34 @@ describe "Emmet", ->
         editorView.trigger keydownEvent('tab', target: editor[0])
         expect(editor.getText()).toBe expansion
 
+    describe "for HTML with attributes", ->
+      beforeEach ->
+        workspaceView.openSync(Path.join(__dirname, './fixtures/abbreviation/before/anchor-class-expand.html'))
+        editorView = workspaceView.getActiveView()
+        editor = editorView.getEditor()
+        editSession = workspaceView.getActivePaneItem()
+        editSession.moveCursorToEndOfLine()
+
+        expansion = Fs.readFileSync(Path.join(__dirname, './fixtures/abbreviation/after/anchor-class-expand.html'), "utf8")
+
+      it "expands HTML abbreviations via commands", ->
+        editorView.trigger "emmet:expand-abbreviation"
+        expect(editorView.getText()).toBe expansion
+        cursorPos = editor.getCursorScreenPosition()
+        expect(cursorPos.column).toBe 9
+
+      it "expands HTML abbreviations via keybindings", ->
+        editorView.trigger keydownEvent('e', shiftKey: true, metaKey: true, target: editor[0])
+        expect(editor.getText()).toBe expansion
+        cursorPos = editor.getCursorScreenPosition()
+        expect(cursorPos.column).toBe 9
+
+      it "expands HTML abbreviations via Tab", ->
+        editorView.trigger keydownEvent('tab', target: editor[0])
+        expect(editor.getText()).toBe expansion
+        cursorPos = editor.getCursorScreenPosition()
+        expect(cursorPos.column).toBe 9
+
     # headers seem to be a special case: http://git.io/7XeBKQ
     describe "for headers in HTML", ->
       beforeEach ->
