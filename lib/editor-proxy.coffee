@@ -98,7 +98,6 @@ module.exports =
     value = tabstopData.text.replace(/\t/g, @editorView.editor.getTabText())
     firstTabStop = tabstopData.tabstops[0]
 
-    debugger
     if firstTabStop
       firstTabStop.start += start
       firstTabStop.end += start
@@ -107,7 +106,6 @@ module.exports =
         start: value.length + start
         end: value.length + start
 
-    range = @editor.getSelection().getBufferRange()
     changeRange = [
       Point.fromObject(@editor.getBuffer().positionForCharacterIndex(start))
       Point.fromObject(@editor.getBuffer().positionForCharacterIndex(end))
@@ -115,12 +113,14 @@ module.exports =
 
     @editor.getBuffer().change(changeRange, value)
 
-    range.start = Point.fromObject(@editor.getBuffer().positionForCharacterIndex(firstTabStop.start))
-    range.end = Point.fromObject(@editor.getBuffer().positionForCharacterIndex(firstTabStop.end))
+    # handles where to place the cursor after the replacement
+    cursorRange = {}
+    cursorRange.start = Point.fromObject(@editor.getBuffer().positionForCharacterIndex(firstTabStop.start))
+    cursorRange.end = Point.fromObject(@editor.getBuffer().positionForCharacterIndex(firstTabStop.end))
 
     # passes the cursor along when tabbing normally
     unless value == @editor.getTabText()
-      @editor.getSelection().setBufferRange(range)
+      @editor.getSelection().setBufferRange(cursorRange)
 
   # Returns the editor content.
   getContent: ->
