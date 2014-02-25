@@ -1,6 +1,8 @@
+# Emmet package
+
 [Emmet](http://emmet.io) support for Atom.
 
-# How to get it
+## How to get it
 
 ```bash
 apm install emmet
@@ -13,14 +15,14 @@ cd ~/.atom/packages
 git clone https://github.com/atom/emmet
 ```
 
-# What's working?
+## What's working?
 
-Almost everything! 
+Almost everything!
 
 Anything requiring a dialog isn't working. There's no support
 (yet) for [_snippets.json_](http://docs.emmet.io/customization/snippets/) and [_preferences.json_](http://docs.emmet.io/customization/preferences/).
 
-# Default Keybindings
+## Default Keybindings
 
 You can change these by simply making up your own keybindings in _keymaps/emmet.cson_.
 
