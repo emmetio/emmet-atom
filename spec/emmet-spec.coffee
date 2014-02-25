@@ -9,13 +9,21 @@ describe "Emmet", ->
     atom.workspaceView = new WorkspaceView
     workspaceView = atom.workspaceView
 
-    atom.packages.activatePackage("emmet")
-    atom.packages.activatePackage("snippets") # to intentionally disrupt tab expansion
-    atom.packages.activatePackage('language-css', sync: true)
-    atom.packages.activatePackage('language-html', sync: true)
+    waitsForPromise ->
+      atom.packages.activatePackage("emmet")
 
-    workspaceView.simulateDomAttachment()
-    workspaceView.enableKeymap()
+    waitsForPromise ->
+      atom.packages.activatePackage("snippets") # to intentionally disrupt tab expansion
+
+    waitsForPromise ->
+      atom.packages.activatePackage('language-css', sync: true)
+
+    waitsForPromise ->
+      atom.packages.activatePackage('language-html', sync: true)
+
+    runs ->
+      workspaceView.simulateDomAttachment()
+      workspaceView.enableKeymap()
 
   afterEach ->
     editSession.destroy()
