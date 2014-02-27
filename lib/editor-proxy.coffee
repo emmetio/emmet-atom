@@ -1,9 +1,10 @@
 {Point} = require 'atom'
 
-emmet = require('../vendor/emmet-app').emmet
-utilsCommon = emmet.require('utils/common')
-tabStops = emmet.require('assets/tabStops')
-resources = emmet.require("assets/resources")
+emmet = require('emmet')
+utilsCommon = require('emmet/lib/utils/common')
+tabStops = require('emmet/lib/assets/tabStops')
+resources = require('emmet/lib/assets/resources')
+editorUtils = require('emmet/lib/utils/editor')
 Dialog = require './dialog'
 
 module.exports =
@@ -89,14 +90,19 @@ module.exports =
     unless noIndent
       value = utilsCommon.padString(value, utilsCommon.getLinePaddingFromPosition(@getContent(), start))
 
+    value = editorUtils.normalize(value, {
+      indentation: @editorView.editor.getTabText()
+    })
+
+    # TODO add support of tabstops, like in Snippets package
     # find new caret position
     tabstopData = tabStops.extract(value,
       escape: (ch) ->
         return ch
+      tabStop: () -> ''
     )
-    # emmet uses hardcoded \t for indents, with no optional override
-    value = tabstopData.text.replace(/\t/g, @editorView.editor.getTabText())
     firstTabStop = tabstopData.tabstops[0]
+    value = tabstopData.text
 
     if firstTabStop
       firstTabStop.start += start

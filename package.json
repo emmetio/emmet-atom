@@ -2,10 +2,11 @@
   "name": "emmet",
   "description": "Adds emmet snippet support",
   "main": "./lib/emmet",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "private": true,
   "dependencies": {
-    "season": "1.x"
+    "season": "1.x",
+    "emmet": "git://github.com/emmetio/emmet.git#umd"
   },
   "repository": "https://github.com/atom/emmet",
   "engines": {
