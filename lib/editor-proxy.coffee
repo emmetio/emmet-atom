@@ -1,4 +1,5 @@
 {Point} = require 'atom'
+path = require 'path'
 
 emmet = require('emmet')
 utilsCommon = require('emmet/lib/utils/common')
@@ -6,6 +7,43 @@ tabStops = require('emmet/lib/assets/tabStops')
 resources = require('emmet/lib/assets/resources')
 editorUtils = require('emmet/lib/utils/editor')
 Dialog = require './dialog'
+
+try
+  snippetsPath = atom.packages.resolvePackagePath('snippets')
+  snippets = require snippetsPath
+  Snippet = require path.join(snippetsPath, 'lib/snippet')
+  SnippetExpansion = require './snippet-expansion'
+catch e
+  console.error e
+
+# Proprocess text data that should be used as snippet content
+# Currently, Atom’s snippets implementation has the following issues: 
+# * supports $N or ${N:placeholder} notation, but not ${N}
+# * multiple $0 are not treated as distinct final tabstops
+preprocessSnippet = (value) ->
+  base = 1000
+  zeroBase = 0
+  lastZero = null
+
+  tabstopOptions =
+    tabstop: (data) ->
+      group = parseInt(data.group, 10)
+      if group is 0
+        group = ++zeroBase
+      else
+        group += base
+
+      placeholder = data.placeholder or ''
+      if placeholder
+        # recursively update nested tabstops
+        placeholder = tabStops.processText(placeholder, tabstopOptions)
+
+      if placeholder then "${#{group}:#{placeholder}" else "$#{group}"
+      
+    escape: (ch) ->
+      if ch == '$' then '\\$' else ch
+
+  tabStops.processText(value, tabstopOptions)
 
 module.exports =
   setupContext: (@editorView) ->
@@ -64,6 +102,17 @@ module.exports =
     row = @editor.getCursor().getBufferRow()
     return @editor.lineForBufferRow(row)
 
+  # Inserts given text as snippet into current position
+  insertAsSnippet: (text) ->
+    unless snippets?
+      return false
+
+    # Normalize tabstops before passing it to Snippets module.
+    text = preprocessSnippet(text)
+    bodyTree = snippets.getBodyParser().parse(text)
+    snippet = new Snippet({'__emmet', '', bodyTree, bodyText: text})
+    new SnippetExpansion(snippet, @editor)
+
   # Replace the editor's content (or part of it, if using `start` to
   # `end` index).
   #
@@ -94,11 +143,24 @@ module.exports =
       indentation: @editorView.editor.getTabText()
     })
 
-    # TODO add support of tabstops, like in Snippets package
+    changeRange = [
+      Point.fromObject(@editor.getBuffer().positionForCharacterIndex(start))
+      Point.fromObject(@editor.getBuffer().positionForCharacterIndex(end))
+    ]
+
+    # If there’s a snippets module, use it to generate
+    # proper tabstops in output
+    if snippets?
+      return @editor.transact =>
+        console.log changeRange
+        @editor.getBuffer().change(changeRange, '')
+        @setCaretPos start
+        @insertAsSnippet value
+
+    # XXX is it possible that Snippets module does not exists?
     # find new caret position
     tabstopData = tabStops.extract(value,
-      escape: (ch) ->
-        return ch
+      escape: (ch) -> ch
       tabStop: () -> ''
     )
     firstTabStop = tabstopData.tabstops[0]
@@ -111,11 +173,6 @@ module.exports =
       firstTabStop =
         start: value.length + start
         end: value.length + start
-
-    changeRange = [
-      Point.fromObject(@editor.getBuffer().positionForCharacterIndex(start))
-      Point.fromObject(@editor.getBuffer().positionForCharacterIndex(end))
-    ]
 
     @editor.getBuffer().change(changeRange, value)
 
