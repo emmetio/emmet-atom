@@ -128,13 +128,13 @@ module.exports =
 
   # Returns the editor's syntax mode.
   getSyntax: ->
-    grammar = @editor.getGrammar().name.toLowerCase()
-    if /\b(less|scss|sass|css|stylus)\b/.test(grammar)
-      return "css"
-    else if /\b(html|xml|haml|slim)\b/.test(grammar)
-      return "html"
-    else
-      return null
+    scopes = @editor.getCursorScopes()
+    for scope in scopes
+      if /^text\.html\./.test(scope)
+        return "html"
+      else if /^source\.css\./.test(scope)
+        return "css"
+    return null
 
   # Returns the current output profile name
   #
