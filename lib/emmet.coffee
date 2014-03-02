@@ -7,7 +7,7 @@ actions = emmet.require 'action/main'
 resources = emmet.require 'assets/resources'
 caniuse = emmet.require 'assets/caniuse'
 
-emmet.define('file', require('./file'));
+emmet.define('file', require('./file'))
 
 editorProxy = require './editor-proxy'
 
@@ -51,8 +51,8 @@ module.exports =
 
   # we must set these up here, so that the Node environment is loaded, and snippets work
   setupSnippets: ->
-    defaultSnippets = fs.readFileSync(path.join(__dirname, '../vendor/snippets.json'), {encoding: 'utf8'});
-    resources.setVocabulary(JSON.parse(defaultSnippets), 'system');
+    defaultSnippets = fs.readFileSync(path.join(__dirname, '../vendor/snippets.json'), {encoding: 'utf8'})
+    resources.setVocabulary(JSON.parse(defaultSnippets), 'system')
 
-    db = fs.readFileSync(path.join(__dirname, '../vendor/caniuse.json'), {encoding: 'utf8'});
+    db = fs.readFileSync(path.join(__dirname, '../vendor/caniuse.json'), {encoding: 'utf8'})
     caniuse.load(db)
