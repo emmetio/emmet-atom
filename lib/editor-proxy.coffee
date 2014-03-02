@@ -131,7 +131,7 @@ module.exports =
     grammar = @editor.getGrammar().name.toLowerCase()
     if /\b(less|scss|sass|css|stylus)\b/.test(grammar)
       return "css"
-    else if /\b(html|xml|haml|slim)\b/.test(grammar)
+    else if /\b(html|xml|haml|slim|hbs|php)\b/.test(grammar)
       return "html"
     else
       return null
