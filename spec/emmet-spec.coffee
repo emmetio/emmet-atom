@@ -139,6 +139,51 @@ describe "Emmet", ->
         editorView.trigger keydownEvent('tab', target: editor[0])
         expect(editor.getText()).toBe expansion
 
+    describe "for PHP", ->
+      beforeEach ->
+        workspaceView.openSync(Path.join(__dirname, './fixtures/abbreviation/before/php-test.php'))
+        editorView = workspaceView.getActiveView()
+        editor = editorView.getEditor()
+        editSession = workspaceView.getActivePaneItem()
+        editSession.setCursorBufferPosition([6, 5])
+
+        expansion = Fs.readFileSync(Path.join(__dirname, './fixtures/abbreviation/after/php-test.php'), "utf8")
+
+      it "expands abbreviations via commands", ->
+        editorView.trigger "emmet:expand-abbreviation"
+        expect(editor.getText()).toBe expansion
+
+      it "expands abbreviations via keybindings", ->
+        editorView.trigger keydownEvent('e', shiftKey: true, metaKey: true, target: editor[0])
+        expect(editor.getText()).toBe expansion
+
+      it "expands abbreviations via tab", ->
+        editorView.trigger keydownEvent('tab', target: editor[0])
+        expect(editor.getText()).toBe expansion
+
+    describe "for SASS", ->
+      beforeEach ->
+        workspaceView.openSync(Path.join(__dirname, './fixtures/abbreviation/before/sass-test.sass'))
+        editorView = workspaceView.getActiveView()
+        editor = editorView.getEditor()
+        editSession = workspaceView.getActivePaneItem()
+        editSession.setCursorBufferPosition([2, 5])
+
+        expansion = Fs.readFileSync(Path.join(__dirname, './fixtures/abbreviation/after/sass-test.sass'), "utf8")
+
+      it "expands abbreviations via commands", ->
+        editorView.trigger "emmet:expand-abbreviation"
+        expect(editor.getText()).toBe expansion
+
+      it "expands abbreviations via keybindings", ->
+        editorView.trigger keydownEvent('e', shiftKey: true, metaKey: true, target: editor[0])
+        expect(editor.getText()).toBe expansion
+
+      it "expands abbreviations via tab", ->
+        editorView.trigger keydownEvent('tab', target: editor[0])
+        expect(editor.getText()).toBe expansion
+
+
   describe "emmet:balance", ->
     beforeEach ->
       workspaceView.openSync(Path.join(__dirname, './fixtures/balance/sample.html'))
