@@ -130,11 +130,10 @@ module.exports =
   getSyntax: ->
     scopes = @editor.getCursorScopes()
     for scope in scopes
-      if /^text\.html\./.test(scope)
+      if /html/.test(scope)
         return "html"
-      else if /^source\.css\./.test(scope)
+      else if /css/.test(scope)
         return "css"
-    return null
 
   # Returns the current output profile name
   #
