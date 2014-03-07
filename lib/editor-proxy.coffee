@@ -130,8 +130,26 @@ module.exports =
   getSyntax: ->
     scopes = @editor.getCursorScopes()
     for scope in scopes
-      if /html/.test(scope)
+      # html & dialects
+      if /jade/.test(scope)
+        return "jade"
+      else if /haml/.test(scope)
+        return "haml"
+      else if /xsl/.test(scope)
+        return "xsl"
+      else if /xml/.test(scope)
+        return "xml"
+      else if /html/.test(scope)
         return "html"
+      # css & dialects
+      if /less/.test(scope)
+        return "less"
+      else if /scss/.test(scope)
+        return "scss"
+      else if /sass/.test(scope)
+        return "sass"
+      else if /stylus/.test(scope)
+        return "stylus"
       else if /css/.test(scope)
         return "css"
 
