@@ -1,3 +1,7 @@
+// NOTE: Reference loophole below are hacked in to make Emmet work in Atom
+// with the content security policy enabled.
+var loophole = require('loophole');
+
 (function (root, factory) {if (typeof define === 'function' && define.amd) {define(factory);} else {root.emmet = factory();}}(this, function () {
 /**
  * almond 0.2.6 Copyright (c) 2011-2012, The Dojo Foundation All Rights Reserved.
@@ -880,7 +884,7 @@ define("vendor/almond", function(){});
         Boolean = context.Boolean,
         Date = context.Date,
         Error = context.Error,
-        Function = context.Function,
+        Function = loophole.Function,
         Math = context.Math,
         Number = context.Number,
         Object = context.Object,
@@ -2027,7 +2031,7 @@ define("vendor/almond", function(){});
       data.firstArg = /^[^,]+/.exec(args)[0];
 
       // create the function factory
-      var factory = Function(
+      var factory = loophole.Function(
           'baseCreateCallback, errorClass, errorProto, hasOwnProperty, ' +
           'indicatorObject, isArguments, isArray, isString, keys, objectProto, ' +
           'objectTypes, nonEnumProps, stringClass, stringProto, toString',
@@ -15827,7 +15831,7 @@ define('action/evaluateMath',['require','exports','module','../utils/action','..
         expr = expr.replace(/([\d\.\-]+)\\([\d\.\-]+)/g, 'Math.round($1/$2)');
 
         try {
-          var result = utils.prettifyNumber(new Function('return ' + expr)());
+          var result = utils.prettifyNumber(new loophole.Function('return ' + expr)());
           editor.replaceContent(result, sel.start, sel.end);
           editor.setCaretPos(sel.start + result.length);
           return true;
