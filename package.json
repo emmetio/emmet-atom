@@ -2,7 +2,7 @@
   "name": "emmet",
   "description": "Adds emmet snippet support",
   "main": "./lib/emmet",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "private": true,
   "dependencies": {
     "loophole": "^1.0.0",
