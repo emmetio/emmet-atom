@@ -3,6 +3,7 @@ path = require 'path'
 
 emmet = require 'emmet'
 editorProxy = require './editor-proxy'
+ContextPanelView = require './context-panel'
 
 module.exports =
   editorSubscription: null
@@ -21,6 +22,11 @@ module.exports =
         for action, emmetAction of @actionTranslation
           do (action) =>
               editorView.command action, (e) =>
+                if emmetAction is 'show_panel'
+                  panel = new ContextPanelView(editorView)
+                  console.log 'Show panel', panel
+                  return
+
                 # a better way to do this might be to manage the editorProxies
                 # right now we are setting up the proxy each time
                 editorProxy.setupContext(editorView)

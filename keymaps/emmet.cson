@@ -24,3 +24,4 @@
   'ctrl-U': 'emmet:update-tag'
   'cmd-M': 'emmet:merge-lines'
   'cmd-A': 'emmet:wrap-with-abbreviation'
+  'f1': 'emmet:show-panel'
