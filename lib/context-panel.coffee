@@ -7,12 +7,12 @@ class ContextPanelView extends View
 	@content: ->
 		@div class: 'emmet-panel mini', =>
 			@subview 'panelEditor', new EditorView(mini: true)
+			@div class: 'emmet-panel-tail'
 
 	initialize: (@editorView, @options={}) ->
-		console.log 'Context panel inited'
 		@editor = @editorView.getEditor()
 		@panelEditor.setPlaceholderText 'Enter Abbreviation'
-		# @panelEditor.setFontSize 10
+		@panelEditor.setFontSize 11
 		@panelEditor.on 'textInput', =>
 			console.log 'Text input', @editor.getText()
 		# @panelEditor.hiddenInput.on 'focusout', => @detach() unless @detaching
@@ -62,8 +62,8 @@ class ContextPanelView extends View
 		
 		# align panel with selection start
 		@css({
-			top: viewRect.top + selPixelPos.top - @height() - 5
-			left: viewRect.left + selPixelPos.left - 5
+			top: viewRect.top + selPixelPos.top - @height() - 15
+			left: viewRect.left + selPixelPos.left - 15
 		})
 		
 		@panelEditor.focus()

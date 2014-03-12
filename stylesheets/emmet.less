@@ -1,28 +1,32 @@
 @import 'ui-variables';
 
-.emmet {
-	&-panel {
+.emmet-panel {
+	position: absolute;
+	z-index: 10;
+	background: @pane-item-background-color;
+	color: @text-color;
+	padding: 5px;
+	min-width: 200px;
+	font-size: 12px;
+	-webkit-box-shadow: 0 0 20px rgba(0, 0, 0, .5);
+	box-shadow: 0 0 20px rgba(0, 0, 0, .5);
+	
+	&-tail {
 		position: absolute;
-		z-index: 10;
-		background: @pane-item-background-color;
-		color: @text-color;
-		padding: 5px;
-		min-width: 200px;
-		-webkit-box-shadow: 0 0 20px rgba(0, 0, 0, .5);
-		box-shadow: 0 0 20px rgba(0, 0, 0, .5);
-	}
-
-	&:after {
-		position: absolute;
-		left: 10px;
-		margin-top: -10px;
-		width: 20px;
-		height: 20px;
+		left: 8px;
+		margin-top: -6px;
+		width: 15px;
+		height: 15px;
 		content: '';
 		display: inline-block;
+		background: inherit;
+		z-index: -1;
 		-webkit-transform: rotate(45deg);
-		-ms-transform: rotate(45deg);
-		-o-transform: rotate(45deg);
 		transform: rotate(45deg);
+	}
+
+	.editor.mini {
+		z-index: 1;
+		line-height: 16px;
 	}
 }

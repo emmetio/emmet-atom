@@ -24,7 +24,6 @@ module.exports =
               editorView.command action, (e) =>
                 if emmetAction is 'show_panel'
                   panel = new ContextPanelView(editorView)
-                  console.log 'Show panel', panel
                   return
 
                 # a better way to do this might be to manage the editorProxies
