@@ -19,6 +19,9 @@ describe "Emmet", ->
       atom.packages.activatePackage('language-css', sync: true)
 
     waitsForPromise ->
+      atom.packages.activatePackage('language-sass', sync: true)
+
+    waitsForPromise ->
       atom.packages.activatePackage('language-html', sync: true)
 
     runs ->
@@ -167,7 +170,7 @@ describe "Emmet", ->
         editorView = workspaceView.getActiveView()
         editor = editorView.getEditor()
         editSession = workspaceView.getActivePaneItem()
-        editSession.setCursorBufferPosition([2, 5])
+        editSession.moveCursorToEndOfLine()
 
         expansion = Fs.readFileSync(Path.join(__dirname, './fixtures/abbreviation/after/sass-test.sass'), "utf8")
 
