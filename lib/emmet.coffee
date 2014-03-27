@@ -32,18 +32,21 @@ module.exports =
               editorView.command action, (e) =>
                 # a better way to do this might be to manage the editorProxies
                 # right now we are setting up the proxy each time
-                editorProxy.setupContext(editorView)
-                syntax = editorProxy.getSyntax()
-                if syntax
-                  emmetAction = @actionTranslation[action]
-                  if emmetAction == "expand_abbreviation_with_tab" && !editorView.getEditor().getSelection().isEmpty()
+                editor = editorView.getEditor()
+                cursorNum = 0
+                for cursor in editor.getCursors()
+                  editorProxy.setupContext(editorView, cursor, cursorNum++)
+                  syntax = editorProxy.getSyntax()
+                  if syntax
+                    emmetAction = @actionTranslation[action]
+                    if emmetAction == "expand_abbreviation_with_tab" && !editor.getSelection().isEmpty()
+                      e.abortKeyBinding()
+                      return
+                    else
+                      actions.run(emmetAction, editorProxy)
+                  else
                     e.abortKeyBinding()
                     return
-                  else
-                    actions.run(emmetAction, editorProxy)
-                else
-                  e.abortKeyBinding()
-                  return
   deactivate: ->
     @editorViewSubscription?.off()
     @editorViewSubscription = null

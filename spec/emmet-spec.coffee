@@ -212,6 +212,30 @@ describe "Emmet", ->
         editorView.trigger keydownEvent('tab', target: editor[0])
         expect(editor.getText()).toBe expansion
 
+    describe "for multiple cursors", ->
+      beforeEach ->
+        workspaceView.openSync(Path.join(__dirname, './fixtures/abbreviation/before/multi-line.html'))
+        editorView = workspaceView.getActiveView()
+        editor = editorView.getEditor()
+        editSession = workspaceView.getActivePaneItem()
+
+        editor.addCursorAtBufferPosition([0, 9])
+        editor.addCursorAtBufferPosition([1, 9])
+        editor.addCursorAtBufferPosition([2, 9])
+
+        expansion = Fs.readFileSync(Path.join(__dirname, './fixtures/abbreviation/after/multi-line.html'), "utf8")
+
+      it "expands HTML abbreviations via commands", ->
+        editorView.trigger "emmet:expand-abbreviation"
+        expect(editorView.getText()).toBe expansion
+
+      # it "expands HTML abbreviations via keybindings", ->
+      #   editorView.trigger keydownEvent('e', shiftKey: true, metaKey: true, target: editor[0])
+      #   expect(editor.getText()).toBe expansion
+      #
+      # it "expands HTML abbreviations via Tab", ->
+      #   editorView.trigger keydownEvent('tab', target: editor[0])
+      #   expect(editor.getText()).toBe expansion
 
   describe "emmet:balance", ->
     beforeEach ->
