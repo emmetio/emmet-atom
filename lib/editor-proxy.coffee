@@ -139,6 +139,8 @@ module.exports =
         return "xsl"
       else if /xml/.test(scope)
         return "xml"
+      else if /php/.test(scope)
+        return "php"
       else if /html/.test(scope)
         return "html"
       # css & dialects

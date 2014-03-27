@@ -22,6 +22,9 @@ describe "Emmet", ->
       atom.packages.activatePackage('language-sass', sync: true)
 
     waitsForPromise ->
+      atom.packages.activatePackage('language-php', sync: true)
+
+    waitsForPromise ->
       atom.packages.activatePackage('language-html', sync: true)
 
     runs ->
@@ -143,26 +146,49 @@ describe "Emmet", ->
         expect(editor.getText()).toBe expansion
 
     describe "for PHP", ->
-      beforeEach ->
-        workspaceView.openSync(Path.join(__dirname, './fixtures/abbreviation/before/php-test.php'))
-        editorView = workspaceView.getActiveView()
-        editor = editorView.getEditor()
-        editSession = workspaceView.getActivePaneItem()
-        editSession.setCursorBufferPosition([6, 5])
+      describe "for PHP with HTML", ->
+        beforeEach ->
+          workspaceView.openSync(Path.join(__dirname, './fixtures/abbreviation/before/php-in-html.php'))
+          editorView = workspaceView.getActiveView()
+          editor = editorView.getEditor()
+          editSession = workspaceView.getActivePaneItem()
+          editSession.setCursorBufferPosition([6, 5])
 
-        expansion = Fs.readFileSync(Path.join(__dirname, './fixtures/abbreviation/after/php-test.php'), "utf8")
+          expansion = Fs.readFileSync(Path.join(__dirname, './fixtures/abbreviation/after/php-in-html.php'), "utf8")
 
-      it "expands abbreviations via commands", ->
-        editorView.trigger "emmet:expand-abbreviation"
-        expect(editor.getText()).toBe expansion
+        it "expands abbreviations via commands", ->
+          editorView.trigger "emmet:expand-abbreviation"
+          expect(editor.getText()).toBe expansion
 
-      it "expands abbreviations via keybindings", ->
-        editorView.trigger keydownEvent('e', shiftKey: true, metaKey: true, target: editor[0])
-        expect(editor.getText()).toBe expansion
+        it "expands abbreviations via keybindings", ->
+          editorView.trigger keydownEvent('e', shiftKey: true, metaKey: true, target: editor[0])
+          expect(editor.getText()).toBe expansion
 
-      it "expands abbreviations via tab", ->
-        editorView.trigger keydownEvent('tab', target: editor[0])
-        expect(editor.getText()).toBe expansion
+        it "expands abbreviations via tab", ->
+          editorView.trigger keydownEvent('tab', target: editor[0])
+          expect(editor.getText()).toBe expansion
+
+      # fdescribe "for vanilla PHP", ->
+      #   beforeEach ->
+      #     workspaceView.openSync(Path.join(__dirname, './fixtures/abbreviation/before/vanilla-php.php'))
+      #     editorView = workspaceView.getActiveView()
+      #     editor = editorView.getEditor()
+      #     editSession = workspaceView.getActivePaneItem()
+      #     editSession.setCursorBufferPosition([1, 3])
+      #
+      #     expansion = Fs.readFileSync(Path.join(__dirname, './fixtures/abbreviation/after/vanilla-php.php'), "utf8")
+      #
+      #   it "expands abbreviations via commands", ->
+      #     editorView.trigger "emmet:expand-abbreviation"
+      #     expect(editor.getText()).toBe expansion
+      #
+      #   it "expands abbreviations via keybindings", ->
+      #     editorView.trigger keydownEvent('e', shiftKey: true, metaKey: true, target: editor[0])
+      #     expect(editor.getText()).toBe expansion
+      #
+      #   it "expands abbreviations via tab", ->
+      #     editorView.trigger keydownEvent('tab', target: editor[0])
+      #     expect(editor.getText()).toBe expansion
 
     describe "for SASS", ->
       beforeEach ->
