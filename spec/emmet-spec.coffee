@@ -456,12 +456,12 @@ describe "Emmet", ->
           expect(editor.lineForBufferRow(1)).toMatch(/2\.1/)
 
          it "increments via keybindings", ->
-          editorView.trigger "emmet:increment-number-by-01"
-          editorView.trigger "emmet:increment-number-by-01"
-          editorView.trigger keydownEvent('up', shiftKey: true, altKey: true, target: editor[0])
-          editorView.trigger "emmet:increment-number-by-01"
-          editorView.trigger "emmet:increment-number-by-01"
-          editorView.trigger keydownEvent('up', shiftKey: true, altKey: true, target: editor[0])
+          editorView.trigger keydownEvent('up', ctrlKey: true, altKey: true, target: editor[0])
+          editorView.trigger keydownEvent('up', ctrlKey: true, altKey: true, target: editor[0])
+          expect(editor.lineForBufferRow(1)).toMatch(/1\.9/)
+          editorView.trigger keydownEvent('up', ctrlKey: true, altKey: true, target: editor[0])
+          editorView.trigger keydownEvent('up', ctrlKey: true, altKey: true, target: editor[0])
+          expect(editor.lineForBufferRow(1)).toMatch(/2\.1/)
 
       describe "increment by 1", ->
         beforeEach ->
@@ -476,11 +476,11 @@ describe "Emmet", ->
          expect(editor.lineForBufferRow(2)).toMatch(/25/)
 
         it "increments via keybindings", ->
-         editorView.trigger keydownEvent('up', shiftKey: true, ctrlKey: true, target: editor[0])
-         editorView.trigger keydownEvent('up', shiftKey: true, ctrlKey: true, target: editor[0])
+         editorView.trigger keydownEvent('up', ctrlKey: true, altKey: true, metaKey:true, target: editor[0])
+         editorView.trigger keydownEvent('up', ctrlKey: true, altKey: true, metaKey:true, target: editor[0])
          expect(editor.lineForBufferRow(2)).toMatch(/12/)
          for i in [0..12] by 1
-           editorView.trigger keydownEvent('up', shiftKey: true, ctrlKey: true, target: editor[0])
+           editorView.trigger keydownEvent('up', ctrlKey: true, altKey: true, metaKey:true, target: editor[0])
          expect(editor.lineForBufferRow(2)).toMatch(/25/)
 
       describe "increment by 10", ->
@@ -493,8 +493,8 @@ describe "Emmet", ->
          expect(editor.lineForBufferRow(3)).toMatch(/120/)
 
         it "increments via keybindings", ->
-         editorView.trigger keydownEvent('up', altKey: true, ctrlKey: true, target: editor[0])
-         editorView.trigger keydownEvent('up', altKey: true, ctrlKey: true, target: editor[0])
+         editorView.trigger keydownEvent('up', ctrlKey: true, altKey: true, metaKey: true, shiftKey: true, target: editor[0])
+         editorView.trigger keydownEvent('up', ctrlKey: true, altKey: true, metaKey: true, shiftKey: true, target: editor[0])
          expect(editor.lineForBufferRow(3)).toMatch(/120/)
 
      describe "for decrementing", ->
@@ -511,11 +511,11 @@ describe "Emmet", ->
           expect(editor.lineForBufferRow(1)).toMatch(/\-0\.6/)
 
          it "decrements via keybindings", ->
-          editorView.trigger keydownEvent('down', shiftKey: true, altKey: true, target: editor[0])
-          editorView.trigger keydownEvent('down', shiftKey: true, altKey: true, target: editor[0])
+          editorView.trigger keydownEvent('down', ctrlKey: true, altKey: true, target: editor[0])
+          editorView.trigger keydownEvent('down', ctrlKey: true, altKey: true, target: editor[0])
           expect(editor.lineForBufferRow(1)).toMatch(/1\.5/)
           for i in [0..20] by 1
-            editorView.trigger keydownEvent('down', shiftKey: true, altKey: true, target: editor[0])
+            editorView.trigger keydownEvent('down', ctrlKey: true, altKey: true, target: editor[0])
           expect(editor.lineForBufferRow(1)).toMatch(/\-0\.6/)
 
       describe "decrement by 1", ->
@@ -531,11 +531,11 @@ describe "Emmet", ->
          expect(editor.lineForBufferRow(2)).toMatch(/\-5/)
 
         it "decrements via keybindings", ->
-         editorView.trigger keydownEvent('down', shiftKey: true, ctrlKey: true, target: editor[0])
-         editorView.trigger keydownEvent('down', shiftKey: true, ctrlKey: true, target: editor[0])
+         editorView.trigger keydownEvent('down', ctrlKey: true, altKey: true, metaKey:true, target: editor[0])
+         editorView.trigger keydownEvent('down', ctrlKey: true, altKey: true, metaKey:true, target: editor[0])
          expect(editor.lineForBufferRow(2)).toMatch(/8/)
          for i in [0..12] by 1
-          editorView.trigger keydownEvent('down', shiftKey: true, ctrlKey: true, target: editor[0])
+          editorView.trigger keydownEvent('down', ctrlKey: true, altKey: true, metaKey:true, target: editor[0])
          expect(editor.lineForBufferRow(2)).toMatch(/\-5/)
 
       describe "decrement by 10", ->
@@ -548,8 +548,8 @@ describe "Emmet", ->
          expect(editor.lineForBufferRow(3)).toMatch(/80/)
 
         it "decrements via keybindings", ->
-         editorView.trigger keydownEvent('down', altKey: true, ctrlKey: true, target: editor[0])
-         editorView.trigger keydownEvent('down', altKey: true, ctrlKey: true, target: editor[0])
+         editorView.trigger keydownEvent('down', ctrlKey: true, altKey: true, metaKey: true, shiftKey: true, target: editor[0])
+         editorView.trigger keydownEvent('down', ctrlKey: true, altKey: true, metaKey: true, shiftKey: true, target: editor[0])
          expect(editor.lineForBufferRow(3)).toMatch(/80/)
 
   describe "emmet select items", ->
