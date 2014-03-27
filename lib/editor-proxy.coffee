@@ -7,7 +7,7 @@ resources = emmet.require("assets/resources")
 Dialog = require './dialog'
 
 module.exports =
-  setupContext: (@editorView) ->
+  setupContext: (@editorView, @cursor, @cursorNum) ->
     @editor = @editorView.getEditor()
     @indentation = @editor.getTabText()
     resources.setVariable("indentation", @indentation)
@@ -17,7 +17,7 @@ module.exports =
   #
   # Returns an {Object} with `start` and `end` properties.
   getSelectionRange: ->
-    range = @editor.getSelection().getBufferRange()
+    range = @editor.getSelection(@cursorNum).getBufferRange()
     return {
       start: @editor.getBuffer().characterIndexForPosition(range.start),
       end: @editor.getBuffer().characterIndexForPosition(range.end)
@@ -30,7 +30,7 @@ module.exports =
   # start - A {Number} representing the starting character index
   # end - A {Number} representing the ending character index
   createSelection: (start, end) ->
-    @editor.getSelection().setBufferRange
+    @editor.getSelection(@cursorNum).setBufferRange
       start: @editor.getBuffer().positionForCharacterIndex(start)
       end: @editor.getBuffer().positionForCharacterIndex(end)
 
@@ -38,7 +38,7 @@ module.exports =
   #
   # Returns an {Object} with `start` and `end` properties
   getCurrentLineRange: ->
-    row = @editor.getCursor().getBufferRow()
+    row = @cursor.getBufferRow()
     lineLength = @editor.lineLengthForBufferRow(row)
     index = @editor.getBuffer().characterIndexForPosition({row: row, column: 0})
     return {
@@ -48,20 +48,20 @@ module.exports =
 
   # Returns the current caret position.
   getCaretPos: ->
-    row = @editor.getCursor().getBufferRow()
-    column = @editor.getCursor().getBufferColumn()
-    return @editor.getBuffer().characterIndexForPosition( {row: row, column: column} )
+    row = @cursor.getBufferRow()
+    column = @cursor.getBufferColumn()
+    @editor.getBuffer().characterIndexForPosition( {row: row, column: column} )
 
   # Sets the current caret position.
   setCaretPos: (index) ->
     pos = @editor.getBuffer().positionForCharacterIndex(index)
-    @editor.getSelection().clear()
-    @editor.setCursorBufferPosition pos
+    @editor.getSelection(@cursorNum).clear()
+    @cursor.setBufferPosition pos
 
   # Returns the current line.
   getCurrentLine: ->
-    row = @editor.getCursor().getBufferRow()
-    return @editor.lineForBufferRow(row)
+    row = @cursor.getBufferRow()
+    @editor.lineForBufferRow(row)
 
   # Replace the editor's content (or part of it, if using `start` to
   # `end` index).
@@ -94,6 +94,7 @@ module.exports =
       escape: (ch) ->
         return ch
     )
+
     # emmet uses hardcoded \t for indents, with no optional override
     value = tabstopData.text.replace(/\t/g, @editorView.editor.getTabText())
     firstTabStop = tabstopData.tabstops[0]
@@ -120,7 +121,7 @@ module.exports =
 
     # passes the cursor along when tabbing normally
     unless value == @editor.getTabText()
-      @editor.getSelection().setBufferRange(cursorRange)
+      @editor.getSelection(@cursorNum).setBufferRange(cursorRange)
 
   # Returns the editor content.
   getContent: ->
@@ -128,7 +129,7 @@ module.exports =
 
   # Returns the editor's syntax mode.
   getSyntax: ->
-    scopes = @editor.getCursorScopes()
+    scopes = @cursor.getScopes()
     for scope in scopes
       # html & dialects
       if /jade/.test(scope)
@@ -139,6 +140,8 @@ module.exports =
         return "xsl"
       else if /xml/.test(scope)
         return "xml"
+      else if /php/.test(scope)
+        return "php"
       else if /html/.test(scope)
         return "html"
       # css & dialects
@@ -161,7 +164,7 @@ module.exports =
 
   # Returns the currently selected text.
   getSelection: ->
-    return @editor.getSelectedText()
+    return @editor.getSelection(@cursorNum).getText()
 
   # Returns the current editor's file path
   getFilePath: ->
