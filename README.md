@@ -20,7 +20,7 @@ git clone https://github.com/atom/emmet
 Almost everything!
 
 Anything requiring a dialog isn't working. There's no support
-(yet) for [_snippets.json_](http://docs.emmet.io/customization/snippets/) and [_preferences.json_](http://docs.emmet.io/customization/preferences/).
+(yet) for [_snippets.json_](http://docs.emmet.io/customization/snippets/),  [_preferences.json_](http://docs.emmet.io/customization/preferences/), or [_syntaxProfiles.json_](http://docs.emmet.io/customization/syntax-profiles/).
 
 ## Default Keybindings
 
