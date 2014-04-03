@@ -152,7 +152,6 @@ module.exports =
     # proper tabstops in output
     if snippets?
       return @editor.transact =>
-        console.log changeRange
         @editor.getBuffer().change(changeRange, '')
         @setCaretPos start
         @insertAsSnippet value

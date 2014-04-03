@@ -2,8 +2,9 @@ CSON = require 'season'
 path = require 'path'
 
 emmet = require 'emmet'
+abbreviationParser = require 'emmet/lib/parser/abbreviation'
 editorProxy = require './editor-proxy'
-ContextPanelView = require './context-panel'
+LiveUpdatePanelView = require './live-update-panel'
 
 module.exports =
   editorSubscription: null
@@ -22,14 +23,15 @@ module.exports =
         for action, emmetAction of @actionTranslation
           do (action) =>
               editorView.command action, (e) =>
+                editorProxy.setupContext(editorView)
+                syntax = editorProxy.getSyntax() or 'html'
+
                 if emmetAction is 'show_panel'
-                  panel = new ContextPanelView(editorView)
+                  @showPanel(editorView)
                   return
 
                 # a better way to do this might be to manage the editorProxies
                 # right now we are setting up the proxy each time
-                editorProxy.setupContext(editorView)
-                syntax = editorProxy.getSyntax() or 'html'
                 if syntax
                   emmetAction = @actionTranslation[action]
                   if emmetAction == "expand_abbreviation_with_tab" && !editorView.getEditor().getSelection().isEmpty()
@@ -43,3 +45,12 @@ module.exports =
   deactivate: ->
     @editorViewSubscription?.off()
     @editorViewSubscription = null
+
+  showPanel: (editorView) ->
+    editor = editorView.getEditor()
+    panel = new LiveUpdatePanelView editorView, 
+      onupdate: (text) ->
+        expanded = abbreviationParser.expand(text)
+        sel = editorProxy.getSelectionRange()
+        editorProxy.replaceContent(expanded, sel.start, sel.end)
+

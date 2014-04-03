@@ -6,16 +6,18 @@ class ContextPanelView extends View
 
 	@content: ->
 		@div class: 'emmet-panel mini', =>
-			@subview 'panelEditor', new EditorView(mini: true)
+			@subview 'panelView', new EditorView(mini: true)
 			@div class: 'emmet-panel-tail'
 
 	initialize: (@editorView, @options={}) ->
-		@editor = @editorView.getEditor()
-		@panelEditor.setPlaceholderText 'Enter Abbreviation'
-		@panelEditor.setFontSize 11
-		@panelEditor.on 'textInput', =>
-			console.log 'Text input', @editor.getText()
-		# @panelEditor.hiddenInput.on 'focusout', => @detach() unless @detaching
+		{@editor} = @editorView
+		@panelEditor = @panelView.getEditor()
+		@panelView.setPlaceholderText 'Enter Abbreviation'
+		@panelView.setFontSize 11
+		@panelEditor.on 'contents-modified', =>
+			console.log 'modified', @panelEditor.getText()
+			@options.onupdate?(@panelEditor.getText())
+		# @panelView.hiddenInput.on 'focusout', => @detach() unless @detaching
 		@on 'core:confirm', => @confirm()
 		@on 'core:cancel', => @detach()
 
@@ -35,7 +37,7 @@ class ContextPanelView extends View
 		return unless @hasParent()
 		console.log 'Detaching'
 		@detaching = true
-		@panelEditor.setText('')
+		@panelView.setText('')
 
 		if @previouslyFocusedElement?.isOnDom()
 			@previouslyFocusedElement.focus()
@@ -66,4 +68,4 @@ class ContextPanelView extends View
 			left: viewRect.left + selPixelPos.left - 15
 		})
 		
-		@panelEditor.focus()
+		@panelView.focus()
