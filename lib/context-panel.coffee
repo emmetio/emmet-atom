@@ -15,11 +15,11 @@ class ContextPanelView extends View
 		@panelView.setPlaceholderText 'Enter Abbreviation'
 		@panelView.setFontSize 11
 		@panelEditor.on 'contents-modified', =>
-			console.log 'modified', @panelEditor.getText()
+			return unless @attached
 			@options.onupdate?(@panelEditor.getText())
 		# @panelView.hiddenInput.on 'focusout', => @detach() unless @detaching
 		@on 'core:confirm', => @confirm()
-		@on 'core:cancel', => @detach()
+		@on 'core:cancel', => @cancel()
 
 		@toggle()
 
@@ -31,6 +31,12 @@ class ContextPanelView extends View
 
 	confirm: ->
 		console.log 'Confirm'
+		@trigger 'confirm'
+		@detach()
+
+	cancel: ->
+		console.log 'Cancel'
+		@trigger 'cancel'
 		@detach()
 		
 	detach: ->
@@ -45,6 +51,7 @@ class ContextPanelView extends View
 			atom.workspaceView.focus()
 
 		super
+		@trigger 'detach'
 
 		@detaching = false
 		@attached = false
@@ -69,3 +76,4 @@ class ContextPanelView extends View
 		})
 		
 		@panelView.focus()
+		@trigger 'attach'

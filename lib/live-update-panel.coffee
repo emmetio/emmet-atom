@@ -9,10 +9,13 @@ class LiveUpdatePanelView extends ContextPanelView
 
 	state: null
 	initialize: (@editorView, @options={}) ->
-		@erase = no
+		@_updated = no
 		@_origOnupdate = @options.onupdate.bind(@options)
 		super @editorView, $.extend {}, @options, onupdate: (text) =>
 			@handleUpdate(text)
+
+		@on 'cancel', =>
+			@undo()
 
 	# Remembers current selection state of underlying editor
 	rememberState: ->
@@ -22,17 +25,10 @@ class LiveUpdatePanelView extends ContextPanelView
 			lastRange: null
 
 	undo: ->
-		console.log 'undo'
 		@editor.undo()
 
 	handleUpdate: (text) ->
-		if not text and @erase
-			@undo()
-			@erase = no
-			return
-
-		@undo()
+		@undo() if @_updated
 		@editor.transact =>
-			console.log 'update'
+			@_updated = yes
 			@_origOnupdate(text)
-			@erase = yes

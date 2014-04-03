@@ -51,6 +51,7 @@ module.exports =
     panel = new LiveUpdatePanelView editorView, 
       onupdate: (text) ->
         expanded = abbreviationParser.expand(text)
+        console.log expanded
         sel = editorProxy.getSelectionRange()
         editorProxy.replaceContent(expanded, sel.start, sel.end)
 

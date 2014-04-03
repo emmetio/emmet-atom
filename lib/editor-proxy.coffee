@@ -135,6 +135,11 @@ module.exports =
       end = if !start? then @getContent().length else start
     start = 0 unless start?
 
+    visualize = (str) ->
+      map = '\n': '\\n', '\t': '\\t', ' ': '\\s'
+      str.replace /\s/g, (ch) ->
+        map[ch] or ch
+
     # # indent new value
     unless noIndent
       value = utilsCommon.padString(value, utilsCommon.getLinePaddingFromPosition(@getContent(), start))
@@ -142,6 +147,10 @@ module.exports =
     value = editorUtils.normalize(value, {
       indentation: @editorView.editor.getTabText()
     })
+
+    console.log 'line padding: "%s"', visualize(utilsCommon.getLinePaddingFromPosition(@getContent(), start))
+    console.log 'tab text: "%s"', visualize(@editorView.editor.getTabText())
+    console.log 'normalized:\n', value
 
     changeRange = [
       Point.fromObject(@editor.getBuffer().positionForCharacterIndex(start))
