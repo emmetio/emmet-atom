@@ -1,0 +1,76 @@
+{$, EditorView, View} = require 'atom'
+
+noop = ->
+
+method = (delegate, method) ->
+	delegate?[method]?.bind(delegate) or noop
+
+module.exports = 
+class PromptView extends View
+	@attach: -> new PromptView
+
+	@content: ->
+		@div class: 'emmet-prompt mini', =>
+			@label class: 'emmet-prompt__label', outlet: 'label'
+			@div class: 'emmet-prompt__input', =>
+				@subview 'panelInput', new EditorView(mini: true)
+
+	initialize: () ->
+		@panelEditor = @panelInput.getEditor()
+		@panelEditor.on 'contents-modified', =>
+			return unless @attached
+			@handleUpdate @panelEditor.getText()
+		@on 'core:confirm', => @confirm()
+		@on 'core:cancel', => @cancel()
+
+	show: (@delegate={}) ->
+		@editor = @delegate.editor
+		@label.text @delegate.label or 'Enter Abbreviation'
+		@updated = no
+
+		@attach()
+		text = @panelEditor.getText()
+		if text
+			@handleUpdate text
+
+	handleUpdate: (text) ->
+		@updated = yes
+		@editor.undo()
+		@editor.transact =>
+			method(@delegate, 'update')(text)
+
+	confirm: ->
+		@trigger 'confirm'
+		method(@delegate, 'confirm')()
+		@detach()
+
+	cancel: ->
+		@editor.undo() if @updated
+		@trigger 'cancel'
+		method(@delegate, 'cancel')()
+		@detach()
+		
+	detach: ->
+		return unless @hasParent()
+		@detaching = true
+		# @panelView.setText('')
+
+		if @previouslyFocusedElement?.isOnDom()
+			@previouslyFocusedElement.focus()
+		else
+			atom.workspaceView.focus()
+
+		super
+		@detaching = false
+		@attached = false
+
+		@trigger 'detach'
+		method(@delegate, 'hide')()
+
+	attach: ->
+		@attached = true
+		@previouslyFocusedElement = $(':focus')
+		atom.workspaceView.append(this)
+		@panelInput.focus()
+		@trigger 'attach'
+		method(@delegate, 'show')()

@@ -1,20 +1,25 @@
-{Point} = require 'atom'
+{Point, Range} = require 'atom'
 path = require 'path'
 
-emmet = require('emmet')
-utilsCommon = require('emmet/lib/utils/common')
-tabStops = require('emmet/lib/assets/tabStops')
-resources = require('emmet/lib/assets/resources')
-editorUtils = require('emmet/lib/utils/editor')
-Dialog = require './dialog'
+emmet       = require 'emmet'
 
-try
-  snippetsPath = atom.packages.resolvePackagePath('snippets')
-  snippets = require snippetsPath
-  Snippet = require path.join(snippetsPath, 'lib/snippet')
-  SnippetExpansion = require './snippet-expansion'
-catch e
-  console.error e
+utils = require 'emmet/lib/utils/common'
+tabStops    = require 'emmet/lib/assets/tabStops'
+resources   = require 'emmet/lib/assets/resources'
+editorUtils = require 'emmet/lib/utils/editor'
+
+snippetsPath = atom.packages.resolvePackagePath('snippets')
+snippets = require snippetsPath
+
+# Normalizes text before it goes to editor: replaces indentation
+# and newlines with ones used in editor
+# @param  {String} text   Text to normalize
+# @param  {Editor} editor Brackets editor instance
+# @return {String}
+normalize = (text, editor) ->
+  editorUtils.normalize text, 
+    indentation: editor.getTabText(),
+    newline: '\n'
 
 # Proprocess text data that should be used as snippet content
 # Currently, Atom’s snippets implementation has the following issues: 
@@ -23,7 +28,6 @@ catch e
 preprocessSnippet = (value) ->
   base = 1000
   zeroBase = 0
-  lastZero = null
 
   tabstopOptions =
     tabstop: (data) ->
@@ -46,21 +50,59 @@ preprocessSnippet = (value) ->
   tabStops.processText(value, tabstopOptions)
 
 module.exports =
-  setupContext: (@editorView) ->
+  setup: (@editorView, @selectionIndex=0) ->
     @editor = @editorView.getEditor()
-    @indentation = @editor.getTabText()
-    resources.setVariable("indentation", @indentation)
-    @syntax = @getSyntax()
+    buf = @editor.getBuffer()
+    bufRanges = @editor.getSelectedBufferRanges()
+    @_selection = 
+      index: 0
+      saved: new Array(bufRanges.length)
+      bufferRanges: bufRanges
+      indexRanges: bufRanges.map (range) ->
+          start: buf.characterIndexForPosition(range.start)
+          end:   buf.characterIndexForPosition(range.end)
+
+  # Executes given function for every selection
+  exec: (fn) ->
+    ix = @_selection.bufferRanges.length - 1
+    @_selection.saved = new Array(@_selection.bufferRanges.length)
+    success = true
+    while ix >= 0
+      @_selection.index = ix--
+      if fn(@_selection.index) is false
+        success = false
+        break
+
+    if success and @_selection.saved.length > 1
+      @editor.setSelectedBufferRanges(@_selection.saved)
+
+  _saveSelection: (delta) ->
+    @_selection.saved[@_selection.index] = @editor.getSelectedBufferRange()
+    if delta
+      i = @_selection.index + 1
+      delta = Point.fromObject([delta, 0])
+      while ++i < @_selection.saved.length
+        range = @_selection.saved[i]
+        @_selection.saved[i] = new Range(range.start.translate(delta), range.end.translate(delta))
+
+  selectionList: ->
+    @_selection.indexRanges
+
+  # Returns the current caret position.
+  getCaretPos: ->
+    @getSelectionRange().start
+
+  # Sets the current caret position.
+  setCaretPos: (pos) ->
+    @createSelection(pos)
 
   # Fetches the character indexes of the selected text.
-  #
   # Returns an {Object} with `start` and `end` properties.
   getSelectionRange: ->
-    range = @editor.getSelection().getBufferRange()
-    return {
-      start: @editor.getBuffer().characterIndexForPosition(range.start),
-      end: @editor.getBuffer().characterIndexForPosition(range.end)
-    }
+    @_selection.indexRanges[@_selection.index]
+
+  getSelectionBufferRange: ->
+    @_selection.bufferRanges[@_selection.index]
 
   # Creates a selection from the `start` to `end` character indexes.
   #
@@ -68,50 +110,38 @@ module.exports =
   #
   # start - A {Number} representing the starting character index
   # end - A {Number} representing the ending character index
-  createSelection: (start, end) ->
-    @editor.getSelection().setBufferRange
-      start: @editor.getBuffer().positionForCharacterIndex(start)
-      end: @editor.getBuffer().positionForCharacterIndex(end)
+  createSelection: (start, end=start) ->
+    sels = @_selection.bufferRanges
+    buf = @editor.getBuffer()
+    sels[@_selection.index] = new Range(buf.positionForCharacterIndex(start), buf.positionForCharacterIndex(end))
+    @editor.setSelectedBufferRanges(sels)
+
+  # Returns the currently selected text.
+  getSelection: ->
+    @editor.getTextInBufferRange(@getSelectionBufferRange())
 
   # Fetches the current line's start and end indexes.
   #
   # Returns an {Object} with `start` and `end` properties
   getCurrentLineRange: ->
-    row = @editor.getCursor().getBufferRow()
+    sel = @getSelectionBufferRange()
+    row = sel.getRows()[0]
     lineLength = @editor.lineLengthForBufferRow(row)
     index = @editor.getBuffer().characterIndexForPosition({row: row, column: 0})
     return {
-      start: index,
+      start: index
       end: index + lineLength
     }
 
-  # Returns the current caret position.
-  getCaretPos: ->
-    row = @editor.getCursor().getBufferRow()
-    column = @editor.getCursor().getBufferColumn()
-    return @editor.getBuffer().characterIndexForPosition( {row: row, column: column} )
-
-  # Sets the current caret position.
-  setCaretPos: (index) ->
-    pos = @editor.getBuffer().positionForCharacterIndex(index)
-    @editor.getSelection().clear()
-    @editor.setCursorBufferPosition pos
-
   # Returns the current line.
   getCurrentLine: ->
-    row = @editor.getCursor().getBufferRow()
+    sel = @getSelectionBufferRange()
+    row = sel.getRows()[0]
     return @editor.lineForBufferRow(row)
 
-  # Inserts given text as snippet into current position
-  insertAsSnippet: (text) ->
-    unless snippets?
-      return false
-
-    # Normalize tabstops before passing it to Snippets module.
-    text = preprocessSnippet(text)
-    bodyTree = snippets.getBodyParser().parse(text)
-    snippet = new Snippet({'__emmet', '', bodyTree, bodyText: text})
-    new SnippetExpansion(snippet, @editor)
+  # Returns the editor content.
+  getContent: ->
+    return @editor.getText()
 
   # Replace the editor's content (or part of it, if using `start` to
   # `end` index).
@@ -131,71 +161,33 @@ module.exports =
   # end - The optional end index {Number} of the editor's content
   # noIdent - An optional {Boolean} which, if `true`, does not attempt to auto indent `value`
   replaceContent: (value, start, end, noIndent) ->
-    if !end?
-      end = if !start? then @getContent().length else start
+    unless end?
+      end = unless start? then @getContent().length else start
     start = 0 unless start?
-
-    visualize = (str) ->
-      map = '\n': '\\n', '\t': '\\t', ' ': '\\s'
-      str.replace /\s/g, (ch) ->
-        map[ch] or ch
 
     # # indent new value
     unless noIndent
-      value = utilsCommon.padString(value, utilsCommon.getLinePaddingFromPosition(@getContent(), start))
+      value = utils.padString(value, utils.getLinePaddingFromPosition(@getContent(), start))
 
-    value = editorUtils.normalize(value, {
-      indentation: @editorView.editor.getTabText()
-    })
-
-    console.log 'line padding: "%s"', visualize(utilsCommon.getLinePaddingFromPosition(@getContent(), start))
-    console.log 'tab text: "%s"', visualize(@editorView.editor.getTabText())
-    console.log 'normalized:\n', value
-
-    changeRange = [
-      Point.fromObject(@editor.getBuffer().positionForCharacterIndex(start))
-      Point.fromObject(@editor.getBuffer().positionForCharacterIndex(end))
-    ]
-
-    # If there’s a snippets module, use it to generate
-    # proper tabstops in output
-    if snippets?
-      return @editor.transact =>
-        @editor.getBuffer().change(changeRange, '')
-        @setCaretPos start
-        @insertAsSnippet value
-
-    # XXX is it possible that Snippets module does not exists?
-    # find new caret position
-    tabstopData = tabStops.extract(value,
-      escape: (ch) -> ch
-      tabStop: () -> ''
+    value = normalize(value, @editor)
+    buf = @editor.getBuffer()
+    changeRange = new Range(
+      Point.fromObject(buf.positionForCharacterIndex(start)),
+      Point.fromObject(buf.positionForCharacterIndex(end))
     )
-    firstTabStop = tabstopData.tabstops[0]
-    value = tabstopData.text
 
-    if firstTabStop
-      firstTabStop.start += start
-      firstTabStop.end += start
-    else
-      firstTabStop =
-        start: value.length + start
-        end: value.length + start
-
-    @editor.getBuffer().change(changeRange, value)
-
-    # handles where to place the cursor after the replacement
-    cursorRange = {}
-    cursorRange.start = Point.fromObject(@editor.getBuffer().positionForCharacterIndex(firstTabStop.start))
-    cursorRange.end = Point.fromObject(@editor.getBuffer().positionForCharacterIndex(firstTabStop.end))
-
-    # passes the cursor along when tabbing normally
-    unless value == @editor.getTabText()
-      @editor.getSelection().setBufferRange(cursorRange)
-
-  # Returns the editor content.
-  getContent: ->
-    return @editor.getText()
+    oldValue = @editor.getTextInBufferRange(changeRange)
+    buf.change(changeRange, '')
+    # Before inserting snippet we have to reset all available selections
+    # to insert snippent right in required place. Otherwise snippet
+    # will be inserted for each selection in editor
+    
+    # Right after that we should save first available selection as buffer range
+    caret = buf.positionForCharacterIndex(start)
+    @editor.setSelectedBufferRange(new Range(caret, caret))
+    snippets.insert preprocessSnippet(value), @editor
+    @_saveSelection(utils.splitByLines(value).length - utils.splitByLines(oldValue).length)
+    value
 
   # Returns the editor's syntax mode.
   getSyntax: ->
@@ -213,34 +205,7 @@ module.exports =
   getProfileName: ->
     return @editor.getGrammar().name
 
-  # Returns the currently selected text.
-  getSelection: ->
-    return @editor.getSelectedText()
-
   # Returns the current editor's file path
   getFilePath: ->
     # is there a better way to get this?
     return @editor.buffer.file.path
-
-  setSavedText: (text) ->
-    @savedText = text
-
-  getSavedText: ->
-    @savedText
-
-  # all of this caller hackery is because emmet expects a synchronous, blocking
-  # prompt dialog, as is the case with window.prompt. N.B. that emmet-app has
-  # been modified to pass 'callerContext' to all prompt calls
-  prompt: (message, callerContext, text=null, caller=null, callerArgs=null) ->
-    if text != null
-      callerArgs[0].setSavedText(text)
-      caller.apply(callerContext, callerArgs)
-    else if @getSavedText()?
-      copy = @getSavedText()
-      @setSavedText(null)
-      copy
-    else
-      caller = arguments.callee.caller
-      callerArgs = caller.arguments
-      new Dialog message, @prompt, {caller, callerArgs, callerContext}
-      return "" # bluff emmet's expecttaion of prompt for now
