@@ -1,0 +1,125 @@
+{
+	"menu": [
+		{
+			"label": "Packages",
+			"submenu": [
+				{
+					"label": "Emmet",
+					"submenu": [
+						{
+							"label": "Encode\\Decode data:URL image",
+							"command": "emmet:encode-decode-data-url"
+						},
+						{
+							"label": "Previous Edit Point",
+							"command": "emmet:prev-edit-point"
+						},
+						{
+							"label": "Next Edit Point",
+							"command": "emmet:next-edit-point"
+						},
+						{
+							"label": "Numbers",
+							"submenu": [
+								{
+									"label": "Evaluate Math Expression",
+									"command": "emmet:evaluate-math-expression"
+								},
+								{
+									"label": "Increment number by 1",
+									"command": "emmet:increment-number-by-1"
+								},
+								{
+									"label": "Decrement number by 1",
+									"command": "emmet:decrement-number-by-1"
+								},
+								{
+									"label": "Increment number by 10",
+									"command": "emmet:increment-number-by-10"
+								},
+								{
+									"label": "Decrement number by 10",
+									"command": "emmet:decrement-number-by-10"
+								},
+								{
+									"label": "Increment number by 0.1",
+									"command": "emmet:increment-number-by-01"
+								},
+								{
+									"label": "Decrement number by 0.1",
+									"command": "emmet:decrement-number-by-01"
+								}
+							]
+						},
+						{
+							"label": "Expand Abbreviation",
+							"command": "emmet:expand-abbreviation"
+						},
+						{
+							"label": "Balance (inward)",
+							"command": "emmet:balance-inward"
+						},
+						{
+							"label": "Balance (outward)",
+							"command": "emmet:balance-outward"
+						},
+						{
+							"label": "HTML",
+							"submenu": [
+								{
+									"label": "Go To Matching Tag Pair",
+									"command": "emmet:matching-pair"
+								},
+								{
+									"label": "Remove Tag",
+									"command": "emmet:remove-tag"
+								},
+								{
+									"label": "Split\\Join Tag Declaration",
+									"command": "emmet:split-join-tag"
+								},
+								{
+									"label": "Update Tag",
+									"command": "emmet:update-tag"
+								}
+							]
+						},
+						{
+							"label": "Merge Lines",
+							"command": "emmet:merge-lines"
+						},
+						{
+							"label": "CSS",
+							"submenu": [
+								{
+									"label": "Reflect Value",
+									"command": "emmet:reflect-css-value"
+								}
+							]
+						},
+						{
+							"label": "Select Next Item",
+							"command": "emmet:select-next-item"
+						},
+						{
+							"label": "Select Previous Item",
+							"command": "emmet:select-previous-item"
+						},
+						{
+							"label": "Toggle Comment",
+							"command": "emmet:toggle-comment"
+						},
+						{
+							"label": "Update Image Size",
+							"command": "emmet:update-image-size"
+						},
+						{
+							"label": "Wrap With Abbreviation",
+							"command": "emmet:wrap-with-abbreviation"
+						}
+					]
+				}
+			]
+		}
+	]
+}

@@ -19,9 +19,9 @@
   'alt-cmd-,': 'emmet:select-previous-item'
   'cmd-R': 'emmet:reflect-css-value'
   'tab': 'emmet:expand-abbreviation-with-tab'
-  # 'ctrl-I': 'emmet:update-image-size' # doesn't seem to work in beta v1.1
-  # 'ctrl-D': 'emmet:encode-decode-data-url' # doesn't seem to work in beta v1.1
+  'ctrl-I': 'emmet:update-image-size'
+  'ctrl-D': 'emmet:encode-decode-data-url'
   'ctrl-U': 'emmet:update-tag'
   'cmd-M': 'emmet:merge-lines'
   'cmd-A': 'emmet:wrap-with-abbreviation'
-  'f1': 'emmet:show-panel'
+  'cmd-alt-enter': 'emmet:interactive-expand-abbreviation'
