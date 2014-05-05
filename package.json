@@ -1,6 +1,6 @@
 {
   "name": "emmet",
-  "description": "Adds emmet snippet support",
+  "description": "Emmet – the essential tool for web developers",
   "main": "./lib/emmet",
   "version": "1.0.0",
   "private": true,
