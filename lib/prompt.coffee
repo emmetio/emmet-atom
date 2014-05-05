@@ -33,9 +33,12 @@ class PromptView extends View
 		if text
 			@handleUpdate text
 
+	undo: ->
+		@editor.undo() if @updated
+
 	handleUpdate: (text) ->
+		@undo()
 		@updated = yes
-		@editor.undo()
 		@editor.transact =>
 			method(@delegate, 'update')(text)
 
@@ -45,7 +48,7 @@ class PromptView extends View
 		@detach()
 
 	cancel: ->
-		@editor.undo() if @updated
+		@undo()
 		@trigger 'cancel'
 		method(@delegate, 'cancel')()
 		@detach()

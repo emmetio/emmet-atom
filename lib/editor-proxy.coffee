@@ -1,15 +1,20 @@
 {Point, Range} = require 'atom'
-path = require 'path'
+path           = require 'path'
 
 emmet       = require 'emmet'
-
-utils = require 'emmet/lib/utils/common'
+utils       = require 'emmet/lib/utils/common'
 tabStops    = require 'emmet/lib/assets/tabStops'
 resources   = require 'emmet/lib/assets/resources'
 editorUtils = require 'emmet/lib/utils/editor'
 
 snippetsPath = atom.packages.resolvePackagePath('snippets')
 snippets = require snippetsPath
+
+visualize = (str) ->
+  str
+    .replace(/\t/g, '\\t')
+    .replace(/\n/g, '\\n')
+    .replace(/\s/g, '\\s')
 
 # Normalizes text before it goes to editor: replaces indentation
 # and newlines with ones used in editor

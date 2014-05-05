@@ -54,7 +54,6 @@ registerInteractiveActions = (actions) ->
     do (name) ->
       atomAction = atomActionName name
       actions[atomAction] = (editorView, evt) ->
-        console.log 'run interactive'
         editorProxy.setup(editorView)
         interactive.run(name, editorProxy)
 
@@ -77,7 +76,6 @@ module.exports =
         for name, action of @actions
           do (name, action) =>
             editorView.command name, (e) =>
-              console.log 'run', name
               action(editorView, e)
 
   deactivate: ->
