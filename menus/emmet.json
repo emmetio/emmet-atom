@@ -116,6 +116,10 @@
 						{
 							"label": "Wrap With Abbreviation",
 							"command": "emmet:wrap-with-abbreviation"
+						},
+						{
+							"label": "Interactive Expand Abbreviation",
+							"command": "emmet:interactive-expand-abbreviation"
 						}
 					]
 				}
