@@ -2,25 +2,24 @@
 
 [Emmet](http://emmet.io) support for Atom.
 
-## How to get it
+### Features:
 
-```bash
-apm install emmet
-```
+* Multiple cursors support
+* Interactive actions (Interactive Expand Abbreviation, Wrap With Abbreviation, Update Tag) allows you to preview result real-time as you type
+* Better tabstops in generated content
+* User extensions support
+* CSP-compatible core, no need to manually patch it with `loophole`.
 
-If that doesn't work, try old school:
+### Installation
 
 ```bash
 cd ~/.atom/packages
-git clone https://github.com/atom/emmet
+git clone https://github.com/emmetio/emmet-atom
+cd emmet-atom
+npm install
 ```
 
-## What's working?
-
-Almost everything!
-
-Anything requiring a dialog isn't working. There's no support
-(yet) for [_snippets.json_](http://docs.emmet.io/customization/snippets/) and [_preferences.json_](http://docs.emmet.io/customization/preferences/).
+Please report any issues at https://github.com/emmetio/emmet-atom/issues
 
 ## Default Keybindings
 
