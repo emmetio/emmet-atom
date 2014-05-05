@@ -1,4 +1,5 @@
 path = require 'path'
+fs   = require 'fs'
 
 emmet        = require 'emmet'
 emmetActions = require 'emmet/lib/action/main'
@@ -12,6 +13,12 @@ singleSelectionActions = [
   'reflect_css_value', 'select_next_item', 'select_previous_item',
   'wrap_with_abbreviation', 'update_tag', 'insert_formatted_line_break_only'
 ]
+
+getUserHome = () ->
+  if process.platform is 'win32'
+    return process.env.USERPROFILE
+
+  process.env.HOME
 
 # Emmet action decorator: creates a command function
 # for Atom and executes Emmet action as single
@@ -57,11 +64,33 @@ registerInteractiveActions = (actions) ->
         editorProxy.setup(editorView)
         interactive.run(name, editorProxy)
 
+loadExtensions = () ->
+  extPath = atom.config.get 'emmet.extensionsPath'
+  console.log 'Load ext from', extPath
+  return unless extPath
+
+  if extPath[0] is '~'
+    extPath = getUserHome() + extPath.substr 1
+
+  if fs.existsSync extPath
+    emmet.resetUserData()
+    files = fs.readdirSync extPath
+    files = files
+      .map((item) -> path.join extPath, item)
+      .filter((file) -> not fs.statSync(file).isDirectory())
+
+    emmet.loadExtensions(files)
+  else
+    console.error 'Emmet: no such extension folder:', extPath
+
 module.exports =
   editorSubscription: null
+  configDefaults:
+    extensionsPath: '~/emmet'
 
   activate: (@state) ->
     unless @actions
+      atom.config.observe 'emmet.extensionsPath', loadExtensions
       @actions = {}
       registerInteractiveActions @actions
       for action in emmetActions.getList()

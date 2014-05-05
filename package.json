@@ -5,7 +5,7 @@
   "version": "1.0.0",
   "private": true,
   "dependencies": {
-    "emmet": "^1.1.4"
+    "emmet": "^1.1.5"
   },
   "repository": "https://github.com/atom/emmet",
   "engines": {
