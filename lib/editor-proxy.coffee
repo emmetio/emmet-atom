@@ -31,23 +31,24 @@ normalize = (text, editor) ->
 # * supports $N or ${N:placeholder} notation, but not ${N}
 # * multiple $0 are not treated as distinct final tabstops
 preprocessSnippet = (value) ->
-  base = 1000
-  zeroBase = 0
+  order = []
 
   tabstopOptions =
     tabstop: (data) ->
       group = parseInt(data.group, 10)
       if group is 0
-        group = ++zeroBase
+        order.push(-1)
+        group = order.length
       else
-        group += base
+        order.push(group) if order.indexOf(group) is -1
+        group = order.indexOf(group) + 1
 
       placeholder = data.placeholder or ''
       if placeholder
         # recursively update nested tabstops
         placeholder = tabStops.processText(placeholder, tabstopOptions)
 
-      if placeholder then "${#{group}:#{placeholder}" else "$#{group}"
+      if placeholder then "${#{group}:#{placeholder}}" else "$#{group}"
       
     escape: (ch) ->
       if ch == '$' then '\\$' else ch
@@ -169,10 +170,6 @@ module.exports =
     unless end?
       end = unless start? then @getContent().length else start
     start = 0 unless start?
-
-    # # indent new value
-    unless noIndent
-      value = utils.padString(value, utils.getLinePaddingFromPosition(@getContent(), start))
 
     value = normalize(value, @editor)
     buf = @editor.getBuffer()

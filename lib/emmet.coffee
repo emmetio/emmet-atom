@@ -66,7 +66,7 @@ registerInteractiveActions = (actions) ->
 
 loadExtensions = () ->
   extPath = atom.config.get 'emmet.extensionsPath'
-  console.log 'Load ext from', extPath
+  console.log 'Loading Emmet extensions from', extPath
   return unless extPath
 
   if extPath[0] is '~'
