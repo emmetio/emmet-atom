@@ -11,7 +11,7 @@ class PromptView extends View
 
 	@content: ->
 		@div class: 'emmet-prompt mini', =>
-			@label class: 'emmet-prompt__label', outlet: 'label'
+			# @label class: 'emmet-prompt__label', outlet: 'label'
 			@div class: 'emmet-prompt__input', =>
 				@subview 'panelInput', new EditorView(mini: true)
 
@@ -25,7 +25,8 @@ class PromptView extends View
 
 	show: (@delegate={}) ->
 		@editor = @delegate.editor
-		@label.text @delegate.label or 'Enter Abbreviation'
+		@editorView = @delegate.editorView
+		@panelInput.setPlaceholderText @delegate.label or 'Enter Abbreviation'
 		@updated = no
 
 		@attach()
@@ -73,7 +74,9 @@ class PromptView extends View
 	attach: ->
 		@attached = true
 		@previouslyFocusedElement = $(':focus')
-		atom.workspaceView.append(this)
+		# atom.workspaceView.append(this)
+		console.log @editor
+		atom.workspaceView.prependToBottom(this)
 		@panelInput.focus()
 		@trigger 'attach'
 		method(@delegate, 'show')()
