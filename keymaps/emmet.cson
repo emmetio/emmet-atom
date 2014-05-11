@@ -18,10 +18,13 @@
   'alt-cmd-.': 'emmet:select-next-item'
   'alt-cmd-,': 'emmet:select-previous-item'
   'cmd-R': 'emmet:reflect-css-value'
-  'tab': 'emmet:expand-abbreviation-with-tab'
   'ctrl-I': 'emmet:update-image-size'
   'ctrl-D': 'emmet:encode-decode-data-url'
   'ctrl-U': 'emmet:update-tag'
   'cmd-M': 'emmet:merge-lines'
   'cmd-A': 'emmet:wrap-with-abbreviation'
   'cmd-alt-enter': 'emmet:interactive-expand-abbreviation'
+
+# more specificity to Emmet to override Tab key action for snippets plugin
+'.pane .editor:not(.mini)':
+	'tab': 'emmet:expand-abbreviation-with-tab'
