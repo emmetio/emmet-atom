@@ -87,9 +87,10 @@ module.exports =
     if delta
       i = @_selection.index + 1
       delta = Point.fromObject([delta, 0])
-      while ++i < @_selection.saved.length
+      while i < @_selection.saved.length
         range = @_selection.saved[i]
         @_selection.saved[i] = new Range(range.start.translate(delta), range.end.translate(delta))
+        i++
 
   selectionList: ->
     @_selection.indexRanges

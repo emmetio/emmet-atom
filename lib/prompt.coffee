@@ -75,7 +75,6 @@ class PromptView extends View
 		@attached = true
 		@previouslyFocusedElement = $(':focus')
 		# atom.workspaceView.append(this)
-		console.log @editor
 		atom.workspaceView.prependToBottom(this)
 		@panelInput.focus()
 		@trigger 'attach'
