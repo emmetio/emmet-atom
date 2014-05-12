@@ -19,6 +19,12 @@ describe "Emmet", ->
       atom.packages.activatePackage('language-css', sync: true)
 
     waitsForPromise ->
+      atom.packages.activatePackage('language-sass', sync: true)
+
+    waitsForPromise ->
+      atom.packages.activatePackage('language-php', sync: true)
+
+    waitsForPromise ->
       atom.packages.activatePackage('language-html', sync: true)
 
     runs ->
@@ -138,6 +144,98 @@ describe "Emmet", ->
       it "expands CSS abbreviations via tab", ->
         editorView.trigger keydownEvent('tab', target: editor[0])
         expect(editor.getText()).toBe expansion
+
+    describe "for PHP", ->
+      describe "for PHP with HTML", ->
+        beforeEach ->
+          workspaceView.openSync(Path.join(__dirname, './fixtures/abbreviation/before/php-in-html.php'))
+          editorView = workspaceView.getActiveView()
+          editor = editorView.getEditor()
+          editSession = workspaceView.getActivePaneItem()
+          editSession.setCursorBufferPosition([6, 5])
+
+          expansion = Fs.readFileSync(Path.join(__dirname, './fixtures/abbreviation/after/php-in-html.php'), "utf8")
+
+        it "expands abbreviations via commands", ->
+          editorView.trigger "emmet:expand-abbreviation"
+          expect(editor.getText()).toBe expansion
+
+        it "expands abbreviations via keybindings", ->
+          editorView.trigger keydownEvent('e', shiftKey: true, metaKey: true, target: editor[0])
+          expect(editor.getText()).toBe expansion
+
+        it "expands abbreviations via tab", ->
+          editorView.trigger keydownEvent('tab', target: editor[0])
+          expect(editor.getText()).toBe expansion
+
+      # fdescribe "for vanilla PHP", ->
+      #   beforeEach ->
+      #     workspaceView.openSync(Path.join(__dirname, './fixtures/abbreviation/before/vanilla-php.php'))
+      #     editorView = workspaceView.getActiveView()
+      #     editor = editorView.getEditor()
+      #     editSession = workspaceView.getActivePaneItem()
+      #     editSession.setCursorBufferPosition([1, 3])
+      #
+      #     expansion = Fs.readFileSync(Path.join(__dirname, './fixtures/abbreviation/after/vanilla-php.php'), "utf8")
+      #
+      #   it "expands abbreviations via commands", ->
+      #     editorView.trigger "emmet:expand-abbreviation"
+      #     expect(editor.getText()).toBe expansion
+      #
+      #   it "expands abbreviations via keybindings", ->
+      #     editorView.trigger keydownEvent('e', shiftKey: true, metaKey: true, target: editor[0])
+      #     expect(editor.getText()).toBe expansion
+      #
+      #   it "expands abbreviations via tab", ->
+      #     editorView.trigger keydownEvent('tab', target: editor[0])
+      #     expect(editor.getText()).toBe expansion
+
+    describe "for SASS", ->
+      beforeEach ->
+        workspaceView.openSync(Path.join(__dirname, './fixtures/abbreviation/before/sass-test.sass'))
+        editorView = workspaceView.getActiveView()
+        editor = editorView.getEditor()
+        editSession = workspaceView.getActivePaneItem()
+        editSession.moveCursorToEndOfLine()
+
+        expansion = Fs.readFileSync(Path.join(__dirname, './fixtures/abbreviation/after/sass-test.sass'), "utf8")
+
+      it "expands abbreviations via commands", ->
+        editorView.trigger "emmet:expand-abbreviation"
+        expect(editor.getText()).toBe expansion
+
+      it "expands abbreviations via keybindings", ->
+        editorView.trigger keydownEvent('e', shiftKey: true, metaKey: true, target: editor[0])
+        expect(editor.getText()).toBe expansion
+
+      it "expands abbreviations via tab", ->
+        editorView.trigger keydownEvent('tab', target: editor[0])
+        expect(editor.getText()).toBe expansion
+
+    describe "for multiple cursors", ->
+      beforeEach ->
+        workspaceView.openSync(Path.join(__dirname, './fixtures/abbreviation/before/multi-line.html'))
+        editorView = workspaceView.getActiveView()
+        editor = editorView.getEditor()
+        editSession = workspaceView.getActivePaneItem()
+
+        editor.addCursorAtBufferPosition([0, 9])
+        editor.addCursorAtBufferPosition([1, 9])
+        editor.addCursorAtBufferPosition([2, 9])
+
+        expansion = Fs.readFileSync(Path.join(__dirname, './fixtures/abbreviation/after/multi-line.html'), "utf8")
+
+      it "expands HTML abbreviations via commands", ->
+        editorView.trigger "emmet:expand-abbreviation"
+        expect(editorView.getText()).toBe expansion
+
+      # it "expands HTML abbreviations via keybindings", ->
+      #   editorView.trigger keydownEvent('e', shiftKey: true, metaKey: true, target: editor[0])
+      #   expect(editor.getText()).toBe expansion
+      #
+      # it "expands HTML abbreviations via Tab", ->
+      #   editorView.trigger keydownEvent('tab', target: editor[0])
+      #   expect(editor.getText()).toBe expansion
 
   describe "emmet:balance", ->
     beforeEach ->
@@ -358,12 +456,12 @@ describe "Emmet", ->
           expect(editor.lineForBufferRow(1)).toMatch(/2\.1/)
 
          it "increments via keybindings", ->
-          editorView.trigger "emmet:increment-number-by-01"
-          editorView.trigger "emmet:increment-number-by-01"
-          editorView.trigger keydownEvent('up', shiftKey: true, altKey: true, target: editor[0])
-          editorView.trigger "emmet:increment-number-by-01"
-          editorView.trigger "emmet:increment-number-by-01"
-          editorView.trigger keydownEvent('up', shiftKey: true, altKey: true, target: editor[0])
+          editorView.trigger keydownEvent('up', ctrlKey: true, altKey: true, target: editor[0])
+          editorView.trigger keydownEvent('up', ctrlKey: true, altKey: true, target: editor[0])
+          expect(editor.lineForBufferRow(1)).toMatch(/1\.9/)
+          editorView.trigger keydownEvent('up', ctrlKey: true, altKey: true, target: editor[0])
+          editorView.trigger keydownEvent('up', ctrlKey: true, altKey: true, target: editor[0])
+          expect(editor.lineForBufferRow(1)).toMatch(/2\.1/)
 
       describe "increment by 1", ->
         beforeEach ->
@@ -378,11 +476,11 @@ describe "Emmet", ->
          expect(editor.lineForBufferRow(2)).toMatch(/25/)
 
         it "increments via keybindings", ->
-         editorView.trigger keydownEvent('up', shiftKey: true, ctrlKey: true, target: editor[0])
-         editorView.trigger keydownEvent('up', shiftKey: true, ctrlKey: true, target: editor[0])
+         editorView.trigger keydownEvent('up', ctrlKey: true, altKey: true, metaKey:true, target: editor[0])
+         editorView.trigger keydownEvent('up', ctrlKey: true, altKey: true, metaKey:true, target: editor[0])
          expect(editor.lineForBufferRow(2)).toMatch(/12/)
          for i in [0..12] by 1
-           editorView.trigger keydownEvent('up', shiftKey: true, ctrlKey: true, target: editor[0])
+           editorView.trigger keydownEvent('up', ctrlKey: true, altKey: true, metaKey:true, target: editor[0])
          expect(editor.lineForBufferRow(2)).toMatch(/25/)
 
       describe "increment by 10", ->
@@ -395,8 +493,8 @@ describe "Emmet", ->
          expect(editor.lineForBufferRow(3)).toMatch(/120/)
 
         it "increments via keybindings", ->
-         editorView.trigger keydownEvent('up', altKey: true, ctrlKey: true, target: editor[0])
-         editorView.trigger keydownEvent('up', altKey: true, ctrlKey: true, target: editor[0])
+         editorView.trigger keydownEvent('up', ctrlKey: true, altKey: true, metaKey: true, shiftKey: true, target: editor[0])
+         editorView.trigger keydownEvent('up', ctrlKey: true, altKey: true, metaKey: true, shiftKey: true, target: editor[0])
          expect(editor.lineForBufferRow(3)).toMatch(/120/)
 
      describe "for decrementing", ->
@@ -413,11 +511,11 @@ describe "Emmet", ->
           expect(editor.lineForBufferRow(1)).toMatch(/\-0\.6/)
 
          it "decrements via keybindings", ->
-          editorView.trigger keydownEvent('down', shiftKey: true, altKey: true, target: editor[0])
-          editorView.trigger keydownEvent('down', shiftKey: true, altKey: true, target: editor[0])
+          editorView.trigger keydownEvent('down', ctrlKey: true, altKey: true, target: editor[0])
+          editorView.trigger keydownEvent('down', ctrlKey: true, altKey: true, target: editor[0])
           expect(editor.lineForBufferRow(1)).toMatch(/1\.5/)
           for i in [0..20] by 1
-            editorView.trigger keydownEvent('down', shiftKey: true, altKey: true, target: editor[0])
+            editorView.trigger keydownEvent('down', ctrlKey: true, altKey: true, target: editor[0])
           expect(editor.lineForBufferRow(1)).toMatch(/\-0\.6/)
 
       describe "decrement by 1", ->
@@ -433,11 +531,11 @@ describe "Emmet", ->
          expect(editor.lineForBufferRow(2)).toMatch(/\-5/)
 
         it "decrements via keybindings", ->
-         editorView.trigger keydownEvent('down', shiftKey: true, ctrlKey: true, target: editor[0])
-         editorView.trigger keydownEvent('down', shiftKey: true, ctrlKey: true, target: editor[0])
+         editorView.trigger keydownEvent('down', ctrlKey: true, altKey: true, metaKey:true, target: editor[0])
+         editorView.trigger keydownEvent('down', ctrlKey: true, altKey: true, metaKey:true, target: editor[0])
          expect(editor.lineForBufferRow(2)).toMatch(/8/)
          for i in [0..12] by 1
-          editorView.trigger keydownEvent('down', shiftKey: true, ctrlKey: true, target: editor[0])
+          editorView.trigger keydownEvent('down', ctrlKey: true, altKey: true, metaKey:true, target: editor[0])
          expect(editor.lineForBufferRow(2)).toMatch(/\-5/)
 
       describe "decrement by 10", ->
@@ -450,8 +548,8 @@ describe "Emmet", ->
          expect(editor.lineForBufferRow(3)).toMatch(/80/)
 
         it "decrements via keybindings", ->
-         editorView.trigger keydownEvent('down', altKey: true, ctrlKey: true, target: editor[0])
-         editorView.trigger keydownEvent('down', altKey: true, ctrlKey: true, target: editor[0])
+         editorView.trigger keydownEvent('down', ctrlKey: true, altKey: true, metaKey: true, shiftKey: true, target: editor[0])
+         editorView.trigger keydownEvent('down', ctrlKey: true, altKey: true, metaKey: true, shiftKey: true, target: editor[0])
          expect(editor.lineForBufferRow(3)).toMatch(/80/)
 
   describe "emmet select items", ->
