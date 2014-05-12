@@ -194,21 +194,15 @@ module.exports =
 
   # Returns the editor's syntax mode.
   getSyntax: ->
-    grammar = @editor.getGrammar().name.toLowerCase()
-    if /\b(less|scss|sass|css|stylus)\b/.test(grammar)
-      return "css"
-    else if /\b(html|xml|haml|slim)\b/.test(grammar)
-      return "html"
-    else
-      return null
+    @editor.getGrammar().name.toLowerCase()
 
   # Returns the current output profile name
   #
   # See emmet.setupProfile for more information.
   getProfileName: ->
-    return @editor.getGrammar().name
+    @editor.getGrammar().name
 
   # Returns the current editor's file path
   getFilePath: ->
     # is there a better way to get this?
-    return @editor.buffer.file.path
+    @editor.buffer.file.path
