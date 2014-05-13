@@ -80,7 +80,10 @@ module.exports =
         break
 
     if success and @_selection.saved.length > 1
-      @editor.setSelectedBufferRanges(@_selection.saved)
+      @_setSelectedBufferRanges(@_selection.saved)
+
+  _setSelectedBufferRanges: (sels) ->
+    @editor.setSelectedBufferRanges(sels.filter (s) -> !!s)
 
   _saveSelection: (delta) ->
     @_selection.saved[@_selection.index] = @editor.getSelectedBufferRange()
@@ -121,7 +124,7 @@ module.exports =
     sels = @_selection.bufferRanges
     buf = @editor.getBuffer()
     sels[@_selection.index] = new Range(buf.positionForCharacterIndex(start), buf.positionForCharacterIndex(end))
-    @editor.setSelectedBufferRanges(sels)
+    @_setSelectedBufferRanges(sels)
 
   # Returns the currently selected text.
   getSelection: ->
