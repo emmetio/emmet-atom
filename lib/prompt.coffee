@@ -44,6 +44,7 @@ class PromptView extends View
 			method(@delegate, 'update')(text)
 
 	confirm: ->
+		@handleUpdate @panelEditor.getText()
 		@trigger 'confirm'
 		method(@delegate, 'confirm')()
 		@detach()

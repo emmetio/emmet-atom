@@ -805,7 +805,7 @@ describe "Emmet", ->
         editorView.trigger "emmet:update-tag"
         prompt = atom.workspaceView.find(".emmet-prompt").view()
 
-        prompt.miniEditor.insertText(".+c2[title=Hello]")
+        prompt.panelInput.insertText(".+c2[title=Hello]")
         prompt.trigger 'core:confirm'
 
         expect(editor.getText()).toBe updated
@@ -813,7 +813,7 @@ describe "Emmet", ->
       it "updates the tag via keybindings", ->
         editorView.trigger keydownEvent('u', shiftKey: true, ctrlKey: true, target: editor[0])
 
-        prompt.miniEditor.insertText(".+c2[title=Hello]")
+        prompt.panelInput.insertText(".+c2[title=Hello]")
         prompt.trigger 'core:confirm'
 
         expect(editor.getText()).toBe updated
@@ -836,7 +836,7 @@ describe "Emmet", ->
         editorView.trigger "emmet:wrap-with-abbreviation"
         prompt = atom.workspaceView.find(".emmet-prompt").view()
 
-        prompt.miniEditor.setText(".wrapper>h1{Title}+.content")
+        prompt.panelInput.setText(".wrapper>h1{Title}+.content")
         prompt.trigger 'core:confirm'
 
         expect(editor.getText()).toBe updated
@@ -845,7 +845,7 @@ describe "Emmet", ->
         editorView.trigger keydownEvent('a', shiftKey: true, metaKey: true, target: editor[0])
         prompt = atom.workspaceView.find(".emmet-prompt").view()
 
-        prompt.miniEditor.setText(".wrapper>h1{Title}+.content")
+        prompt.panelInput.setText(".wrapper>h1{Title}+.content")
         prompt.trigger 'core:confirm'
 
         expect(editor.getText()).toBe updated
