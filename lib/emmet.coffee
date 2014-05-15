@@ -52,8 +52,16 @@ runAction = (action, evt) ->
     activeEditor = editorProxy.editor;
     if not resources.hasSyntax(syntax) or not activeEditor.getSelection().isEmpty()
       return evt.abortKeyBinding()
+  
   if action is 'toggle_comment' and toggleCommentSyntaxes.indexOf(syntax) is -1
     return evt.abortKeyBinding()
+
+  if action is 'insert_formatted_line_break_only'
+    if syntax isnt 'html' or not atom.config.get 'emmet.formatLineBreaks'
+      return evt.abortKeyBinding()
+
+    result = emmet.run action, editorProxy
+    return if not result then evt.abortKeyBinding() else true
 
   emmet.run action, editorProxy
 
@@ -91,6 +99,7 @@ module.exports =
   editorSubscription: null
   configDefaults:
     extensionsPath: '~/emmet'
+    formatLineBreaks: true
 
   activate: (@state) ->
     unless @actions

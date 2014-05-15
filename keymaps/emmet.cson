@@ -28,3 +28,4 @@
 '.pane .editor:not(.mini)':
   'tab': 'emmet:expand-abbreviation-with-tab'
   'cmd-/': 'emmet:toggle-comment'
+  'enter': 'emmet:insert-formatted-line-break-only'
