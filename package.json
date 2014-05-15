@@ -3,11 +3,10 @@
   "description": "Emmet – the essential tool for web developers",
   "main": "./lib/emmet",
   "version": "1.0.0",
-  "private": true,
   "dependencies": {
     "emmet": "^1.1.6"
   },
-  "repository": "https://github.com/atom/emmet",
+  "repository": "https://github.com/emmetio/emmet-atom",
   "engines": {
     "atom": "*"
   }
