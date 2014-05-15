@@ -1,16 +1,14 @@
-# Emmet package
+# Emmet plugin Atom editor
 
-[Emmet](http://emmet.io) support for Atom.
+[Emmet](http://emmet.io) support for [Atom](http://atom.io).
 
-### Features:
+## Installation
 
-* Multiple cursors support
-* Interactive actions (Interactive Expand Abbreviation, Wrap With Abbreviation, Update Tag) allows you to preview result real-time as you type
-* Better tabstops in generated content
-* User extensions support
-* CSP-compatible core, no need to manually patch it with `loophole`.
+In Atom, open Preferences > Packages, search for `Emmet` package. Once it found, click `Install` button to install package.
 
-### Installation
+### Manual installation
+
+You can install the latest Emmet version manually from console:
 
 ```bash
 cd ~/.atom/packages
@@ -19,36 +17,50 @@ cd emmet-atom
 npm install
 ```
 
-Please report any issues at https://github.com/emmetio/emmet-atom/issues
+Then restart Atom editor.
+
+## Features:
+
+* Expand abbreviations by <kbd>Tab</kbd> key.
+* Multiple cursor support: most [Emmet actions](http://docs.emmet.io/actions/) like Expand Abbreviation, Wrap with Abbreviation, Update Tag can run in multi-cursor mode.
+* Interactive actions (Interactive Expand Abbreviation, Wrap With Abbreviation, Update Tag) allows you to preview result real-time as you type.
+* Better tabstops in generated content: when abbreviation expanded, hit <kbd>Tab</kbd> key to quickly traverse between important code points.
+* [Emmet v1.1 core](http://emmet.io/blog/beta-v1-1/).
+
+Please report any problems at [issue tracker](/issues/).
 
 ## Default Keybindings
 
-You can change these by simply making up your own keybindings in _keymaps/emmet.cson_.
+You can change these Preferences > Emmet.
 
-```cson
-'meta-E': 'emmet:expand-abbreviation'
-'ctrl-d': 'emmet:match-pair-outward'
-'alt-d': 'emmet:match-pair-inward'
-'ctrl-alt-j': 'emmet:matching-pair'
-'ctrl-alt-right': 'emmet:next-edit-point'
-'ctrl-alt-left': 'emmet:prev-edit-point'
-# 'command+/': 'emmet:toggle_comment' already exists in Atom
-'meta-J': 'emmet:split-join-tag'
-'meta-K': 'emmet:remove-tag'
-'meta-Y': 'emmet:evaluate-math-expression'
-'ctrl-shift-up': 'emmet:increment-number-by-1'
-'ctrl-shift-down': 'emmet:decrement-number-by-1'
-'alt-shift-up': 'emmet:increment-number-by-01'
-'alt-shift-down': 'emmet:decrement-number-by-01'
-'ctrl-alt-up': 'emmet:increment-number-by-10'
-'ctrl-alt-down': 'emmet:decrement-number-by-10'
-'alt-meta-.': 'emmet:select-next-item'
-'alt-meta-,': 'emmet:select-previous-item'
-'meta-R': 'emmet:reflect-css-value'
-'ctrl-D': 'emmet:encode-decode-data-url' # decoding doesn't work--we need dialogs
-'ctrl-I': 'emmet:update-image-size'
-#'ctrl+alt+enter': 'emmet:expand_as_you_type' doesn't work--we need dialogs
-# 'shift+ctrl+g': 'emmet:wrap_as_you_type' doesn't work--we need dialogs
-# 'Tab': 'emmet:expand_abbreviation_with_tab'
-# 'shift+ctrl+a': 'emmet:wrap_with_abbreviation' doesn't work--we need dialogs
-```
+* <kbd>⇥</kbd> / <kbd>⌘E</kbd>:  Expand Abbreviation
+* <kbd>⌘⌥⏎</kbd>: Expand Abbreviation (interactive)
+* <kbd>⌃W</kbd>: Wrap with Abbreviation
+* <kbd>⌃D</kbd>:  Balance (outward)
+* <kbd>⌥D</kbd>: Balance (inward)
+* <kbd>⌃⌥J</kbd>: Go to Matching Pair
+* <kbd>⌃→</kbd>: Next Edit Point
+* <kbd>⌃←</kbd>: Previous Edit Point
+* <kbd>⌃⇧→</kbd>: Select Next Item
+* <kbd>⌃⇧←</kbd>: Select Previous Item
+* <kbd>⌘</kbd>/: Toggle Comment
+* <kbd>⌘J</kbd>: Split/Join Tag
+* <kbd>⌘</kbd>': Remove Tag
+* <kbd>⌘Y</kbd>: Evaluate Math Expression
+* <kbd>⌃⌥↑</kbd>: Increment Number by 0.1
+* <kbd>⌃⌥↓</kbd>: Decrement Number by 0.1
+* <kbd>⌃⌥⌘↑</kbd>: Increment Number by 1
+* <kbd>⌃⌥⌘↓</kbd>: Decrement Number by 1
+* <kbd>⌃⌥⌘⇧↑</kbd>: Increment Number by 10
+* <kbd>⌃⌥⌘⇧↓</kbd>: Decrement Number by 10
+* <kbd>⌘R</kbd>: Reflect CSS value
+* <kbd>⌃I</kbd>: Update Image Size
+* <kbd>⌃⇧I</kbd>: Encode/Decode image to data:URL
+* <kbd>⌃U</kbd>: Update Tag
+* <kbd>⌘M</kbd>: Merge Lines
+
+All actions and their keyboard shortcuts are available under Packages > Emmet menu item.
+
+## Extensions support
+
+You can easily [extend](http://docs.emmet.io/customization/) Emmet with new actions and filters or customize existing ones. In Preferences > Emmet, set Extensions path to folder with Emmet extensions. By default, it’s `~/emmet`, e.g. `emmet` folder in your system HOME folder.

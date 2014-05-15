@@ -14,6 +14,8 @@ singleSelectionActions = [
   'wrap_with_abbreviation', 'update_tag', 'insert_formatted_line_break_only'
 ]
 
+toggleCommentSyntaxes = ['html', 'css', 'less', 'scss']
+
 getUserHome = () ->
   if process.platform is 'win32'
     return process.env.USERPROFILE
@@ -44,12 +46,14 @@ multiSelectionActionDecorator = (action) ->
         return false if evt.keyBindingAborted
 
 runAction = (action, evt) ->
+  syntax = editorProxy.getSyntax()
   if action is 'expand_abbreviation_with_tab'
     # do not handle Tab key for unknown syntaxes
     activeEditor = editorProxy.editor;
-    syntax = editorProxy.getSyntax()
     if not resources.hasSyntax(syntax) or not activeEditor.getSelection().isEmpty()
       return evt.abortKeyBinding()
+  if action is 'toggle_comment' and toggleCommentSyntaxes.indexOf(syntax) is -1
+    return evt.abortKeyBinding()
 
   emmet.run action, editorProxy
 
@@ -81,7 +85,7 @@ loadExtensions = () ->
 
     emmet.loadExtensions(files)
   else
-    console.error 'Emmet: no such extension folder:', extPath
+    console.warn 'Emmet: no such extension folder:', extPath
 
 module.exports =
   editorSubscription: null
