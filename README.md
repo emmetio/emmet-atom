@@ -27,7 +27,7 @@ Then restart Atom editor.
 * Better tabstops in generated content: when abbreviation expanded, hit <kbd>Tab</kbd> key to quickly traverse between important code points.
 * [Emmet v1.1 core](http://emmet.io/blog/beta-v1-1/).
 
-Please report any problems at [issue tracker](/issues/).
+Please report any problems at [issue tracker](https://github.com/emmetio/emmet-atom/issues).
 
 ## Default Keybindings
 
