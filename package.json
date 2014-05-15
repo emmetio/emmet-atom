@@ -2,7 +2,7 @@
   "name": "emmet",
   "description": "Emmet – the essential tool for web developers",
   "main": "./lib/emmet",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "dependencies": {
     "emmet": "^1.1.6"
   },
