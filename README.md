@@ -33,7 +33,7 @@ Please report any problems at [issue tracker](https://github.com/emmetio/emmet-a
 
 You can change these Preferences > Emmet.
 
-* <kbd>⇥</kbd> / <kbd>⌘E</kbd>:  Expand Abbreviation
+* <kbd>⇥</kbd> / <kbd>⌘⇧E</kbd>:  Expand Abbreviation
 * <kbd>⌘⌥⏎</kbd>: Expand Abbreviation (interactive)
 * <kbd>⌃W</kbd>: Wrap with Abbreviation
 * <kbd>⌃D</kbd>:  Balance (outward)
