@@ -33,31 +33,33 @@ Please report any problems at [issue tracker](https://github.com/emmetio/emmet-a
 
 You can change these Preferences > Emmet.
 
-* <kbd>⇥</kbd> / <kbd>⌘⇧E</kbd>:  Expand Abbreviation
-* <kbd>⌘⌥⏎</kbd>: Expand Abbreviation (interactive)
-* <kbd>⌃W</kbd>: Wrap with Abbreviation
-* <kbd>⌃D</kbd>:  Balance (outward)
-* <kbd>⌥D</kbd>: Balance (inward)
-* <kbd>⌃⌥J</kbd>: Go to Matching Pair
-* <kbd>⌃→</kbd>: Next Edit Point
-* <kbd>⌃←</kbd>: Previous Edit Point
-* <kbd>⌃⇧→</kbd>: Select Next Item
-* <kbd>⌃⇧←</kbd>: Select Previous Item
-* <kbd>⌘</kbd>/: Toggle Comment
-* <kbd>⌘J</kbd>: Split/Join Tag
-* <kbd>⌘</kbd>': Remove Tag
-* <kbd>⌘Y</kbd>: Evaluate Math Expression
-* <kbd>⌃⌥↑</kbd>: Increment Number by 0.1
-* <kbd>⌃⌥↓</kbd>: Decrement Number by 0.1
-* <kbd>⌃⌥⌘↑</kbd>: Increment Number by 1
-* <kbd>⌃⌥⌘↓</kbd>: Decrement Number by 1
-* <kbd>⌃⌥⌘⇧↑</kbd>: Increment Number by 10
-* <kbd>⌃⌥⌘⇧↓</kbd>: Decrement Number by 10
-* <kbd>⌘R</kbd>: Reflect CSS value
-* <kbd>⌃I</kbd>: Update Image Size
-* <kbd>⌃⇧I</kbd>: Encode/Decode image to data:URL
-* <kbd>⌃U</kbd>: Update Tag
-* <kbd>⌘M</kbd>: Merge Lines
+Command | Darwin | Linux/Windows
+------- | ------ | -------------
+Expand Abbreviation | <kbd>tab</kbd> or <kbd>shift</kbd> + <kbd>⌘</kbd> + <kbd>e</kbd> | <kbd>tab</kbd> or <kbd>ctrl</kbd> + <kbd>e</kbd>
+Expand Abbreviation (interactive) | <kbd>alt</kbd> + <kbd>⌘</kbd> + <kbd>enter</kbd> | <kbd>ctrl</kbd> + <kbd>alt</kbd> + <kbd>enter</kbd>
+Wrap with Abbreviation | <kbd>ctrl</kbd> + <kbd>w</kbd> | <kbd>ctrl</kbd> + <kbd>alt</kbd> + <kbd>w</kbd>
+Balance (outward) | <kbd>ctrl</kbd> + <kbd>d</kbd> | <kbd>ctrl</kbd> + <kbd>,</kbd>
+Balance (inward) | <kbd>alt</kbd> + <kbd>d</kbd> | <kbd>ctrl</kbd> + <kbd>shift</kbd> + <kbd>0</kbd>
+Go to Matching Pair | <kbd>ctrl</kbd> + <kbd>alt</kbd> + <kbd>j</kbd> | <kbd>ctrl</kbd> + <kbd>alt</kbd> + <kbd>j</kbd>
+Next Edit Point | <kbd>ctrl</kbd> + <kbd>→</kbd> | <kbd>ctrl</kbd> + <kbd>alt</kbd> + <kbd>→</kbd>
+Previous Edit Point | <kbd>ctrl</kbd> + <kbd>←</kbd> | <kbd>ctrl</kbd> + <kbd>alt</kbd> + <kbd>←</kbd>
+Select Next Item | <kbd>ctrl</kbd> + <kbd>shift</kbd> + <kbd>→</kbd> | <kbd>ctrl</kbd> + <kbd>shift</kbd> + <kbd>.</kbd>
+Select Previous Item | <kbd>ctrl</kbd> + <kbd>shift</kbd> + <kbd>←</kbd> | <kbd>ctrl</kbd> + <kbd>shift</kbd> + <kbd>,</kbd>
+Toggle Comment | <kbd>⌘</kbd> + <kbd>/</kbd> | <kbd>ctrl</kbd> + <kbd>shift</kbd> + <kbd>/</kbd>
+Split/Join Tag | <kbd>shift</kbd> + <kbd>⌘</kbd> + <kbd>j</kbd> | <kbd>ctrl</kbd> + <kbd>shift</kbd> + <kbd>`</kbd>
+Remove Tag | <kbd>⌘</kbd> + <kbd>'</kbd> | <kbd>ctrl</kbd> + <kbd>shift</kbd> + <kbd>;</kbd>
+Evaluate Math Expression | <kbd>shift</kbd> + <kbd>⌘</kbd> + <kbd>y</kbd> | <kbd>ctrl</kbd> + <kbd>shift</kbd> + <kbd>y</kbd>
+Increment Number by 0.1 | <kbd>ctrl</kbd> + <kbd>alt</kbd> + <kbd>↑</kbd> | <kbd>alt</kbd> + <kbd>↑</kbd>
+Decrement Number by 0.1 | <kbd>ctrl</kbd> + <kbd>alt</kbd> + <kbd>↓</kbd> | <kbd>alt</kbd> + <kbd>↓</kbd>
+Increment Number by 1 | <kbd>ctrl</kbd> + <kbd>alt</kbd> + <kbd>⌘</kbd> + <kbd>↑</kbd> | <kbd>ctrl</kbd> + <kbd>↑</kbd>
+Decrement Number by 1 | <kbd>ctrl</kbd> + <kbd>alt</kbd> + <kbd>⌘</kbd> + <kbd>↓</kbd> | <kbd>ctrl</kbd> + <kbd>↓</kbd>
+Increment Number by 10 | <kbd>ctrl</kbd> + <kbd>alt</kbd> + <kbd>⌘</kbd> + <kbd>shift</kbd> + <kbd>↑</kbd> | <kbd>shift</kbd> + <kbd>alt</kbd> + <kbd>↑</kbd>
+Decrement Number by 10 | <kbd>ctrl</kbd> + <kbd>alt</kbd> + <kbd>⌘</kbd> + <kbd>shift</kbd> + <kbd>↓</kbd> | <kbd>shift</kbd> + <kbd>alt</kbd> + <kbd>↓</kbd>
+Reflect CSS value | <kbd>shift</kbd> + <kbd>⌘</kbd> + <kbd>r</kbd> | <kbd>ctrl</kbd> + <kbd>shift</kbd> + <kbd>r</kbd>
+Update Image Size | <kbd>ctrl</kbd> + <kbd>i</kbd> | <kbd>ctrl</kbd> + <kbd>u</kbd>
+Encode/Decode image to data:URL | <kbd>ctrl</kbd> + <kbd>shift</kbd> + <kbd>i</kbd> | <kbd>ctrl</kbd> + <kbd>'</kbd>
+Update Tag | <kbd>ctrl</kbd> + <kbd>shift</kbd> + <kbd>u</kbd> | <kbd>ctrl</kbd> + <kbd>shift</kbd> + <kbd>'</kbd>
+Merge Lines | <kbd>shift</kbd> + <kbd>⌘</kbd> + <kbd>m</kbd> | <kbd>ctrl</kbd> + <kbd>shift</kbd> + <kbd>m</kbd>
 
 All actions and their keyboard shortcuts are available under Packages > Emmet menu item.
 
