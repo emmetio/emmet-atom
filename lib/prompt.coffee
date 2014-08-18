@@ -10,7 +10,7 @@ class PromptView extends View
 	@attach: -> new PromptView
 
 	@content: ->
-		@div class: 'emmet-prompt mini', =>
+		@div class: 'emmet-prompt tool-panel panel-bottom', =>
 			# @label class: 'emmet-prompt__label', outlet: 'label'
 			@div class: 'emmet-prompt__input', =>
 				@subview 'panelInput', new EditorView(mini: true)
@@ -26,7 +26,7 @@ class PromptView extends View
 	show: (@delegate={}) ->
 		@editor = @delegate.editor
 		@editorView = @delegate.editorView
-		@panelInput.setPlaceholderText @delegate.label or 'Enter Abbreviation'
+		@panelInput.setPlaceholderText @delegate.label or 'Enter abbreviation'
 		@updated = no
 
 		@attach()
