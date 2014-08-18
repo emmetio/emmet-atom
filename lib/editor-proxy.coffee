@@ -183,7 +183,7 @@ module.exports =
     )
 
     oldValue = @editor.getTextInBufferRange(changeRange)
-    buf.change(changeRange, '')
+    buf.setTextInRange(changeRange, '')
     # Before inserting snippet we have to reset all available selections
     # to insert snippent right in required place. Otherwise snippet
     # will be inserted for each selection in editor
