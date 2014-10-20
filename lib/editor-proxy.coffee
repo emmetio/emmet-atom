@@ -22,12 +22,12 @@ visualize = (str) ->
 # @param  {Editor} editor Brackets editor instance
 # @return {String}
 normalize = (text, editor) ->
-  editorUtils.normalize text, 
+  editorUtils.normalize text,
     indentation: editor.getTabText(),
     newline: '\n'
 
 # Proprocess text data that should be used as snippet content
-# Currently, Atom’s snippets implementation has the following issues: 
+# Currently, Atom’s snippets implementation has the following issues:
 # * supports $N or ${N:placeholder} notation, but not ${N}
 # * multiple $0 are not treated as distinct final tabstops
 preprocessSnippet = (value) ->
@@ -49,7 +49,7 @@ preprocessSnippet = (value) ->
         placeholder = tabStops.processText(placeholder, tabstopOptions)
 
       if placeholder then "${#{group}:#{placeholder}}" else "$#{group}"
-      
+
     escape: (ch) ->
       if ch == '$' then '\\$' else ch
 
@@ -60,7 +60,7 @@ module.exports =
     @editor = @editorView.getEditor()
     buf = @editor.getBuffer()
     bufRanges = @editor.getSelectedBufferRanges()
-    @_selection = 
+    @_selection =
       index: 0
       saved: new Array(bufRanges.length)
       bufferRanges: bufRanges
@@ -83,7 +83,9 @@ module.exports =
       @_setSelectedBufferRanges(@_selection.saved)
 
   _setSelectedBufferRanges: (sels) ->
-    @editor.setSelectedBufferRanges(sels.filter (s) -> !!s)
+    filteredSels = sels.filter (s) -> !!s
+    if filteredSels.length
+      @editor.setSelectedBufferRanges(filteredSels)
 
   _saveSelection: (delta) ->
     @_selection.saved[@_selection.index] = @editor.getSelectedBufferRange()
@@ -187,7 +189,7 @@ module.exports =
     # Before inserting snippet we have to reset all available selections
     # to insert snippent right in required place. Otherwise snippet
     # will be inserted for each selection in editor
-    
+
     # Right after that we should save first available selection as buffer range
     caret = buf.positionForCharacterIndex(start)
     @editor.setSelectedBufferRange(new Range(caret, caret))
