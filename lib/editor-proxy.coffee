@@ -7,8 +7,8 @@ tabStops    = require 'emmet/lib/assets/tabStops'
 resources   = require 'emmet/lib/assets/resources'
 editorUtils = require 'emmet/lib/utils/editor'
 
-snippetsPath = atom.packages.resolvePackagePath('snippets')
-snippets = require snippetsPath
+insertSnippet = (snippet, editor) ->
+  atom.packages.getLoadedPackage('snippets')?.mainModule?.insert(snippet, editor)
 
 visualize = (str) ->
   str
@@ -22,12 +22,12 @@ visualize = (str) ->
 # @param  {Editor} editor Brackets editor instance
 # @return {String}
 normalize = (text, editor) ->
-  editorUtils.normalize text, 
+  editorUtils.normalize text,
     indentation: editor.getTabText(),
     newline: '\n'
 
 # Proprocess text data that should be used as snippet content
-# Currently, Atom’s snippets implementation has the following issues: 
+# Currently, Atom’s snippets implementation has the following issues:
 # * supports $N or ${N:placeholder} notation, but not ${N}
 # * multiple $0 are not treated as distinct final tabstops
 preprocessSnippet = (value) ->
@@ -49,7 +49,7 @@ preprocessSnippet = (value) ->
         placeholder = tabStops.processText(placeholder, tabstopOptions)
 
       if placeholder then "${#{group}:#{placeholder}}" else "$#{group}"
-      
+
     escape: (ch) ->
       if ch == '$' then '\\$' else ch
 
@@ -60,7 +60,7 @@ module.exports =
     @editor = @editorView.getEditor()
     buf = @editor.getBuffer()
     bufRanges = @editor.getSelectedBufferRanges()
-    @_selection = 
+    @_selection =
       index: 0
       saved: new Array(bufRanges.length)
       bufferRanges: bufRanges
@@ -187,11 +187,11 @@ module.exports =
     # Before inserting snippet we have to reset all available selections
     # to insert snippent right in required place. Otherwise snippet
     # will be inserted for each selection in editor
-    
+
     # Right after that we should save first available selection as buffer range
     caret = buf.positionForCharacterIndex(start)
     @editor.setSelectedBufferRange(new Range(caret, caret))
-    snippets.insert preprocessSnippet(value), @editor
+    insertSnippet preprocessSnippet(value), @editor
     @_saveSelection(utils.splitByLines(value).length - utils.splitByLines(oldValue).length)
     value
 

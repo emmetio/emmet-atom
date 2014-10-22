@@ -88,7 +88,7 @@ describe "Emmet", ->
         cursorPos = editor.getCursorScreenPosition()
         expect(cursorPos.column).toBe 9
 
-      it "expands HTML abbreviations via keybindings", ->
+      fit "expands HTML abbreviations via keybindings", ->
         editorView.trigger keydownEvent('e', shiftKey: true, metaKey: true, target: editor[0])
         expect(editor.getText()).toBe expansion
         cursorPos = editor.getCursorScreenPosition()
