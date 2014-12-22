@@ -11,7 +11,7 @@ interactive  = require './interactive'
 singleSelectionActions = [
   'prev_edit_point', 'next_edit_point', 'merge_lines',
   'reflect_css_value', 'select_next_item', 'select_previous_item',
-  'wrap_with_abbreviation', 'update_tag', 'insert_formatted_line_break_only'
+  'wrap_with_abbreviation', 'update_tag'
 ]
 
 toggleCommentSyntaxes = ['html', 'css', 'less', 'scss']
