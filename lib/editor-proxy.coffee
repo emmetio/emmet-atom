@@ -83,7 +83,9 @@ module.exports =
       @_setSelectedBufferRanges(@_selection.saved)
 
   _setSelectedBufferRanges: (sels) ->
-    @editor.setSelectedBufferRanges(sels.filter (s) -> !!s)
+    filteredSels = sels.filter (s) -> !!s
+    if filteredSels.length
+      @editor.setSelectedBufferRanges(filteredSels)
 
   _saveSelection: (delta) ->
     @_selection.saved[@_selection.index] = @editor.getSelectedBufferRange()
