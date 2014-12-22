@@ -4,7 +4,7 @@
   "main": "./lib/emmet",
   "version": "2.2.1",
   "dependencies": {
-    "emmet": "^1.1.7"
+    "emmet": "^1.2.0"
   },
   "repository": "https://github.com/emmetio/emmet-atom",
   "engines": {
