@@ -198,15 +198,25 @@ module.exports =
     @_saveSelection(utils.splitByLines(value).length - utils.splitByLines(oldValue).length)
     value
 
-  # Returns the editor's syntax mode.
+  insideStyleTag: ->
+    for cursor in @editor.cursors
+      if cursor.getScopeDescriptor()
+          .getScopeChain()
+          .indexOf('.source.css.embedded') is -1
+        return no
+    return yes
+
+  # Returns the editor's syntax mode or 'css' if cursors inside style tag
   getSyntax: ->
-    @editor.getGrammar().name.toLowerCase()
+    return 'css' if @insideStyleTag()
+    return @editor.getGrammar().name.toLowerCase()
 
   # Returns the current output profile name
   #
   # See emmet.setupProfile for more information.
   getProfileName: ->
-    'html'
+    return 'css' if @insideStyleTag()
+    return 'html'
 
   # Returns the current editor's file path
   getFilePath: ->

@@ -100,6 +100,34 @@ describe "Emmet", ->
         cursorPos = editor.getCursorScreenPosition()
         expect(cursorPos.column).toBe 9
 
+    describe "for CSS inside <style> tag", ->
+      beforeEach ->
+        workspaceView.openSync(Path.join(__dirname, './fixtures/css-inside-style-tag/before/css-inside-style-tag-expand.html'))
+        editorView = workspaceView.getActiveView()
+        editor = editorView.getEditor()
+        editSession = workspaceView.getActivePaneItem()
+        editor.setCursorScreenPosition([7, 8])
+
+        expansion = Fs.readFileSync(Path.join(__dirname, './fixtures/css-inside-style-tag/after/css-inside-style-tag-expand.html'), "utf8")
+
+      it "expands CSS abbreviations via command", ->
+        editorView.trigger "emmet:expand-abbreviation"
+        expect(editorView.getText()).toBe expansion
+        cursorPos = editor.getCursorScreenPosition()
+        expect(cursorPos.column).toBe 16
+
+      it "expands CSS abbreviations via keybindings", ->
+        editorView.trigger keydownEvent('e', shiftKey: true, metaKey: true, target: editor[0])
+        expect(editor.getText()).toBe expansion
+        cursorPos = editor.getCursorScreenPosition()
+        expect(cursorPos.column).toBe 16
+
+      it "expands CSS abbreviations via Tab", ->
+        editorView.trigger keydownEvent('tab', target: editor[0])
+        expect(editor.getText()).toBe expansion
+        cursorPos = editor.getCursorScreenPosition()
+        expect(cursorPos.column).toBe 16
+
     # headers seem to be a special case: http://git.io/7XeBKQ
     describe "for headers in HTML", ->
       beforeEach ->
