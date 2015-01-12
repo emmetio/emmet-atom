@@ -1,5 +1,4 @@
-{$, EditorView, View} = require 'atom'
-
+{$, TextEditorView, View} = require 'atom-space-pen-views'
 noop = ->
 
 method = (delegate, method) ->
@@ -13,20 +12,21 @@ class PromptView extends View
 		@div class: 'emmet-prompt tool-panel panel-bottom', =>
 			# @label class: 'emmet-prompt__label', outlet: 'label'
 			@div class: 'emmet-prompt__input', =>
-				@subview 'panelInput', new EditorView(mini: true)
+				@subview 'panelInput', new TextEditorView(mini: true)
 
 	initialize: () ->
-		@panelEditor = @panelInput.getEditor()
-		@panelEditor.on 'contents-modified', =>
+		@panelEditor = @panelInput.getModel()
+		@panelEditor.onDidStopChanging =>
 			return unless @attached
 			@handleUpdate @panelEditor.getText()
-		@on 'core:confirm', => @confirm()
-		@on 'core:cancel', => @cancel()
+		atom.commands.add @panelInput.element, 'core:confirm', => @confirm()
+		atom.commands.add @panelInput.element, 'core:cancel', => @cancel()
 
 	show: (@delegate={}) ->
 		@editor = @delegate.editor
 		@editorView = @delegate.editorView
-		@panelInput.setPlaceholderText @delegate.label or 'Enter abbreviation'
+		# @panelInput.setPlaceholderText @delegate.label or 'Enter abbreviation'
+		@panelInput.element.setAttribute 'placeholder', @delegate.label or 'Enter abbreviation'
 		@updated = no
 
 		@attach()

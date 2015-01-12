@@ -56,8 +56,7 @@ preprocessSnippet = (value) ->
   tabStops.processText(value, tabstopOptions)
 
 module.exports =
-  setup: (@editorView, @selectionIndex=0) ->
-    @editor = @editorView.getEditor()
+  setup: (@editor, @selectionIndex=0) ->
     buf = @editor.getBuffer()
     bufRanges = @editor.getSelectedBufferRanges()
     @_selection =
@@ -139,7 +138,7 @@ module.exports =
   getCurrentLineRange: ->
     sel = @getSelectionBufferRange()
     row = sel.getRows()[0]
-    lineLength = @editor.lineLengthForBufferRow(row)
+    lineLength = @editor.lineTextForBufferRow(row).length
     index = @editor.getBuffer().characterIndexForPosition({row: row, column: 0})
     return {
       start: index

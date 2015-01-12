@@ -4,7 +4,8 @@
   "main": "./lib/emmet",
   "version": "2.3.0",
   "dependencies": {
-    "emmet": "^1.2.0"
+    "emmet": "^1.2.0",
+    "atom-space-pen-views": "^2.0.3"
   },
   "repository": "https://github.com/emmetio/emmet-atom",
   "engines": {

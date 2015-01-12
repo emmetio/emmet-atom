@@ -1,4 +1,4 @@
-'.editor:not(.mini)':
+'atom-text-editor:not([mini])':
   'ctrl-e': 'emmet:expand-abbreviation'
   'ctrl-,': 'emmet:balance-outward'
   'ctrl-shift-0': 'emmet:balance-inward'
@@ -25,12 +25,12 @@
   'ctrl-alt-enter': 'emmet:interactive-expand-abbreviation'
 
 # more specificity to Emmet to override Tab key action for snippets plugin
-'.pane .editor:not(.mini)':
+'atom-pane atom-text-editor:not([mini])':
   'tab': 'emmet:expand-abbreviation-with-tab'
   'ctrl-shift-/': 'emmet:toggle-comment'
   'enter': 'emmet:insert-formatted-line-break-only'
 
-'.platform-darwin .editor:not(.mini)':
+'.platform-darwin atom-text-editor:not([mini])':
   'cmd-shift-e': 'emmet:expand-abbreviation'
   'ctrl-d': 'emmet:balance-outward'
   'alt-d': 'emmet:balance-inward'
@@ -55,5 +55,5 @@
   'ctrl-w': 'emmet:wrap-with-abbreviation'
   'alt-cmd-enter': 'emmet:interactive-expand-abbreviation'
 
-'.platform-darwin .pane .editor:not(.mini)':
+'.platform-darwin atom-pane atom-text-editor:not([mini])':
   'cmd-/': 'emmet:toggle-comment'
