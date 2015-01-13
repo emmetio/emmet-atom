@@ -29,6 +29,24 @@ Then restart Atom editor.
 
 Please report any problems at [issue tracker](https://github.com/emmetio/emmet-atom/issues).
 
+## Tab key
+
+Currently, Emmet expands abbreviations by Tab key only for HTML, CSS, Sass/SCSS and LESS syntaxes. Tab handler scope is limited because it overrides default snippets.
+
+If you want to make Emmet expand abbreviations with Tab key for other syntaxes, you can do the following:
+
+1. Use *Open Your Keymap* menu item to open your custom `keymap.csom` file.
+2. Add the following section into it:
+
+```coffee
+'atom-text-editor[data-grammar="YOUR GRAMMAR HERE"]:not([mini])':
+    'tab': 'emmet:expand-abbreviation-with-tab'
+```
+
+Replace `YOUR GRAMMAR HERE` with actual grammar attribute value. The easiest way to get grammar name of currently opened editor is to open DevTools and find corresponding `<atom-text-editor>` element: it will contain `data-grammar` attribute with value you need. For example, for HTML syntax it’s a `text html basic`.
+
+You can add as many sections as you like for different syntaxes. Note that default snippets will no longer work, but you can add [your own snippets in Emmet](http://docs.emmet.io/customization/).
+
 ## Default Keybindings
 
 You can change these Preferences > Emmet.

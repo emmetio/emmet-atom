@@ -26,9 +26,13 @@
 
 # more specificity to Emmet to override Tab key action for snippets plugin
 'atom-pane atom-text-editor:not([mini])':
-  'tab': 'emmet:expand-abbreviation-with-tab'
   'ctrl-shift-/': 'emmet:toggle-comment'
   'enter': 'emmet:insert-formatted-line-break-only'
+
+# language-specific Tab triggers
+# you can add more triggers by changing `grammar` attribute values
+'atom-text-editor[data-grammar="text html basic"]:not([mini]), atom-text-editor[data-grammar~="css"]:not([mini]), atom-text-editor[data-grammar~="sass"]:not([mini])':
+  'tab': 'emmet:expand-abbreviation-with-tab'
 
 '.platform-darwin atom-text-editor:not([mini])':
   'cmd-shift-e': 'emmet:expand-abbreviation'
