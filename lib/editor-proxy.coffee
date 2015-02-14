@@ -10,6 +10,9 @@ editorUtils = require 'emmet/lib/utils/editor'
 insertSnippet = (snippet, editor) ->
   atom.packages.getLoadedPackage('snippets')?.mainModule?.insert(snippet, editor)
 
+  # Fetch expansions and assign to editor
+  editor.snippetExpansion = atom.packages.getLoadedPackage('snippets')?.mainModule?.getExpansions(editor)[0]
+
 visualize = (str) ->
   str
     .replace(/\t/g, '\\t')
