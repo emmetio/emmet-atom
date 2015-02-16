@@ -35,7 +35,7 @@ Currently, Emmet expands abbreviations by Tab key only for HTML, CSS, Sass/SCSS 
 
 If you want to make Emmet expand abbreviations with Tab key for other syntaxes, you can do the following:
 
-1. Use *Open Your Keymap* menu item to open your custom `keymap.csom` file.
+1. Use *Open Your Keymap* menu item to open your custom `keymap.cson` file.
 2. Add the following section into it:
 
 ```coffee
