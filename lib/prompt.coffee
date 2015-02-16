@@ -62,8 +62,6 @@ class PromptView extends View
 
 		if @previouslyFocusedElement?.isOnDom()
 			@previouslyFocusedElement.focus()
-		else
-			atom.workspaceView.focus()
 
 		super
 		@detaching = false
@@ -75,8 +73,7 @@ class PromptView extends View
 	attach: ->
 		@attached = true
 		@previouslyFocusedElement = $(':focus')
-		# atom.workspaceView.append(this)
-		atom.workspaceView.prependToBottom(this)
+		atom.workspace.addBottomPanel(item: this, visible: true)
 		@panelInput.focus()
 		@trigger 'attach'
 		method(@delegate, 'show')()

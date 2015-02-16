@@ -50,7 +50,7 @@ runAction = (action, evt) ->
   syntax = editorProxy.getSyntax()
   if action is 'expand_abbreviation_with_tab'
     # do not handle Tab key if:
-    # -1. syntax is unknown- (defined by keymap selector)
+    # -1. syntax is unknown- (no longer valid, defined by keymap selector)
     # 2. there’s a selection (user wants to indent it)
     # 3. has expanded snippet (e.g. has tabstops)
     activeEditor = editorProxy.editor;
