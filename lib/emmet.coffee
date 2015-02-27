@@ -23,6 +23,19 @@ getUserHome = () ->
 
   process.env.HOME
 
+isValidTabContext = () ->
+  if editorProxy.getGrammar() is 'html'
+    # HTML may contain embedded grammars
+    scopes = editorProxy.getCurrentScope()
+    contains = (regexp) -> scopes.filter((s) -> regexp.test s).length
+
+    if contains /\.js\.embedded\./
+      # in JS, allow Tab expander only inside string
+      return contains /^string\./
+
+  return true
+
+
 # Emmet action decorator: creates a command function
 # for Atom and executes Emmet action as single
 # undo command
@@ -54,7 +67,7 @@ runAction = (action, evt) ->
     # 2. there’s a selection (user wants to indent it)
     # 3. has expanded snippet (e.g. has tabstops)
     activeEditor = editorProxy.editor;
-    if not activeEditor.getSelection().isEmpty()
+    if not isValidTabContext() or not activeEditor.getSelection().isEmpty()
       return evt.abortKeyBinding()
     if activeEditor.snippetExpansion
       # in case of snippet expansion: expand abbreviation if we currently on last

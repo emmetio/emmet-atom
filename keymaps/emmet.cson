@@ -24,7 +24,6 @@
   'ctrl-alt-w': 'emmet:wrap-with-abbreviation'
   'ctrl-alt-enter': 'emmet:interactive-expand-abbreviation'
 
-# more specificity to Emmet to override Tab key action for snippets plugin
 'atom-pane atom-text-editor:not([mini])':
   'ctrl-shift-/': 'emmet:toggle-comment'
   'enter': 'emmet:insert-formatted-line-break-only'
