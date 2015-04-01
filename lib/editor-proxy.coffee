@@ -206,6 +206,9 @@ module.exports =
   # Returns the editor's syntax mode.
   getSyntax: ->
     syntax = @getGrammar()
+
+    syntax = 'jsx' if /\b(javascript|jsx)\b/.test(syntax)
+      
     if syntax is 'html'
       # HTML can contain embedded syntaxes
       embedded = @getCurrentScope().filter((s) -> /\.embedded\./.test s).pop()
