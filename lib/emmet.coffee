@@ -67,7 +67,7 @@ runAction = (action, evt) ->
     # 2. there’s a selection (user wants to indent it)
     # 3. has expanded snippet (e.g. has tabstops)
     activeEditor = editorProxy.editor;
-    if not isValidTabContext() or not activeEditor.getSelection().isEmpty()
+    if not isValidTabContext() or not activeEditor.getLastSelection().isEmpty()
       return evt.abortKeyBinding()
     if activeEditor.snippetExpansion
       # in case of snippet expansion: expand abbreviation if we currently on last
