@@ -152,7 +152,7 @@ module.exports =
   getCurrentLine: ->
     sel = @getSelectionBufferRange()
     row = sel.getRows()[0]
-    return @editor.lineForBufferRow(row)
+    return @editor.lineTextForBufferRow(row)
 
   # Returns the editor content.
   getContent: ->
