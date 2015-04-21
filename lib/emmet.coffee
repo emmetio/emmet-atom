@@ -122,9 +122,13 @@ loadExtensions = () ->
     console.warn 'Emmet: no such extension folder:', extPath
 
 module.exports =
-  configDefaults:
-    extensionsPath: '~/emmet'
-    formatLineBreaks: true
+  config:
+    extensionsPath:
+      type: 'string'
+      default: '~/emmet'
+    formatLineBreaks:
+      type: 'boolean'
+      default: true
 
   activate: (@state) ->
     @subscriptions = new CompositeDisposable
