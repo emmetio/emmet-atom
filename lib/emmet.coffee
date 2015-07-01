@@ -131,7 +131,7 @@ module.exports =
       default: true
     useEmmetComments:
       type: 'boolean'
-      default: true
+      default: false
       description: 'disable to use atom native commenting system'
 
   activate: (@state) ->
