@@ -1,6 +1,6 @@
 'atom-text-editor:not([mini])':
   'ctrl-e': 'emmet:expand-abbreviation'
-  'ctrl-,': 'emmet:balance-outward'
+  'ctrl-shift-e': 'emmet:balance-outward'
   'ctrl-shift-0': 'emmet:balance-inward'
   'ctrl-alt-j': 'emmet:matching-pair'
   'ctrl-alt-right': 'emmet:next-edit-point'
