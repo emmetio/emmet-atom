@@ -39,7 +39,7 @@ If you want to make Emmet expand abbreviations with Tab key for other syntaxes, 
 2. Add the following section into it:
 
 ```coffee
-'atom-text-editor[data-grammar="YOUR GRAMMAR HERE"]:not([mini])':
+'atom-text-editor[data-grammar~="YOUR GRAMMAR HERE"]:not([mini])':
     'tab': 'emmet:expand-abbreviation-with-tab'
 ```
 
