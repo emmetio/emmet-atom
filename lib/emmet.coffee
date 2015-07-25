@@ -2,11 +2,12 @@ path = require 'path'
 fs = require 'fs'
 {CompositeDisposable} = require 'atom'
 
-emmet = require 'emmet'
 emmetActions = require 'emmet/lib/action/main'
-resources = require 'emmet/lib/assets/resources'
 
-editorProxy  = require './editor-proxy'
+# deferring to load modules depend on emmet
+emmet = null
+editorProxy = null
+
 # interactive  = require './interactive'
 
 singleSelectionActions = [
@@ -121,6 +122,12 @@ loadExtensions = () ->
   else
     console.warn 'Emmet: no such extension folder:', extPath
 
+lazyLoadEmmetDecorator = (cmd) ->
+  ->
+    emmet ?= require 'emmet'
+    editorProxy ?= require './editor-proxy'
+    cmd.apply(this, arguments)
+
 module.exports =
   config:
     extensionsPath:
@@ -138,14 +145,17 @@ module.exports =
     @subscriptions = new CompositeDisposable
     unless @actions
       @subscriptions.add atom.config.observe 'emmet.extensionsPath', loadExtensions
-      @actions = {}
-      registerInteractiveActions @actions
+      actions = {}
+      registerInteractiveActions actions
       for action in emmetActions.getList()
         atomAction = atomActionName action.name
-        if @actions[atomAction]?
+        if actions[atomAction]?
           continue
         cmd = if singleSelectionActions.indexOf(action.name) isnt -1 then actionDecorator(action.name) else multiSelectionActionDecorator(action.name)
-        @actions[atomAction] = cmd
+        actions[atomAction] = cmd
+      @actions = {}
+      for atomAction, cmd of actions
+        @actions[atomAction] = lazyLoadEmmetDecorator(cmd)
 
     @subscriptions.add atom.commands.add 'atom-text-editor', @actions
 

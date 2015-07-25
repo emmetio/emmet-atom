@@ -4,7 +4,6 @@ path           = require 'path'
 emmet       = require 'emmet'
 utils       = require 'emmet/lib/utils/common'
 tabStops    = require 'emmet/lib/assets/tabStops'
-resources   = require 'emmet/lib/assets/resources'
 editorUtils = require 'emmet/lib/utils/editor'
 
 insertSnippet = (snippet, editor) ->
@@ -211,7 +210,7 @@ module.exports =
 
     if /\b(javascript|jsx)\b/.test(syntax)
       syntax = if @getCurrentScope().some((scope) -> /\bstring\b/.test scope) then 'html' else 'jsx'
-      
+
     if syntax is 'html'
       # HTML can contain embedded syntaxes
       embedded = @getCurrentScope().filter((s) -> /\.embedded\./.test s).pop()
