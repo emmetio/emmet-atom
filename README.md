@@ -4,7 +4,7 @@
 
 ## Installation
 
-In Atom, open Preferences > Packages, search for `Emmet` package. Once it found, click `Install` button to install package.
+In Atom, open Edit > Preferences > Install, search for `Emmet` package. Once it found, click `Install` button to install package.
 
 ### Manual installation
 
@@ -49,7 +49,7 @@ You can add as many sections as you like for different syntaxes. Note that defau
 
 ## Default Keybindings
 
-You can change these Preferences > Emmet.
+You can change these Packages > Emmet.
 
 Command | Darwin | Linux/Windows
 ------- | ------ | -------------
