@@ -4,7 +4,7 @@
 
 ## Installation
 
-In Atom, open Preferences > Packages, search for `Emmet` package. Once it found, click `Install` button to install package.
+In Atom, open Preferences > Packages, On Windows, go to File > Settings (or Ctrl + ,) > Install > `Install Packages`,  search for `Emmet` package. Once it found, click `Install` button to install package.
 
 ### Manual installation
 
