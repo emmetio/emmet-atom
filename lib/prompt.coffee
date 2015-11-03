@@ -4,7 +4,7 @@ noop = ->
 method = (delegate, method) ->
 	delegate?[method]?.bind(delegate) or noop
 
-module.exports = 
+module.exports =
 class PromptView extends View
 	@attach: -> new PromptView
 
@@ -32,6 +32,7 @@ class PromptView extends View
 		@attach()
 		text = @panelEditor.getText()
 		if text
+			@panelEditor.selectAll()
 			@handleUpdate text
 
 	undo: ->
@@ -54,7 +55,7 @@ class PromptView extends View
 		@trigger 'cancel'
 		method(@delegate, 'cancel')()
 		@detach()
-		
+
 	detach: ->
 		return unless @hasParent()
 		@detaching = true
