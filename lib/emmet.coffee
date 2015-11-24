@@ -17,6 +17,9 @@ singleSelectionActions = [
 
 toggleCommentSyntaxes = ['html', 'css', 'less', 'scss']
 
+for k, v of  atom.config.get 'emmet.stylus'
+    emmet.preferences.set('stylus.' + k, v);
+
 getUserHome = () ->
   if process.platform is 'win32'
     return process.env.USERPROFILE
