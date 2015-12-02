@@ -207,7 +207,7 @@ module.exports =
   getSyntax: ->
     syntax = @getGrammar().split(' ')[0]
 
-    if /\b(javascript|jsx)\b/.test(syntax)
+    if /\b(javascript|jsx|babel)\b/.test(syntax)
       syntax = if @getCurrentScope().some((scope) -> /\bstring\b/.test scope) then 'html' else 'jsx'
     else if not resources.hasSyntax syntax
       syntax = "html"
