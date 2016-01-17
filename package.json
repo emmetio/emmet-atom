@@ -2,7 +2,7 @@
   "name": "emmet",
   "description": "Emmet – the essential tool for web developers",
   "main": "./lib/emmet",
-  "version": "2.3.17",
+  "version": "2.3.18",
   "dependencies": {
     "emmet": "^1.3.2",
     "atom-space-pen-views": "^2.0.3"
