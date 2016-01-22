@@ -215,13 +215,13 @@ module.exports =
     if not /\bstring\b/.test(scope) && sourceSyntax && resources.hasSyntax(sourceSyntax)
       syntax = sourceSyntax;
     else
-      # detect CSS-like syntaxes independently,
-      # since it may cause collisions with some highlighters
-      cssSyntax = scope.match(/\b(less|scss|sass|css|stylus)\b/)?[0]
-      knownSyntax = scope.match(/\b(html|xml|haml|slim|jade)\b/)?[0]
-      syntax = cssSyntax or knownSyntax or 'html'
+      # probe syntax based on current selector
+      m = scope.match(/\b(source|text)\.[\w\-\.]+/)
+      syntax = m?[0].split('.').reduceRight (result, token) ->
+          result or (token if resources.hasSyntax token)
+        , null
 
-    actionUtils.detectSyntax(@, syntax)
+    actionUtils.detectSyntax(@, syntax or 'html')
 
   getCurrentScope: ->
     range = @_selection.bufferRanges[@_selection.index]
