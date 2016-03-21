@@ -28,7 +28,7 @@
   'ctrl-shift-/': 'emmet:toggle-comment'
 
 # Override Enter key for specific syntaxes only
-'atom-pane atom-text-editor[data-grammar~="html"]:not([mini]), atom-pane atom-text-editor[data-grammar~="xml"]:not([mini])':
+'atom-pane atom-text-editor[data-grammar~="html"]:not([mini]):not(.autocomplete-active), atom-pane atom-text-editor[data-grammar~="xml"]:not([mini]):not(.autocomplete-active)':
   'enter': 'emmet:insert-formatted-line-break-only'
 
 # language-specific Tab triggers
