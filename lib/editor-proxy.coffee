@@ -181,6 +181,7 @@ module.exports =
     start = 0 unless start?
 
     value = normalize(value, @editor)
+    value = utils.unescapeText(value)
     buf = @editor.getBuffer()
     changeRange = new Range(
       Point.fromObject(buf.positionForCharacterIndex(start)),
