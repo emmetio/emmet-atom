@@ -14,8 +14,8 @@ You can install the latest Emmet version manually from console:
 
 ```bash
 cd ~/.atom/packages
-git clone https://github.com/emmetio/emmet-atom
-cd emmet-atom
+git clone https://github.com/emmetio/emmet-atom emmet
+cd emmet
 npm install
 ```
 
