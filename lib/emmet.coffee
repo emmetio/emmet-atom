@@ -107,13 +107,13 @@ registerInteractiveActions = (actions) ->
 
 loadExtensions = () ->
   extPath = atom.config.get 'emmet.extensionsPath'
-  console.log 'Loading Emmet extensions from', extPath
   return unless extPath
 
   if extPath[0] is '~'
     extPath = getUserHome() + extPath.substr 1
 
   if fs.existsSync extPath
+    console.log 'Loading Emmet extensions from', extPath
     emmet.resetUserData()
     files = fs.readdirSync extPath
     files = files
@@ -121,7 +121,7 @@ loadExtensions = () ->
       .filter((file) -> not fs.statSync(file).isDirectory())
 
     emmet.loadExtensions(files)
-  else
+  else if atom.config.get('emmet.extensionsPath') isnt atom.config.getSchema('emmet.extensionsPath').default
     console.warn 'Emmet: no such extension folder:', extPath
 
 module.exports =
