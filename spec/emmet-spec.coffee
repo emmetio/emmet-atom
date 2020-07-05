@@ -20,7 +20,12 @@ describe "Emmet", ->
       atom.workspace.open("tabbing.html")
 
     waitsForPromise ->
-      atom.packages.activatePackage("emmet")
+      # Package activation will be deferred to the configured, activation hook, which is then triggered
+      # Activate activation hook
+      atom.packages.triggerDeferredActivationHooks();
+      atom.packages.triggerActivationHook("core:loaded-shell-environment");
+      waitsForPromise ->
+        atom.packages.activatePackage("emmet");
 
     waitsForPromise ->
       atom.packages.activatePackage("snippets") # to intentionally disrupt tab expansion
