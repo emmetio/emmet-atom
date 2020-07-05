@@ -7,6 +7,9 @@
     "emmet": "^1.6.3",
     "atom-space-pen-views-plus": "^3.0.4"
   },
+  "devDependencies": {
+    "@types/atom": "^1.40.4"
+  },
   "license": "MIT",
   "repository": "https://github.com/emmetio/emmet-atom",
   "engines": {
