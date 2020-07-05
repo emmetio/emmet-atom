@@ -12,6 +12,9 @@
   "engines": {
     "atom": "*"
   },
+  "scripts": {
+    "test": "atom --test spec"
+  },
   "activationHooks": [
     "core:loaded-shell-environment"
   ]
