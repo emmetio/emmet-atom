@@ -11,5 +11,8 @@
   "repository": "https://github.com/emmetio/emmet-atom",
   "engines": {
     "atom": "*"
-  }
+  },
+  "activationHooks": [
+    "core:loaded-shell-environment"
+  ]
 }
