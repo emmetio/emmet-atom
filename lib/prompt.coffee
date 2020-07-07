@@ -1,4 +1,4 @@
-{$, TextEditorView, View} = require 'atom-space-pen-views-plus'
+{$, TextEditorView, View} = require 'atom-space-pen-views'
 noop = ->
 
 method = (delegate, method) ->
