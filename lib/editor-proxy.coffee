@@ -207,7 +207,7 @@ module.exports =
   getSyntax: ->
     scope = @getCurrentScope().join(' ')
     return 'xsl' if ~scope.indexOf('xsl')
-    return 'jsx' if not /\bstring\b/.test(scope) && /\bsource\.(js|ts)x?\b/.test(scope)
+    return 'jsx' if not /\bstring\b/.test(scope) && /\bsource\.(js|ts|reason)x?\b/.test(scope)
 
     sourceSyntax = scope.match(/\bsource\.([\w\-]+)/)?[0]
 
